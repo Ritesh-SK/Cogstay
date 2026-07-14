@@ -1,0 +1,54 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Record Payment";
+    if (ViewData["Role"] == null)
+    {
+        var roleParam = Context.Request.Query["role"].ToString();
+        ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
+    }
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Record Guest Payment</h1>
+    <p style="color: var(--color-text-muted);">Process settlements and log payments for pending guest invoice statements.</p>
+</div>
+
+<div class="cogstay-card" style="max-width: 800px;">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-credit-card"></i> Process Invoice Payment</h3>
+    </div>
+    <div class="cogstay-card-body">
+        <form action="/Billing/Index" method="get">
+            <div class="cogstay-form-row">
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label">Invoice Reference</label>
+                    <input type="text" class="cogstay-form-control" value="#BILL-00924" readonly />
+                </div>
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label">Pending Amount Due</label>
+                    <input type="text" class="cogstay-form-control" value="₹12,000.00" readonly />
+                </div>
+            </div>
+
+            <div class="cogstay-form-row">
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label">Amount Being Settled (₹)</label>
+                    <input type="number" class="cogstay-form-control" value="12000.00" required />
+                </div>
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label">Payment Method Selection</label>
+                    <select class="cogstay-form-control" required>
+                        <option value="Card" selected>Credit / Debit Card Payment</option>
+                        <option value="Cash">Cash Settlement</option>
+                        <option value="UPI">UPI / Digital Wallet Transfer</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <a href="/Billing/Index" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Record & Settle Bill</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,215 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = CogStayMVC
+build_property.RootNamespace = CogStayMVC
+build_property.ProjectDir = C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Admin/Views/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Admin/Views/Admin/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWRtaW5cTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Admin/Views/Admin/Reports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWRtaW5cUmVwb3J0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Admin/Views/Admin/ReservationMonitoring.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWRtaW5cUmVzZXJ2YXRpb25Nb25pdG9yaW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Admin/Views/Admin/RoomManagement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWRtaW5cUm9vbU1hbmFnZW1lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Admin/Views/Admin/Settings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWRtaW5cU2V0dGluZ3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Admin/Views/Admin/StaffUserManagement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWRtaW5cU3RhZmZVc2VyTWFuYWdlbWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Admin/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Customer/Views/Customer/AvailableRooms.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcQ3VzdG9tZXJcQXZhaWxhYmxlUm9vbXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Customer/Views/Customer/BookingHistory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcQ3VzdG9tZXJcQm9va2luZ0hpc3RvcnkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Customer/Views/Customer/BookRoom.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcQ3VzdG9tZXJcQm9va1Jvb20uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Customer/Views/Customer/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcQ3VzdG9tZXJcRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Customer/Views/Customer/Feedback.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcQ3VzdG9tZXJcRmVlZGJhY2suY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Customer/Views/Customer/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcQ3VzdG9tZXJcTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Customer/Views/Customer/Payment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcQ3VzdG9tZXJcUGF5bWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Customer/Views/Customer/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcQ3VzdG9tZXJcUHJvZmlsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Customer/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/FrontDesk/Views/FrontDesk/CheckIn.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRnJvbnREZXNrXFZpZXdzXEZyb250RGVza1xDaGVja0luLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/FrontDesk/Views/FrontDesk/CheckOut.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRnJvbnREZXNrXFZpZXdzXEZyb250RGVza1xDaGVja091dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/FrontDesk/Views/FrontDesk/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRnJvbnREZXNrXFZpZXdzXEZyb250RGVza1xEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/FrontDesk/Views/FrontDesk/GuestOperations.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRnJvbnREZXNrXFZpZXdzXEZyb250RGVza1xHdWVzdE9wZXJhdGlvbnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/FrontDesk/Views/FrontDesk/HousekeepingCoordination.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRnJvbnREZXNrXFZpZXdzXEZyb250RGVza1xIb3VzZWtlZXBpbmdDb29yZGluYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/FrontDesk/Views/FrontDesk/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRnJvbnREZXNrXFZpZXdzXEZyb250RGVza1xMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/FrontDesk/Views/FrontDesk/Reservations.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRnJvbnREZXNrXFZpZXdzXEZyb250RGVza1xSZXNlcnZhdGlvbnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/FrontDesk/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRnJvbnREZXNrXFZpZXdzXF9WaWV3SW1wb3J0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Housekeeping/Views/Housekeeping/AssignTask.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSG91c2VrZWVwaW5nXFZpZXdzXEhvdXNla2VlcGluZ1xBc3NpZ25UYXNrLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Housekeeping/Views/Housekeeping/CleaningService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSG91c2VrZWVwaW5nXFZpZXdzXEhvdXNla2VlcGluZ1xDbGVhbmluZ1NlcnZpY2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Housekeeping/Views/Housekeeping/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSG91c2VrZWVwaW5nXFZpZXdzXEhvdXNla2VlcGluZ1xEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Housekeeping/Views/Housekeeping/FoodService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSG91c2VrZWVwaW5nXFZpZXdzXEhvdXNla2VlcGluZ1xGb29kU2VydmljZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Housekeeping/Views/Housekeeping/LaundryService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSG91c2VrZWVwaW5nXFZpZXdzXEhvdXNla2VlcGluZ1xMYXVuZHJ5U2VydmljZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Housekeeping/Views/Housekeeping/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSG91c2VrZWVwaW5nXFZpZXdzXEhvdXNla2VlcGluZ1xMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Housekeeping/Views/Housekeeping/MaintenanceService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSG91c2VrZWVwaW5nXFZpZXdzXEhvdXNla2VlcGluZ1xNYWludGVuYW5jZVNlcnZpY2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Housekeeping/Views/Housekeeping/ServiceRequests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSG91c2VrZWVwaW5nXFZpZXdzXEhvdXNla2VlcGluZ1xTZXJ2aWNlUmVxdWVzdHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Housekeeping/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSG91c2VrZWVwaW5nXFZpZXdzXF9WaWV3SW1wb3J0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Manager/Views/Manager/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlclxWaWV3c1xNYW5hZ2VyXERhc2hib2FyZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Manager/Views/Manager/Feedbacks.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlclxWaWV3c1xNYW5hZ2VyXEZlZWRiYWNrcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Manager/Views/Manager/HousekeepingOverview.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlclxWaWV3c1xNYW5hZ2VyXEhvdXNla2VlcGluZ092ZXJ2aWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Manager/Views/Manager/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlclxWaWV3c1xNYW5hZ2VyXExvZ2luLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Manager/Views/Manager/Occupancy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlclxWaWV3c1xNYW5hZ2VyXE9jY3VwYW5jeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Manager/Views/Manager/Reservations.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlclxWaWV3c1xNYW5hZ2VyXFJlc2VydmF0aW9ucy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Manager/Views/Manager/Revenue.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlclxWaWV3c1xNYW5hZ2VyXFJldmVudWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Areas/Manager/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlclxWaWV3c1xfVmlld0ltcG9ydHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Views/Shared/_LoginLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpbkxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Views/StaffLogin/RoleSelect.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZMb2dpblxSb2xlU2VsZWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/CogStay - Hotel Management/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 

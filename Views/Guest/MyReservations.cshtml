@@ -1,0 +1,53 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "My Reservations";
+    ViewData["Role"] = "Guest";
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">My Reservations</h1>
+    <p style="color: var(--color-text-muted);">Manage and track your active, upcoming, and pending stay reservations.</p>
+</div>
+
+<div class="cogstay-card">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-plane-arrival"></i> Active & Upcoming Stays</h3>
+        <span class="cogstay-badge info">2 Reservations</span>
+    </div>
+    <div class="cogstay-table-responsive">
+        <table class="cogstay-table">
+            <thead>
+                <tr>
+                    <th>Reservation ID</th>
+                    <th>Assigned Room</th>
+                    <th>Check-In Date</th>
+                    <th>Check-Out Date</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#RES-94021</strong></td>
+                    <td>Room 304 (Penthouse Suite)</td>
+                    <td>June 24, 2026</td>
+                    <td>June 28, 2026</td>
+                    <td><span class="cogstay-badge success">Checked In</span></td>
+                    <td style="text-align: right;">
+                        <a href="/Guest/CheckInStatus" class="btn btn-secondary btn-sm">Details</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#RES-95843</strong></td>
+                    <td>Room 205 (Deluxe Room)</td>
+                    <td>July 22, 2026</td>
+                    <td>July 26, 2026</td>
+                    <td><span class="cogstay-badge warning">Booked</span></td>
+                    <td style="text-align: right;">
+                        <a href="/Guest/CheckInStatus" class="btn btn-secondary btn-sm">Details</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

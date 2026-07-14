@@ -1,0 +1,73 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Guest Registration";
+}
+
+<div class="split-login-container">
+    <div class="split-login-hero">
+        <div class="split-login-hero-overlay"></div>
+        <div class="split-login-hero-content">
+            <a href="/Home/Index" class="split-login-brand">
+                <i class="fa-solid fa-hotel"></i> CogStay
+            </a>
+            <h1>Join CogStay Club</h1>
+            <p>Create a guest account to unlock premium room bookings, loyalty rewards, check-in tracking, and instant service requests.</p>
+        </div>
+    </div>
+    
+    <div class="split-login-panel">
+        <div class="split-login-panel-content">
+            <div class="cogstay-login-card">
+                <div class="cogstay-login-header">
+                    <h2 class="cogstay-login-title">Guest Registration</h2>
+                    <p class="cogstay-login-desc">Sign up to enjoy personalized luxury services</p>
+                </div>
+                
+                <form action="/Guest/Login" method="get">
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label">Full Name</label>
+                        <input type="text" class="cogstay-form-control" placeholder="John Doe" required />
+                    </div>
+                    
+                    <div class="cogstay-form-row">
+                        <div class="cogstay-form-group">
+                            <label class="cogstay-form-label">Email Address</label>
+                            <input type="email" class="cogstay-form-control" placeholder="john@example.com" required />
+                        </div>
+                        <div class="cogstay-form-group">
+                            <label class="cogstay-form-label">Phone Number</label>
+                            <input type="tel" class="cogstay-form-control" placeholder="+91 99999-88888" required />
+                        </div>
+                    </div>
+
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label">Address</label>
+                        <input type="text" class="cogstay-form-control" placeholder="Flat 401, Crescent Enclave, New Delhi" required />
+                    </div>
+                    
+                    <div class="cogstay-form-row">
+                        <div class="cogstay-form-group">
+                            <label class="cogstay-form-label">Password</label>
+                            <input type="password" class="cogstay-form-control" placeholder="••••••••" required />
+                        </div>
+                        <div class="cogstay-form-group">
+                            <label class="cogstay-form-label">Confirm Password</label>
+                            <input type="password" class="cogstay-form-control" placeholder="••••••••" required />
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Register</button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 20px; font-size: 14px;">
+                    <span style="color: var(--color-text-muted);">Already have an account? </span>
+                    <a href="/Guest/Login" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">Login here</a>
+                </div>
+            </div>
+            
+            <a href="/Home/Index" style="text-align: center; color: var(--color-text-muted); font-size: 14px; font-weight: 500;">
+                <i class="fa-solid fa-arrow-left-long"></i> Back to Homepage
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Booking History";
+    ViewData["Role"] = "Guest";
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Stay History Archive</h1>
+    <p style="color: var(--color-text-muted);">View records of all your past stays and completed reservations at CogStay.</p>
+</div>
+
+<div class="cogstay-card">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-clock-rotate-left"></i> Completed Reservations</h3>
+    </div>
+    <div class="cogstay-table-responsive">
+        <table class="cogstay-table">
+            <thead>
+                <tr>
+                    <th>Reservation ID</th>
+                    <th>Room Type & Number</th>
+                    <th>Arrived</th>
+                    <th>Departed</th>
+                    <th>Total Charges</th>
+                    <th>Payment</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#RES-11029</strong></td>
+                    <td>Room 101 (Superior King)</td>
+                    <td>Jan 12, 2026</td>
+                    <td>Jan 15, 2026</td>
+                    <td>₹37,632.00</td>
+                    <td><span class="cogstay-badge success">Paid</span></td>
+                    <td><a href="/Guest/Billing" class="btn btn-secondary btn-sm">Receipt</a></td>
+                </tr>
+                <tr>
+                    <td><strong>#RES-09872</strong></td>
+                    <td>Room 402 (Deluxe Room)</td>
+                    <td>Nov 04, 2025</td>
+                    <td>Nov 08, 2025</td>
+                    <td>₹68,000.00</td>
+                    <td><span class="cogstay-badge success">Paid</span></td>
+                    <td><a href="/Guest/Billing" class="btn btn-secondary btn-sm">Receipt</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

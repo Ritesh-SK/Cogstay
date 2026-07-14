@@ -1,0 +1,325 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var role = ViewData["Role"]?.ToString() ?? "Admin";
+    ViewData["Title"] = role + " Dashboard";
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">@role Operations Center</h1>
+    <p style="color: var(--color-text-muted);">Real-time status overview and task tracking utility.</p>
+</div>
+
+@if (role == "FrontDesk")
+{
+    <!-- Front Desk Stats Counters -->
+    <div class="grid-container grid-cols-3" style="margin-bottom: 30px;">
+        <div class="cogstay-stat-card frontdesk">
+            <div class="cogstay-stat-details">
+                <p>Today's Reservations</p>
+                <h3>8 Bookings</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card frontdesk">
+            <div class="cogstay-stat-details">
+                <p>Active Stays</p>
+                <h3>14 Guests</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card frontdesk">
+            <div class="cogstay-stat-details">
+                <p>Available Rooms</p>
+                <h3>4 Rooms</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-door-open"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="booking-checkout-container">
+        <!-- Today's Queue List -->
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-clock"></i> Today's Expected Arrivals</h3>
+                <span class="cogstay-badge info">3 Pending</span>
+            </div>
+            <div class="cogstay-table-responsive">
+                <table class="cogstay-table">
+                    <thead>
+                        <tr>
+                            <th>Guest Name</th>
+                            <th>Room Preferred</th>
+                            <th>Arriving</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Sarah Jenkins</strong></td>
+                            <td>Room 205 (Deluxe)</td>
+                            <td>Today, 2:30 PM</td>
+                            <td><span class="cogstay-badge warning">Booked</span></td>
+                            <td><a href="/CheckIn/CheckIn" class="btn btn-primary btn-sm">Check-In</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Michael Chang</strong></td>
+                            <td>Room 101 (Standard)</td>
+                            <td>Today, 4:00 PM</td>
+                            <td><span class="cogstay-badge warning">Booked</span></td>
+                            <td><a href="/CheckIn/CheckIn" class="btn btn-primary btn-sm">Check-In</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+            <div class="cogstay-card">
+                <div class="cogstay-card-header">
+                    <h3 class="cogstay-card-title"><i class="fa-solid fa-bolt"></i> Front Desk Shortcuts</h3>
+                </div>
+                <div class="cogstay-card-body" style="display: flex; flex-direction: column; gap: 12px;">
+                    <a href="/Reservation/Create" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                        <i class="fa-solid fa-calendar-plus"></i> Create Reservation
+                    </a>
+                    <a href="/CheckIn/CheckOut" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                        <i class="fa-solid fa-sign-out-alt"></i> Guest Check-Out
+                    </a>
+                    <a href="/Room/CheckAvailability" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                        <i class="fa-solid fa-door-open"></i> Check Room Availability
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (role == "Housekeeping")
+{
+    <!-- Housekeeping Stats Counters -->
+    <div class="grid-container grid-cols-3" style="margin-bottom: 30px;">
+        <div class="cogstay-stat-card housekeeping">
+            <div class="cogstay-stat-details">
+                <p>Pending Tasks</p>
+                <h3>5 Tasks</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card housekeeping">
+            <div class="cogstay-stat-details">
+                <p>In Progress Tasks</p>
+                <h3>2 Tasks</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-spinner"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card housekeeping">
+            <div class="cogstay-stat-details">
+                <p>Completed Today</p>
+                <h3>12 Tasks</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Tasks Queue -->
+    <div class="cogstay-card">
+        <div class="cogstay-card-header">
+            <h3 class="cogstay-card-title"><i class="fa-solid fa-broom"></i> Active Room Cleaning Duties</h3>
+        </div>
+        <div class="cogstay-table-responsive">
+            <table class="cogstay-table">
+                <thead>
+                    <tr>
+                        <th>Room</th>
+                        <th>Task Details</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Room 101</strong></td>
+                        <td>Full checkout cleaning & amenity refill</td>
+                        <td><span class="cogstay-badge danger">Pending</span></td>
+                        <td><span class="cogstay-badge danger">High</span></td>
+                        <td style="text-align: right;"><a href="/Housekeeping/Edit?id=1" class="btn btn-primary btn-sm">Update</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Room 304</strong></td>
+                        <td>Extra towels request</td>
+                        <td><span class="cogstay-badge warning">In Progress</span></td>
+                        <td><span class="cogstay-badge info">Medium</span></td>
+                        <td style="text-align: right;"><a href="/Housekeeping/Edit?id=2" class="btn btn-primary btn-sm">Update</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else if (role == "Manager")
+{
+    <!-- Manager Stats Counters -->
+    <div class="grid-container grid-cols-4" style="margin-bottom: 30px;">
+        <div class="cogstay-stat-card manager">
+            <div class="cogstay-stat-details">
+                <p>Available Rooms</p>
+                <h3>4 Rooms</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-door-open"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card manager">
+            <div class="cogstay-stat-details">
+                <p>Active Reservations</p>
+                <h3>22 Bookings</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card manager">
+            <div class="cogstay-stat-details">
+                <p>Active Stays</p>
+                <h3>14 Stays</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-key"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card manager">
+            <div class="cogstay-stat-details">
+                <p>Pending Payments</p>
+                <h3>₹34,200.00</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="booking-checkout-container">
+        <!-- Revenue Overview -->
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-chart-line"></i> Today's Occupancy Status</h3>
+            </div>
+            <div class="cogstay-card-body">
+                <div class="manager-kpi-row">
+                    <span>Occupancy Rate</span>
+                    <strong>85% (34 / 40 Rooms)</strong>
+                </div>
+                <div class="manager-kpi-row">
+                    <span>Housekeeping Completion</span>
+                    <strong>90% Completed</strong>
+                </div>
+                <div class="manager-kpi-row">
+                    <span>Outstanding Invoices</span>
+                    <strong>₹34,200.00 (3 pending)</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manager Quick Links -->
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-gears"></i> Review Operations</h3>
+            </div>
+            <div class="cogstay-card-body" style="display: flex; flex-direction: column; gap: 12px;">
+                <a href="/Room/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-door-closed"></i> Rooms Management</a>
+                <a href="/Reservation/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-list-check"></i> Reservations List</a>
+                <a href="/Billing/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-wallet"></i> Billing History</a>
+            </div>
+        </div>
+    </div>
+}
+else if (role == "Admin")
+{
+    <!-- Admin Stats Counters -->
+    <div class="grid-container grid-cols-4" style="margin-bottom: 30px;">
+        <div class="cogstay-stat-card admin">
+            <div class="cogstay-stat-details">
+                <p>Total Rooms</p>
+                <h3>40 Rooms</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-door-open"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card admin">
+            <div class="cogstay-stat-details">
+                <p>Active Reservations</p>
+                <h3>22 Bookings</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card admin">
+            <div class="cogstay-stat-details">
+                <p>Active Stays</p>
+                <h3>14 Stays</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-key"></i>
+            </div>
+        </div>
+
+        <div class="cogstay-stat-card admin">
+            <div class="cogstay-stat-details">
+                <p>Pending Payments</p>
+                <h3>₹34,200.00</h3>
+            </div>
+            <div class="cogstay-stat-icon">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="booking-checkout-container">
+        <!-- Overview of administrative actions -->
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-user-shield"></i> Administration Tools</h3>
+            </div>
+            <div class="cogstay-card-body" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                <a href="/Staff/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-users"></i> Staff CRUD Portal</a>
+                <a href="/Room/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-door-open"></i> Add/Edit Room Catalog</a>
+                <a href="/Reservation/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-list-check"></i> Monitor Reservations</a>
+                <a href="/Billing/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-wallet"></i> Invoice Billing Panel</a>
+            </div>
+        </div>
+
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-info-circle"></i> Quick Admin Info</h3>
+            </div>
+            <div class="cogstay-card-body" style="font-size: 13.5px; line-height: 1.5; color: var(--color-text-muted);">
+                Welcome to administrative dashboard. System is running under **Development Mode (Temporary Navigation)**. Security checks, migrations, and model binding are disabled.
+            </div>
+        </div>
+    </div>
+}

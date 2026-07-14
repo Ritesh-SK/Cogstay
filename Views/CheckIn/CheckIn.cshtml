@@ -1,0 +1,62 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Guest Check-In";
+    ViewData["Role"] = "FrontDesk";
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Process Guest Arrival</h1>
+    <p style="color: var(--color-text-muted);">Allocate keys and register actual check-in timestamps for arriving guests.</p>
+</div>
+
+<div class="booking-checkout-container">
+    <div class="cogstay-card">
+        <div class="cogstay-card-header">
+            <h3 class="cogstay-card-title"><i class="fa-solid fa-sign-in-alt"></i> Guest Check-In Registration</h3>
+        </div>
+        <div class="cogstay-card-body">
+            <form action="/CheckIn/ActiveStays" method="get">
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label">Select Active Reservation Booking</label>
+                    <select class="cogstay-form-control" required>
+                        <option value="94021">#RES-94021 - John Henderson (Room 304 - Penthouse Suite)</option>
+                        <option value="95843">#RES-95843 - Sarah Jenkins (Room 205 - Deluxe Room)</option>
+                    </select>
+                </div>
+
+                <div class="cogstay-form-row">
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label">Actual Check-In Date & Time</label>
+                        <input type="datetime-local" class="cogstay-form-control" value="2026-07-14T14:00" required />
+                    </div>
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label">Assign Physical Keycard ID</label>
+                        <input type="text" class="cogstay-form-control" placeholder="RFID-77203" required />
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                    <a href="/Staff/Dashboard?role=FrontDesk" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Process Check-In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-key"></i> Key Card Swiper</h3>
+            </div>
+            <div class="cogstay-card-body">
+                <div class="keycard-swiper-placeholder">
+                    <i class="fa-solid fa-credit-card" style="font-size: 32px; display: block; margin-bottom: 12px;"></i>
+                    Swipe RFID Key to Program
+                </div>
+                <p style="font-size: 12px; color: var(--color-text-muted); margin-top: 15px; text-align: center; line-height: 1.4;">
+                    RFID programmer simulates program codes into key database cards for Front Desk staff.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

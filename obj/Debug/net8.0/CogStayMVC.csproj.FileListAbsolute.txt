@@ -1,0 +1,55 @@
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\bin\Debug\net8.0\appsettings.json
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\bin\Debug\net8.0\CogStayMVC.staticwebassets.runtime.json
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\bin\Debug\net8.0\CogStayMVC.exe
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\bin\Debug\net8.0\CogStayMVC.deps.json
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\bin\Debug\net8.0\CogStayMVC.runtimeconfig.json
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\bin\Debug\net8.0\CogStayMVC.dll
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\bin\Debug\net8.0\CogStayMVC.pdb
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.AssemblyInfoInputs.cache
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.AssemblyInfo.cs
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.csproj.CoreCompileInputs.cache
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.RazorAssemblyInfo.cache
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.RazorAssemblyInfo.cs
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\staticwebassets\msbuild.CogStayMVC.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\staticwebassets\msbuild.build.CogStayMVC.props
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.CogStayMVC.props
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.CogStayMVC.props
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\scopedcss\bundle\CogStayMVC.styles.css
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.dll
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\refint\CogStayMVC.dll
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.pdb
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\CogStayMVC.genruntimeconfig.cache
+C:\Users\Ritesh SK\Desktop\Hotel-Management - Antigravity\obj\Debug\net8.0\ref\CogStayMVC.dll
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\bin\Debug\net8.0\appsettings.json
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\bin\Debug\net8.0\CogStayMVC.staticwebassets.runtime.json
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\bin\Debug\net8.0\CogStayMVC.exe
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\bin\Debug\net8.0\CogStayMVC.deps.json
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\bin\Debug\net8.0\CogStayMVC.runtimeconfig.json
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\bin\Debug\net8.0\CogStayMVC.dll
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\bin\Debug\net8.0\CogStayMVC.pdb
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.AssemblyInfoInputs.cache
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.AssemblyInfo.cs
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.csproj.CoreCompileInputs.cache
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.RazorAssemblyInfo.cache
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.RazorAssemblyInfo.cs
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.sourcelink.json
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\staticwebassets\msbuild.CogStayMVC.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\staticwebassets\msbuild.build.CogStayMVC.props
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.CogStayMVC.props
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.CogStayMVC.props
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\scopedcss\bundle\CogStayMVC.styles.css
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.dll
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\refint\CogStayMVC.dll
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.pdb
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\CogStayMVC.genruntimeconfig.cache
+C:\Users\Ritesh SK\Desktop\CogStay - Hotel Management\obj\Debug\net8.0\ref\CogStayMVC.dll

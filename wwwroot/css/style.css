@@ -1,0 +1,1444 @@
+/* ==========================================================================
+   CogStay Consolidated Stylesheet
+   Combines Global Styles, Home Landing, Login, and Role-Specific Layouts
+   ========================================================================== */
+
+:root {
+  /* CogStay Core Brand */
+  --color-primary: #1F3A5F;
+  --color-primary-dark: #14283F;
+  --color-accent: #C8A04D;
+  --color-accent-light: #E4C77E;
+
+  /* Neutrals */
+  --color-bg: #F7F6F3;
+  --color-surface: #FFFFFF;
+  --color-border: #E3E0D8;
+  --color-text: #20262E;
+  --color-text-muted: #6B7280;
+
+  /* Status Styles */
+  --color-success: #2E7D5B;
+  --color-success-light: #E8F5E9;
+  --color-warning: #C9772E;
+  --color-warning-light: #FFF3E0;
+  --color-danger: #B3412E;
+  --color-danger-light: #FFEBEE;
+  --color-info: #2E6F95;
+  --color-info-light: #E1F5FE;
+
+  /* CogStay Role Accents */
+  --accent-admin: #6B3FA0;
+  --accent-manager: #1F3A5F;
+  --accent-frontdesk: #2E6F95;
+  --accent-housekeeping: #2E7D5B;
+  --accent-customer: #C8A04D;
+
+  /* System Fonts */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Layout Variables */
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 70px;
+  --header-height: 70px;
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Base & Reset --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+/* --- App Shell Layout --- */
+.cogstay-app-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Sidebar Styling */
+.cogstay-sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--color-primary-dark);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  transition: var(--transition);
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.cogstay-sidebar-brand {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.cogstay-brand-logo {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cogstay-brand-logo i {
+  font-size: 20px;
+}
+
+.cogstay-sidebar-user {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cogstay-user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--color-accent-light);
+  border: 2px solid var(--color-accent);
+}
+
+.cogstay-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cogstay-user-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cogstay-user-role {
+  font-size: 11px;
+  color: var(--color-accent-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+.cogstay-sidebar-menu {
+  flex: 1;
+  padding: 20px 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.cogstay-menu-item {
+  margin: 4px 16px;
+}
+
+.cogstay-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  transition: var(--transition);
+}
+
+.cogstay-menu-link i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.cogstay-menu-link:hover {
+  background-color: rgba(255,255,255,0.05);
+  color: #ffffff;
+}
+
+.cogstay-menu-link.active {
+  background-color: var(--color-accent);
+  color: var(--color-primary-dark);
+  font-weight: 600;
+}
+
+.cogstay-menu-link.active i {
+  color: var(--color-primary-dark);
+}
+
+.cogstay-sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.cogstay-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  width: 100%;
+  background-color: rgba(179, 65, 46, 0.1);
+  border: 1px solid rgba(179, 65, 46, 0.3);
+  color: #FF8A80;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cogstay-logout-btn:hover {
+  background-color: var(--color-danger);
+  color: #ffffff;
+  border-color: var(--color-danger);
+}
+
+/* Main Content Area Layout */
+.cogstay-main-container {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: var(--transition);
+}
+
+/* Header Navbar */
+.cogstay-navbar {
+  height: var(--header-height);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  box-shadow: var(--shadow-sm);
+}
+
+.cogstay-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cogstay-sidebar-toggle {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--color-text);
+  cursor: pointer;
+  display: none;
+}
+
+.cogstay-page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.cogstay-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cogstay-notification-bell {
+  position: relative;
+  font-size: 18px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cogstay-notification-bell:hover {
+  color: var(--color-primary);
+}
+
+.cogstay-notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-danger);
+  border-radius: 50%;
+}
+
+.cogstay-portal-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: rgba(31, 58, 95, 0.08);
+  color: var(--color-primary);
+  border: 1px solid rgba(31, 58, 95, 0.15);
+}
+
+/* Page Content Base Container */
+.cogstay-content {
+  flex: 1;
+  padding: 30px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Footer */
+.cogstay-footer {
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 20px 30px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: auto;
+}
+
+/* --- UI Elements: Cards --- */
+.cogstay-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.cogstay-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.cogstay-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cogstay-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cogstay-card-body {
+  padding: 24px;
+}
+
+.cogstay-card-footer {
+  padding: 16px 24px;
+  background-color: #FAF9F6;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Grid & Layout Utilities */
+.grid-container {
+  display: grid;
+  gap: 24px;
+}
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 1024px) {
+  .grid-cols-3, .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dashboard Stat Cards */
+.cogstay-stat-card {
+  padding: 24px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.cogstay-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.cogstay-stat-details h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-top: 4px;
+}
+
+.cogstay-stat-details p {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.cogstay-stat-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  background-color: rgba(31, 58, 95, 0.06);
+  color: var(--color-primary);
+}
+
+.cogstay-stat-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--color-accent);
+}
+
+.cogstay-stat-card.admin::after { background-color: var(--accent-admin); }
+.cogstay-stat-card.manager::after { background-color: var(--accent-manager); }
+.cogstay-stat-card.frontdesk::after { background-color: var(--accent-frontdesk); }
+.cogstay-stat-card.housekeeping::after { background-color: var(--accent-housekeeping); }
+.cogstay-stat-card.customer::after { background-color: var(--accent-customer); }
+
+/* --- UI Elements: Badges --- */
+.cogstay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.cogstay-badge.success { background-color: var(--color-success-light); color: var(--color-success); }
+.cogstay-badge.warning { background-color: var(--color-warning-light); color: var(--color-warning); }
+.cogstay-badge.danger { background-color: var(--color-danger-light); color: var(--color-danger); }
+.cogstay-badge.info { background-color: var(--color-info-light); color: var(--color-info); }
+
+/* --- UI Elements: Tables --- */
+.cogstay-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-border);
+}
+
+.cogstay-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  background-color: var(--color-surface);
+  font-size: 14px;
+}
+
+.cogstay-table th {
+  background-color: #FAF9F6;
+  padding: 14px 20px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cogstay-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+.cogstay-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.cogstay-table tbody tr:hover {
+  background-color: rgba(31, 58, 95, 0.02);
+}
+
+/* --- UI Elements: Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background-color: rgba(31, 58, 95, 0.05);
+}
+
+.btn-accent {
+  background-color: var(--color-accent);
+  color: var(--color-primary-dark);
+}
+
+.btn-accent:hover {
+  background-color: #B28C3E;
+  color: #ffffff;
+}
+
+.btn-danger {
+  background-color: transparent;
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.btn-danger:hover {
+  background-color: var(--color-danger);
+  color: #ffffff;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-lg {
+  padding: 14px 28px;
+  font-size: 16px;
+}
+
+/* --- UI Elements: Forms --- */
+.cogstay-form-group {
+  margin-bottom: 20px;
+}
+
+.cogstay-form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cogstay-form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-border);
+  background-color: #FAF9F6;
+  color: var(--color-text);
+  font-size: 14px;
+  font-family: var(--font-sans);
+  transition: var(--transition);
+}
+
+.cogstay-form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(31, 58, 95, 0.1);
+}
+
+.cogstay-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 576px) {
+  .cogstay-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Public Navigation & Hero (Landing Page) --- */
+.cogstay-public-nav {
+  height: 80px;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.cogstay-public-links {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+.cogstay-public-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.cogstay-public-link:hover {
+  color: var(--color-primary);
+}
+
+.cogstay-public-actions {
+  display: flex;
+  gap: 15px;
+}
+
+@media (max-width: 768px) {
+  .cogstay-public-nav {
+    padding: 0 20px;
+  }
+  .cogstay-public-links {
+    display: none;
+  }
+}
+
+.cogstay-hero {
+  position: relative;
+  background: linear-gradient(rgba(20, 40, 63, 0.75), rgba(20, 40, 63, 0.85)), 
+              url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+  padding: 160px 24px 140px;
+  text-align: center;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 4px solid var(--color-accent);
+}
+
+.cogstay-hero-content {
+  max-width: 800px;
+}
+
+.cogstay-hero-title {
+  font-family: var(--font-serif);
+  font-size: 54px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.cogstay-hero-title span {
+  color: var(--color-accent-light);
+}
+
+.cogstay-hero-subtitle {
+  font-size: 18px;
+  color: #E3E0D8;
+  margin-bottom: 40px;
+  font-weight: 300;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.cogstay-hero-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .cogstay-hero-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+  }
+  .cogstay-hero-title {
+    font-size: 32px;
+  }
+}
+
+/* Home Section Styles */
+.cogstay-section {
+  padding: 80px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.cogstay-section-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.cogstay-section-title {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  color: var(--color-primary-dark);
+  margin-bottom: 10px;
+}
+
+.cogstay-section-divider {
+  width: 60px;
+  height: 3px;
+  background-color: var(--color-accent);
+  margin: 15px auto 20px;
+}
+
+.cogstay-section-subtitle {
+  color: var(--color-text-muted);
+  font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cogstay-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+@media (max-width: 992px) {
+  .cogstay-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .cogstay-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cogstay-service-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.cogstay-service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent);
+}
+
+.cogstay-service-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: rgba(200, 160, 77, 0.1);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 24px;
+  transition: var(--transition);
+}
+
+.cogstay-service-card:hover .cogstay-service-icon {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.cogstay-service-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--color-primary-dark);
+  margin-bottom: 12px;
+}
+
+.cogstay-service-desc {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* --- Staff Login & Portal Selection --- */
+.cogstay-login-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 40px;
+  overflow: hidden;
+}
+
+.cogstay-login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.cogstay-login-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  color: var(--color-primary-dark);
+  margin-bottom: 8px;
+}
+
+.cogstay-login-desc {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.split-login-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  min-height: 100vh;
+  width: 100%;
+}
+
+@media (max-width: 992px) {
+  .split-login-container {
+    grid-template-columns: 1fr;
+  }
+  .split-login-hero {
+    display: none;
+  }
+}
+
+.split-login-hero {
+  position: relative;
+  background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 60px;
+  color: #ffffff;
+}
+
+.split-login-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(20, 40, 63, 0.95) 20%, rgba(20, 40, 63, 0.4) 100%);
+  z-index: 1;
+}
+
+.split-login-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+}
+
+.split-login-brand {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-accent-light);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.split-login-hero-content h1 {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.split-login-hero-content p {
+  color: #E3E0D8;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.split-login-panel {
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.split-login-panel-content {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* --- Customer / Room Listings --- */
+.cogstay-filter-bar {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cogstay-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 150px;
+}
+
+.booking-checkout-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 992px) {
+  .booking-checkout-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.booking-summary-card {
+  position: sticky;
+  top: 100px;
+}
+
+.booking-price-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.booking-price-total {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.profile-header-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 30px;
+  background-color: var(--color-primary-dark);
+  color: #ffffff;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 30px;
+}
+
+.profile-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 3px solid var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-accent-light);
+}
+
+.customer-rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+@media (max-width: 992px) {
+  .customer-rooms-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .customer-rooms-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cogstay-room-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(31, 58, 95, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 100%;
+}
+
+.cogstay-room-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 35px rgba(31, 58, 95, 0.1);
+  border-color: var(--color-accent);
+}
+
+.cogstay-room-image-container {
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  background-color: #f3f3f3;
+}
+
+.cogstay-room-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cogstay-room-card:hover .cogstay-room-card-img {
+  transform: scale(1.08);
+}
+
+.cogstay-room-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background-color: var(--color-success);
+  color: #ffffff;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  z-index: 2;
+}
+
+.cogstay-room-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.cogstay-room-desc {
+  color: var(--color-text-muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  height: 40px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cogstay-occupancy-row {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.cogstay-occupancy-row i {
+  color: var(--color-primary);
+  font-size: 14px;
+}
+
+.cogstay-room-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.cogstay-amenity-chip {
+  background-color: rgba(31, 58, 95, 0.04);
+  color: var(--color-primary-dark);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(31, 58, 95, 0.06);
+  transition: all 0.2s ease;
+}
+
+.cogstay-amenity-chip i {
+  color: var(--color-accent);
+  font-size: 12px;
+}
+
+.cogstay-room-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.cogstay-room-price span {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.cogstay-room-footer .btn-reserve {
+  padding: 10px 24px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  min-width: 105px;
+  text-align: center;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 10px rgba(31, 58, 95, 0.15);
+}
+
+.cogstay-room-footer .btn-reserve:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(31, 58, 95, 0.2);
+}
+
+/* --- Admin / Settings Page switch sliders --- */
+.settings-section-card {
+  margin-bottom: 24px;
+}
+
+.settings-toggle-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.settings-toggle-container:last-child {
+  border-bottom: none;
+}
+
+.cogstay-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.cogstay-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.cogstay-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-border);
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.cogstay-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .cogstay-slider {
+  background-color: var(--accent-admin);
+}
+
+input:checked + .cogstay-slider:before {
+  transform: translateX(24px);
+}
+
+/* Table action header & search inputs */
+.table-action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.search-input-wrapper {
+  position: relative;
+  max-width: 300px;
+  width: 100%;
+}
+
+.search-input-wrapper input {
+  padding-left: 36px;
+}
+
+.search-input-wrapper i {
+  position: absolute;
+  left: 12px;
+  top: 15px;
+  color: var(--color-text-muted);
+}
+
+/* --- Front Desk arrival cards & keycard --- */
+.guest-arrival-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  background-color: #FAF9F6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.guest-arrival-card:hover {
+  transform: translateX(4px);
+  border-color: var(--accent-frontdesk);
+}
+
+.keycard-swiper-placeholder {
+  border: 2px dashed var(--accent-frontdesk);
+  background-color: var(--color-info-light);
+  color: var(--color-info);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.keycard-swiper-placeholder:hover {
+  background-color: rgba(46, 111, 149, 0.15);
+  border-style: solid;
+}
+
+/* --- Housekeeper tasks --- */
+.housekeeper-task-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  background-color: var(--color-surface);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.housekeeper-task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-housekeeping);
+}
+
+.task-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.task-card-items-list {
+  list-style: none;
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-card-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+}
+
+.task-card-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-housekeeping);
+  cursor: pointer;
+}
+
+.task-card-item input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+/* --- Manager KPI lists --- */
+.manager-kpi-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.manager-kpi-row:last-child {
+  border-bottom: none;
+}
+
+.feedback-review-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #FAF9F6;
+}
+
+.feedback-review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.feedback-stars-display {
+  color: var(--color-accent);
+}
+
+/* --- Mobile Styling --- */
+@media (max-width: 768px) {
+  .cogstay-sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .cogstay-sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .cogstay-main-container {
+    margin-left: 0;
+  }
+  
+  .cogstay-sidebar-toggle {
+    display: block;
+  }
+  
+  .cogstay-navbar {
+    padding: 0 16px;
+  }
+  
+  .cogstay-content {
+    padding: 20px 16px;
+  }
+}

@@ -1,0 +1,25 @@
+@{
+    var role = ViewData["Role"]?.ToString() ?? "";
+    var portalName = "CogStay Portal";
+    if (role == "Guest") { portalName = "CogStay Guest Portal"; }
+    else if (role == "Admin") { portalName = "CogStay Administration"; }
+    else if (role == "Manager") { portalName = "CogStay Management Console"; }
+    else if (role == "FrontDesk") { portalName = "CogStay Front Desk Operations"; }
+    else if (role == "Housekeeping") { portalName = "CogStay Housekeeping Services"; }
+}
+
+<header class="cogstay-navbar">
+    <div class="cogstay-nav-left">
+        <button class="cogstay-sidebar-toggle" aria-label="Toggle Sidebar">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <h2 class="cogstay-page-title">@ViewData["Title"]</h2>
+    </div>
+    <div class="cogstay-nav-right">
+        <span class="cogstay-portal-badge">@portalName</span>
+        <div class="cogstay-notification-bell">
+            <i class="fa-regular fa-bell"></i>
+            <span class="cogstay-notification-badge"></span>
+        </div>
+    </div>
+</header>

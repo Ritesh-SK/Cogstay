@@ -1,0 +1,53 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Billing Statements";
+    if (ViewData["Role"] == null)
+    {
+        var roleParam = Context.Request.Query["role"].ToString();
+        ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
+    }
+}
+
+<div class="table-action-header">
+    <div>
+        <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Guest Invoices & Billing Operations</h1>
+        <p style="color: var(--color-text-muted);">Process room charge invoices, record guest payments, and view billing archives.</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <a href="/Billing/History" class="btn btn-secondary"><i class="fa-solid fa-clock-rotate-left"></i> Billing History Archive</a>
+        <a href="/Billing/Create" class="btn btn-primary"><i class="fa-solid fa-file-invoice"></i> Generate Invoice</a>
+    </div>
+</div>
+
+<div class="cogstay-card">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-receipt"></i> Pending Guest Invoices</h3>
+        <span class="cogstay-badge danger">1 Pending Settlement</span>
+    </div>
+    <div class="cogstay-table-responsive">
+        <table class="cogstay-table">
+            <thead>
+                <tr>
+                    <th>Bill ID</th>
+                    <th>Guest Stay Account</th>
+                    <th>Total Amount</th>
+                    <th>Payment Status</th>
+                    <th>Remarks</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#BILL-00924</strong></td>
+                    <td>John Henderson (Room 304)</td>
+                    <td>₹12,000.00</td>
+                    <td><span class="cogstay-badge danger">Pending</span></td>
+                    <td>Minibar snack selections, extra laundry dry-cleaning services.</td>
+                    <td style="text-align: right;">
+                        <a href="/Billing/Payment?id=00924" class="btn btn-primary btn-sm">Process Payment</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

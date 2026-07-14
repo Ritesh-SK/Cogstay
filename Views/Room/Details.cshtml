@@ -1,0 +1,64 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Room Details";
+    if (ViewData["Role"] == null)
+    {
+        var roleParam = Context.Request.Query["role"].ToString();
+        ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
+    }
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Room Record Details</h1>
+    <p style="color: var(--color-text-muted);">Administrative details for this specific room inventory profile.</p>
+</div>
+
+<div class="booking-checkout-container">
+    <div class="cogstay-card">
+        <div class="cogstay-card-header">
+            <h3 class="cogstay-card-title"><i class="fa-solid fa-door-open"></i> Room Profile Information</h3>
+            <span class="cogstay-badge danger">Occupied</span>
+        </div>
+        <div class="cogstay-card-body">
+            <div class="grid-container grid-cols-2" style="gap: 15px; margin-bottom: 25px;">
+                <div>
+                    <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Room Number</span>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Room 205</p>
+                </div>
+                <div>
+                    <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Room Type Classification</span>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Deluxe Executive Room</p>
+                </div>
+                <div>
+                    <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Price Per Night</span>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">₹14,400.00</p>
+                </div>
+                <div>
+                    <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Current Operational Status</span>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px; color: var(--color-danger);">Occupied (Checked In)</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--color-border); padding-top: 20px;">
+                <a href="/Room/Index" class="btn btn-secondary">Back to Catalog</a>
+                <a href="/Room/Edit?id=205" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i> Edit Room</a>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-hotel"></i> Room Amenity Summary</h3>
+            </div>
+            <div class="cogstay-card-body" style="font-size: 13.5px; line-height: 1.5; color: var(--color-text-muted);">
+                Deluxe Executive Room features:
+                <ul style="margin-top: 10px; margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                    <li>High speed Wi-Fi access</li>
+                    <li>Plush King bedding</li>
+                    <li>Writing desk & mini bar</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

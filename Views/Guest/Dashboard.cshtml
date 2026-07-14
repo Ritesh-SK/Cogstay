@@ -1,0 +1,136 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Guest Dashboard";
+    ViewData["Role"] = "Guest";
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Welcome back, Mr. Henderson</h1>
+    <p style="color: var(--color-text-muted);">CogStay Guest Portal &bull; Room 304 (Penthouse Suite)</p>
+</div>
+
+<!-- Stats Counters / Status Cards -->
+<div class="grid-container grid-cols-3" style="margin-bottom: 30px;">
+    <!-- Upcoming Reservation -->
+    <div class="cogstay-stat-card customer">
+        <div class="cogstay-stat-details">
+            <p>Upcoming Reservation</p>
+            <h3>July 22, 2026</h3>
+            <span style="font-size: 12px; color: var(--color-text-muted);">ID: #RES-94021 &bull; Deluxe Room</span>
+        </div>
+        <div class="cogstay-stat-icon">
+            <i class="fa-solid fa-plane-arrival"></i>
+        </div>
+    </div>
+
+    <!-- Current Stay -->
+    <div class="cogstay-stat-card customer">
+        <div class="cogstay-stat-details">
+            <p>Current Stay Status</p>
+            <h3>Room 304</h3>
+            <span style="font-size: 12px; color: var(--color-success); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Checked In</span>
+        </div>
+        <div class="cogstay-stat-icon">
+            <i class="fa-solid fa-key"></i>
+        </div>
+    </div>
+
+    <!-- Pending Payment -->
+    <div class="cogstay-stat-card customer">
+        <div class="cogstay-stat-details">
+            <p>Pending Payment</p>
+            <h3>₹12,000.00</h3>
+            <span style="font-size: 12px; color: var(--color-warning); font-weight: 600;"><i class="fa-solid fa-clock"></i> Invoice #INV-5502</span>
+        </div>
+        <div class="cogstay-stat-icon">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+        </div>
+    </div>
+</div>
+
+<div class="booking-checkout-container">
+    <!-- Left Column: Stay Info -->
+    <div>
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-circle-info"></i> Your Current Booking Details</h3>
+                <span class="cogstay-badge success">Checked In</span>
+            </div>
+            <div class="cogstay-card-body">
+                <div class="grid-container grid-cols-2" style="gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <strong style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Guest Name</strong>
+                        <p style="font-size: 15px; font-weight: 600; margin-top: 3px;">John Henderson</p>
+                    </div>
+                    <div>
+                        <strong style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Room Selection</strong>
+                        <p style="font-size: 15px; font-weight: 600; margin-top: 3px;">Room 304 - Penthouse Suite</p>
+                    </div>
+                    <div>
+                        <strong style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Check-In Date</strong>
+                        <p style="font-size: 15px; font-weight: 600; margin-top: 3px;">June 24, 2026</p>
+                    </div>
+                    <div>
+                        <strong style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Check-Out Date</strong>
+                        <p style="font-size: 15px; font-weight: 600; margin-top: 3px;">June 28, 2026</p>
+                    </div>
+                </div>
+                
+                <div style="background-color: #FAF9F6; border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <strong style="font-size: 14px; color: var(--color-primary-dark);"><i class="fa-solid fa-bell-concierge"></i> Expected Stay Services</strong>
+                        <p style="font-size: 12px; color: var(--color-text-muted); margin-top: 2px;">Your stays include complimentary breakfast buffet access, spa coupon, and laundry services.</p>
+                    </div>
+                    <a href="/Guest/CheckInStatus" class="btn btn-secondary btn-sm">View Status</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-list-check"></i> Dashboard Quick Actions</h3>
+            </div>
+            <div class="cogstay-card-body" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <a href="/Guest/AvailableRooms" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Book Another Room</a>
+                <a href="/Guest/MyReservations" class="btn btn-secondary"><i class="fa-solid fa-list"></i> My Reservations</a>
+                <a href="/Guest/Billing" class="btn btn-secondary"><i class="fa-solid fa-receipt"></i> View Billing Invoices</a>
+                <a href="/Guest/Profile" class="btn btn-secondary"><i class="fa-solid fa-user-pen"></i> Update Profile Info</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Quick Links & Promotional -->
+    <div>
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-star"></i> Stay Information</h3>
+            </div>
+            <div class="cogstay-card-body" style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; justify-content: space-between; font-size: 14px; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
+                    <span style="color: var(--color-text-muted);">Wi-Fi Password:</span>
+                    <strong>CogStayLuxury2026</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
+                    <span style="color: var(--color-text-muted);">Gym Hours:</span>
+                    <strong>6:00 AM - 10:00 PM</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
+                    <span style="color: var(--color-text-muted);">Restaurant Hours:</span>
+                    <strong>7:00 AM - 11:30 PM</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                    <span style="color: var(--color-text-muted);">Spa Bookings:</span>
+                    <strong>Ext. 404 (Front Desk)</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="cogstay-card" style="background-color: var(--color-primary-dark); color: #ffffff; border: none;">
+            <div class="cogstay-card-body">
+                <h4 style="font-family: var(--font-serif); font-size: 18px; color: var(--color-accent-light); margin-bottom: 10px;">Exclusive Guest Offer</h4>
+                <p style="font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 15px;">Enjoy 15% off spa therapies and fine-dining room delivery during your stay. Use coupon code <strong>LUXGOLD15</strong>.</p>
+                <a href="/Guest/Billing" class="btn btn-accent btn-sm" style="color: var(--color-primary-dark)">View Invoices</a>
+            </div>
+        </div>
+    </div>
+</div>

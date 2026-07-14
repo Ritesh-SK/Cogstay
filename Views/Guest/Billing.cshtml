@@ -1,0 +1,50 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Billing & Invoices";
+    ViewData["Role"] = "Guest";
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Billing Statements</h1>
+    <p style="color: var(--color-text-muted);">Manage payments and review historical invoices and transaction receipts.</p>
+</div>
+
+<div class="cogstay-card">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-file-invoice-dollar"></i> Active Invoice Statements</h3>
+        <span class="cogstay-badge danger">1 Invoice Pending</span>
+    </div>
+    <div class="cogstay-table-responsive">
+        <table class="cogstay-table">
+            <thead>
+                <tr>
+                    <th>Invoice Number</th>
+                    <th>Billing Period</th>
+                    <th>Amount Due</th>
+                    <th>Payment Status</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#INV-5502</strong></td>
+                    <td>June 24 - June 28, 2026</td>
+                    <td>₹12,000.00</td>
+                    <td><span class="cogstay-badge danger">Pending</span></td>
+                    <td style="text-align: right;">
+                        <a href="/Guest/Dashboard" class="btn btn-primary btn-sm">Pay Balance</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#INV-5489</strong></td>
+                    <td>Jan 12 - Jan 15, 2026</td>
+                    <td>₹37,632.00</td>
+                    <td><span class="cogstay-badge success">Paid</span></td>
+                    <td style="text-align: right;">
+                        <a href="/Guest/Dashboard" class="btn btn-secondary btn-sm">Receipt</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

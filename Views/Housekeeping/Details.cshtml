@@ -1,0 +1,66 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Housekeeping Task Details";
+    if (ViewData["Role"] == null)
+    {
+        var roleParam = Context.Request.Query["role"].ToString();
+        ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
+    }
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Housekeeping Duty Record</h1>
+    <p style="color: var(--color-text-muted);">View assignment instructions and progress records for this housekeeping task.</p>
+</div>
+
+<div class="booking-checkout-container">
+    <div class="cogstay-card">
+        <div class="cogstay-card-header">
+            <h3 class="cogstay-card-title"><i class="fa-solid fa-broom"></i> Room 101 Task Assignment</h3>
+            <span class="cogstay-badge danger">Pending</span>
+        </div>
+        <div class="cogstay-card-body">
+            <div class="grid-container grid-cols-2" style="gap: 15px; margin-bottom: 25px;">
+                <div>
+                    <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Room Unit</span>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Room 101 (Classic Superior King)</p>
+                </div>
+                <div>
+                    <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Task Status</span>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px; color: var(--color-danger);">Pending (Not Started)</p>
+                </div>
+                <div>
+                    <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Assigned Task Priority</span>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px; color: var(--color-danger);">High Priority</p>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--color-border); padding-top: 15px; margin-bottom: 20px;">
+                <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 5px;">Duty Description Instructions</span>
+                <p style="font-size: 14.5px; line-height: 1.5;">Standard check-out cleaning: sweep, mop, bed linens change, and toiletries refill.</p>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--color-border); padding-top: 20px;">
+                <a href="/Housekeeping/Index" class="btn btn-secondary">Back to Task Board</a>
+                <a href="/Housekeeping/Edit?id=1" class="btn btn-primary">Update Task Status</a>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-list-check"></i> Standard Operating Checklists</h3>
+            </div>
+            <div class="cogstay-card-body" style="font-size: 13.5px; color: var(--color-text-muted);">
+                Housekeeping staff check-list items:
+                <ul class="task-card-items-list" style="margin-top: 12px;">
+                    <li class="task-card-item"><input type="checkbox" /> <span>Change bedsheets and pillowcovers</span></li>
+                    <li class="task-card-item"><input type="checkbox" /> <span>Vacuum carpet and sweep balcony</span></li>
+                    <li class="task-card-item"><input type="checkbox" /> <span>Sanitize bathroom and replenish towels</span></li>
+                    <li class="task-card-item"><input type="checkbox" /> <span>Refill minibar snack selections</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

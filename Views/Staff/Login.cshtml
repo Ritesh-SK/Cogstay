@@ -1,0 +1,60 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Staff Login";
+}
+
+<div class="split-login-container">
+    <div class="split-login-hero">
+        <div class="split-login-hero-overlay"></div>
+        <div class="split-login-hero-content">
+            <a href="/Home/Index" class="split-login-brand">
+                <i class="fa-solid fa-hotel"></i> CogStay
+            </a>
+            <h1>Operations Console</h1>
+            <p>Welcome to the CogStay Operations Portal. Access specialized workflows for guest reservation tracking, check-ins, cleaning duties, and management oversight.</p>
+        </div>
+    </div>
+    
+    <div class="split-login-panel">
+        <div class="split-login-panel-content">
+            <div class="cogstay-login-card">
+                <div class="cogstay-login-header">
+                    <h2 class="cogstay-login-title">Staff Login</h2>
+                    <p class="cogstay-login-desc">Sign in with your corporate credentials</p>
+                </div>
+                
+                <form action="/Staff/Dashboard" method="get">
+                    <!-- Default to Admin for standard form action -->
+                    <input type="hidden" name="role" value="Admin" />
+
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label">Corporate Email Address</label>
+                        <input type="email" class="cogstay-form-control" placeholder="staff@cogstay.com" required />
+                    </div>
+                    
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label">Security Password</label>
+                        <input type="password" class="cogstay-form-control" placeholder="••••••••" required />
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Access Panel</button>
+                </form>
+                
+                <!-- Quick Demo Links for Staff roles testing -->
+                <div style="border-top: 1px dashed var(--color-border); margin-top: 30px; padding-top: 20px;">
+                    <span style="font-size: 12px; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 12px; text-align: center;">Simulate Staff Roles (Development Preview)</span>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <a href="/Staff/Dashboard?role=FrontDesk" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-clipboard-list" style="color: var(--accent-frontdesk);"></i> Front Desk</a>
+                        <a href="/Staff/Dashboard?role=Housekeeping" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-broom" style="color: var(--accent-housekeeping);"></i> Housekeeping</a>
+                        <a href="/Staff/Dashboard?role=Manager" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-gauge-high" style="color: var(--accent-manager);"></i> Manager</a>
+                        <a href="/Staff/Dashboard?role=Admin" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-chart-pie" style="color: var(--accent-admin);"></i> Admin</a>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="/Home/Index" style="text-align: center; color: var(--color-text-muted); font-size: 14px; font-weight: 500;">
+                <i class="fa-solid fa-arrow-left-long"></i> Back to Homepage
+            </a>
+        </div>
+    </div>
+</div>

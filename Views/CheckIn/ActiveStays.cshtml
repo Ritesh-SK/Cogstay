@@ -1,0 +1,48 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Active Guest Stays";
+    ViewData["Role"] = "FrontDesk";
+}
+
+<div class="table-action-header">
+    <div>
+        <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Active Occupancy Log</h1>
+        <p style="color: var(--color-text-muted);">Monitor currently checked-in guests, active stays, and expected departures.</p>
+    </div>
+    <div>
+        <a href="/CheckIn/CheckIn?role=@ViewData["Role"]" class="btn btn-primary"><i class="fa-solid fa-sign-in-alt"></i> New Guest Check-In</a>
+    </div>
+</div>
+
+<div class="cogstay-card">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-key"></i> Active Guest Stays</h3>
+        <span class="cogstay-badge success">1 Active Guest Stay</span>
+    </div>
+    <div class="cogstay-table-responsive">
+        <table class="cogstay-table">
+            <thead>
+                <tr>
+                    <th>Stay ID</th>
+                    <th>Guest Name</th>
+                    <th>Allotted Room</th>
+                    <th>Check-In Date</th>
+                    <th>Expected Departure</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#STAY-77291</strong></td>
+                    <td>John Henderson</td>
+                    <td>Room 304 (Penthouse Suite)</td>
+                    <td>June 24, 2026 at 2:15 PM</td>
+                    <td>June 28, 2026 at 11:00 AM</td>
+                    <td style="text-align: right;">
+                        <a href="/CheckIn/CheckOut?role=@ViewData["Role"]" class="btn btn-danger btn-sm">Process Check-Out</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

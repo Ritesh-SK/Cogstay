@@ -1,0 +1,54 @@
+@{
+    Layout = null; // Public standalone error card
+    ViewData["Title"] = "Error";
+    var requestId = ViewData["RequestId"]?.ToString() ?? "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error - CogStay</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/style.css" />
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: var(--color-bg);
+            padding: 20px;
+        }
+        .error-wrapper {
+            width: 100%;
+            max-width: 480px;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-wrapper">
+        <div class="cogstay-login-card" style="border-top: 4px solid var(--color-danger); text-align: center;">
+            <div class="cogstay-login-header">
+                <span class="cogstay-badge" style="background-color: var(--color-danger-light); color: var(--color-danger); margin-bottom: 12px; text-transform: uppercase; font-weight: 700;">System Error</span>
+                <h2 class="cogstay-login-title" style="color: var(--color-danger);">An Error Occurred</h2>
+                <p class="cogstay-login-desc">We encountered an issue processing your request on the CogStay platform.</p>
+            </div>
+
+            <div style="background-color: #FAF9F6; border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 15px; margin-bottom: 24px;">
+                <p style="font-size: 13px; color: var(--color-text-muted);">Please contact system administration if this problem persists.</p>
+                @if (!string.IsNullOrEmpty(requestId))
+                {
+                    <p style="font-size: 13px; font-weight: 600; margin-top: 10px; color: var(--color-primary-dark);">
+                        Request ID: <code style="background-color: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-family: monospace;">@requestId</code>
+                    </p>
+                }
+            </div>
+
+            <a href="/Home/Index" class="btn btn-primary" style="width: 100%; background-color: var(--color-primary-dark);">Return to Homepage</a>
+        </div>
+    </div>
+</body>
+</html>

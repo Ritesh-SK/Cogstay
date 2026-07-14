@@ -1,0 +1,37 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Delete Staff Profile";
+    ViewData["Role"] = "Admin";
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Confirm Profile Deletion</h1>
+    <p style="color: var(--color-text-muted);">Permanently remove staff access credentials and corporate profiles.</p>
+</div>
+
+<div class="cogstay-card" style="max-width: 600px; border-top: 4px solid var(--color-danger);">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title" style="color: var(--color-danger);"><i class="fa-solid fa-triangle-exclamation"></i> Warning: Deletion is Permanent</h3>
+    </div>
+    <div class="cogstay-card-body">
+        <p style="font-size: 14.5px; margin-bottom: 20px; line-height: 1.5;">
+            Are you sure you want to delete the corporate profile for <strong>Alexander Pierce</strong> (Front Desk Staff)? This action will clear their credentials and cannot be undone.
+        </p>
+
+        <div style="background-color: #FAF9F6; border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 15px; margin-bottom: 25px; font-size: 13.5px; color: var(--color-text-muted);">
+            <strong>Email:</strong> a.pierce@cogstay.com<br/>
+            <strong>Phone:</strong> +91 98888-77777<br/>
+            <strong>Role:</strong> Front Desk Staff
+        </div>
+
+        <form action="/Staff/Index" method="get">
+            <!-- Retain role query parameter on redirect -->
+            <input type="hidden" name="role" value="@ViewData["Role"]" />
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <a href="/Staff/Index?role=@ViewData["Role"]" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i> Delete Profile</button>
+            </div>
+        </form>
+    </div>
+</div>

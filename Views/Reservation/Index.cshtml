@@ -1,0 +1,65 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Reservations Queue";
+    if (ViewData["Role"] == null)
+    {
+        var roleParam = Context.Request.Query["role"].ToString();
+        ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
+    }
+}
+
+<div class="table-action-header">
+    <div>
+        <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Guest Bookings & Reservations</h1>
+        <p style="color: var(--color-text-muted);">Monitor guest stays, confirm new bookings, and process cancellations.</p>
+    </div>
+    <div>
+        <a href="/Reservation/Create" class="btn btn-primary"><i class="fa-solid fa-calendar-plus"></i> New Reservation</a>
+    </div>
+</div>
+
+<div class="cogstay-card">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-list-check"></i> Reservation Bookings</h3>
+        <span class="cogstay-badge success">2 Bookings Registered</span>
+    </div>
+    <div class="cogstay-table-responsive">
+        <table class="cogstay-table">
+            <thead>
+                <tr>
+                    <th>Reservation ID</th>
+                    <th>Guest Name</th>
+                    <th>Allotted Room</th>
+                    <th>Check-In</th>
+                    <th>Check-Out</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#RES-94021</strong></td>
+                    <td>John Henderson</td>
+                    <td>Room 304 (Penthouse Suite)</td>
+                    <td>June 24, 2026</td>
+                    <td>June 28, 2026</td>
+                    <td><span class="cogstay-badge success">Booked</span></td>
+                    <td style="text-align: right;">
+                        <a href="/Reservation/Details?id=94021" class="btn btn-secondary btn-sm">Details</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#RES-95843</strong></td>
+                    <td>Sarah Jenkins</td>
+                    <td>Room 205 (Deluxe Room)</td>
+                    <td>July 22, 2026</td>
+                    <td>July 26, 2026</td>
+                    <td><span class="cogstay-badge success">Booked</span></td>
+                    <td style="text-align: right;">
+                        <a href="/Reservation/Details?id=95843" class="btn btn-secondary btn-sm">Details</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

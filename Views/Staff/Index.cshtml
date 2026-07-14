@@ -1,0 +1,81 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Staff Management";
+    ViewData["Role"] = "Admin";
+}
+
+<div class="table-action-header">
+    <div>
+        <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Corporate Staff Directory</h1>
+        <p style="color: var(--color-text-muted);">Manage corporate staff profiles, roles, and accessibility permissions.</p>
+    </div>
+    <div>
+        <a href="/Staff/Create?role=@ViewData["Role"]" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Add Staff Member</a>
+    </div>
+</div>
+
+<div class="cogstay-card">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-users"></i> CogStay Staff Members</h3>
+        <span class="cogstay-badge success">4 Staff Profiles</span>
+    </div>
+    <div class="cogstay-table-responsive">
+        <table class="cogstay-table">
+            <thead>
+                <tr>
+                    <th>Staff Name</th>
+                    <th>Email Address</th>
+                    <th>Phone Number</th>
+                    <th>Assigned Role</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Alexander Pierce</strong></td>
+                    <td>a.pierce@cogstay.com</td>
+                    <td>+91 98888-77777</td>
+                    <td><span class="cogstay-badge info">Front Desk Staff</span></td>
+                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                        <a href="/Staff/Details?id=1&role=@ViewData["Role"]" class="btn btn-secondary btn-sm">View</a>
+                        <a href="/Staff/Edit?id=1&role=@ViewData["Role"]" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-user-pen"></i> Update</a>
+                        <a href="/Staff/Delete?id=1&role=@ViewData["Role"]" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Jane Henderson</strong></td>
+                    <td>j.henderson@cogstay.com</td>
+                    <td>+91 98888-66666</td>
+                    <td><span class="cogstay-badge success">Housekeeping Staff</span></td>
+                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                        <a href="/Staff/Details?id=2&role=@ViewData["Role"]" class="btn btn-secondary btn-sm">View</a>
+                        <a href="/Staff/Edit?id=2&role=@ViewData["Role"]" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-user-pen"></i> Update</a>
+                        <a href="/Staff/Delete?id=2&role=@ViewData["Role"]" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Vikram Malhotra</strong></td>
+                    <td>v.malhotra@cogstay.com</td>
+                    <td>+91 97777-55555</td>
+                    <td><span class="cogstay-badge admin" style="background-color: rgba(31, 58, 95, 0.08); color: var(--color-primary);">Manager</span></td>
+                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                        <a href="/Staff/Details?id=3&role=@ViewData["Role"]" class="btn btn-secondary btn-sm">View</a>
+                        <a href="/Staff/Edit?id=3&role=@ViewData["Role"]" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-user-pen"></i> Update</a>
+                        <a href="/Staff/Delete?id=3&role=@ViewData["Role"]" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Admin Administrator</strong></td>
+                    <td>admin@cogstay.com</td>
+                    <td>+91 91111-22222</td>
+                    <td><span class="cogstay-badge admin" style="background-color: rgba(107, 63, 160, 0.08); color: var(--accent-admin);">Admin</span></td>
+                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                        <a href="/Staff/Details?id=4&role=@ViewData["Role"]" class="btn btn-secondary btn-sm">View</a>
+                        <a href="/Staff/Edit?id=4&role=@ViewData["Role"]" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-user-pen"></i> Update</a>
+                        <a href="/Staff/Delete?id=4&role=@ViewData["Role"]" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

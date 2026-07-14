@@ -1,0 +1,59 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Create Reservation";
+    if (ViewData["Role"] == null)
+    {
+        var roleParam = Context.Request.Query["role"].ToString();
+        ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
+    }
+}
+
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Create New Guest Booking</h1>
+    <p style="color: var(--color-text-muted);">Fill in guest details and select dates to reserve a room allotment.</p>
+</div>
+
+<div class="cogstay-card" style="max-width: 800px;">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-calendar-plus"></i> Booking Reservation Form</h3>
+    </div>
+    <div class="cogstay-card-body">
+        <form action="/Reservation/Index" method="get">
+            <div class="cogstay-form-group">
+                <label class="cogstay-form-label">Guest Name</label>
+                <input type="text" class="cogstay-form-control" placeholder="E.g., Jane Smith" required />
+            </div>
+
+            <div class="cogstay-form-row">
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label">Check-In Date</label>
+                    <input type="date" class="cogstay-form-control" required />
+                </div>
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label">Check-Out Date</label>
+                    <input type="date" class="cogstay-form-control" required />
+                </div>
+            </div>
+
+            <div class="cogstay-form-row">
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label">Allot Room Number</label>
+                    <select class="cogstay-form-control" required>
+                        <option value="101">Room 101 - Classic Superior King (₹11,200/night)</option>
+                        <option value="205" selected>Room 205 - Deluxe Executive Room (₹14,400/night)</option>
+                        <option value="304">Room 304 - Luxury Penthouse Suite (₹28,000/night)</option>
+                    </select>
+                </div>
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label">Number of Guests</label>
+                    <input type="number" class="cogstay-form-control" min="1" max="4" value="2" required />
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <a href="/Reservation/Index" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create Reservation</button>
+            </div>
+        </form>
+    </div>
+</div>

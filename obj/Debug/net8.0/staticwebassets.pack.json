@@ -1,0 +1,85 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\css\\admin\\admin.css",
+      "PackagePath": "staticwebassets\\css\\admin\\admin.css"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\css\\customer\\customer.css",
+      "PackagePath": "staticwebassets\\css\\customer\\customer.css"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\css\\frontdesk\\frontdesk.css",
+      "PackagePath": "staticwebassets\\css\\frontdesk\\frontdesk.css"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\css\\home.css",
+      "PackagePath": "staticwebassets\\css\\home.css"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\css\\housekeeping\\housekeeping.css",
+      "PackagePath": "staticwebassets\\css\\housekeeping\\housekeeping.css"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\css\\manager\\manager.css",
+      "PackagePath": "staticwebassets\\css\\manager\\manager.css"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\css\\staff-login.css",
+      "PackagePath": "staticwebassets\\css\\staff-login.css"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\js\\admin\\admin.js",
+      "PackagePath": "staticwebassets\\js\\admin\\admin.js"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\js\\customer\\customer.js",
+      "PackagePath": "staticwebassets\\js\\customer\\customer.js"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\js\\frontdesk\\frontdesk.js",
+      "PackagePath": "staticwebassets\\js\\frontdesk\\frontdesk.js"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\js\\home.js",
+      "PackagePath": "staticwebassets\\js\\home.js"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\js\\housekeeping\\housekeeping.js",
+      "PackagePath": "staticwebassets\\js\\housekeeping\\housekeeping.js"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\js\\manager\\manager.js",
+      "PackagePath": "staticwebassets\\js\\manager\\manager.js"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\Ritesh SK\\Desktop\\CogStay - Hotel Management\\wwwroot\\js\\staff-login.js",
+      "PackagePath": "staticwebassets\\js\\staff-login.js"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.CogStayMVC.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.CogStayMVC.props",
+      "PackagePath": "build\\CogStayMVC.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.CogStayMVC.props",
+      "PackagePath": "buildMultiTargeting\\CogStayMVC.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.CogStayMVC.props",
+      "PackagePath": "buildTransitive\\CogStayMVC.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

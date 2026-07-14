@@ -1,0 +1,275 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Premium Hotel & Guest Experience";
+}
+
+<!-- Public Navigation Header -->
+<nav class="cogstay-public-nav">
+    <a href="/Home/Index" class="cogstay-brand-logo" style="font-family: var(--font-serif); font-size: 28px; font-weight: 700; color: var(--color-primary); display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-hotel" style="color: var(--color-accent);"></i> CogStay
+    </a>
+    
+    <ul class="cogstay-public-links">
+        <li><a href="#about" class="cogstay-public-link">About Us</a></li>
+        <li><a href="#services" class="cogstay-public-link">Services</a></li>
+        <li><a href="#rooms" class="cogstay-public-link">Rooms & Suites</a></li>
+        <li><a href="#portals" class="cogstay-public-link">Portals</a></li>
+        <li><a href="#contact" class="cogstay-public-link">Contact</a></li>
+    </ul>
+
+    <div class="cogstay-public-actions">
+        <a href="/Guest/Login" class="btn btn-secondary">Guest Login</a>
+        <a href="/Staff/Login" class="btn btn-primary">Staff Portal</a>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="cogstay-hero">
+    <div class="cogstay-hero-content">
+        <h1 class="cogstay-hero-title">Welcome to <span>CogStay</span></h1>
+        <p class="cogstay-hero-subtitle">
+            Experience the pinnacle of luxury, convenience, and service. Manage reservations, housekeeping requests, and front desk coordination in real-time on our unified hospitality platform.
+        </p>
+        <div class="cogstay-hero-actions">
+            <a href="/Guest/Login" class="btn btn-accent btn-lg" style="color: var(--color-primary-dark)">
+                <i class="fa-solid fa-calendar-days"></i> Reserve Your Stay
+            </a>
+            <a href="/Staff/Login" class="btn btn-secondary btn-lg" style="color: #ffffff; border-color: #ffffff;">
+                <i class="fa-solid fa-clipboard-user"></i> Operations Portal
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="cogstay-section">
+    <div class="cogstay-section-header">
+        <h2 class="cogstay-section-title">A New Standard of Luxury</h2>
+        <div class="cogstay-section-divider"></div>
+        <p class="cogstay-section-subtitle">
+            Branded as the premier system for guest service management, CogStay integrates guest-facing portals with staff workflow panels to ensure seamless coordination and outstanding hospitality.
+        </p>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="cogstay-section" style="border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+    <div class="cogstay-section-header">
+        <h2 class="cogstay-section-title">Branded Service Experiences</h2>
+        <div class="cogstay-section-divider"></div>
+        <p class="cogstay-section-subtitle">
+            CogStay coordinates teams to provide instant guest gratification, managing maintenance, cleaning, laundry, and dining service operations.
+        </p>
+    </div>
+
+    <div class="cogstay-grid">
+        <div class="cogstay-service-card">
+            <div class="cogstay-service-icon">
+                <i class="fa-solid fa-utensils"></i>
+            </div>
+            <h3 class="cogstay-service-title">In-Room Dining</h3>
+            <p class="cogstay-service-desc">Order breakfast, dinner, or wine selections directly through the Guest Portal, prepared by our signature restaurant chefs.</p>
+        </div>
+
+        <div class="cogstay-service-card">
+            <div class="cogstay-service-icon">
+                <i class="fa-solid fa-spa"></i>
+            </div>
+            <h3 class="cogstay-service-title">Wellness Spa</h3>
+            <p class="cogstay-service-desc">Schedule a session or order essential oils and toiletries directly to your door, fulfilled by our housekeeping staff.</p>
+        </div>
+
+        <div class="cogstay-service-card">
+            <div class="cogstay-service-icon">
+                <i class="fa-solid fa-bell-concierge"></i>
+            </div>
+            <h3 class="cogstay-service-title">Concierge Service</h3>
+            <p class="cogstay-service-desc">Submit special requests (tours, taxi bookings, and event tickets) that get instantly routed to our Front Desk portal.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Rooms Highlight Grid -->
+<section id="rooms" class="cogstay-section" style="background-color: rgba(31, 58, 95, 0.02); border-bottom: 1px solid var(--color-border); max-width: 100%;">
+    <div class="cogstay-section" style="padding-top: 0; padding-bottom: 0;">
+        <div class="cogstay-section-header">
+            <h2 class="cogstay-section-title">Our Premium Rooms</h2>
+            <div class="cogstay-section-divider"></div>
+            <p class="cogstay-section-subtitle">
+                Explore our meticulously designed spaces and premium amenities. Make a reservation directly through our Guest Portal.
+            </p>
+        </div>
+
+        <div class="cogstay-grid">
+            <!-- Room 1 -->
+            <div class="cogstay-room-card">
+                <div class="cogstay-room-image-container">
+                    <img class="cogstay-room-card-img" src="/images/rooms/room_deluxe.png" alt="Deluxe Executive Room" />
+                    <span class="cogstay-room-badge"><i class="fa-solid fa-star"></i> Popular</span>
+                </div>
+                <div class="cogstay-room-body">
+                    <h3 class="cogstay-room-title">Deluxe Executive Room</h3>
+                    <p class="cogstay-room-desc">Perfect balance of design and comfort. Includes high speed internet, writing desk, and city views.</p>
+                    <div class="cogstay-room-chips">
+                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-wifi"></i> Free Wifi</span>
+                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-tv"></i> Smart TV</span>
+                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-coffee"></i> Espresso</span>
+                    </div>
+                    <div class="cogstay-room-footer">
+                        <div class="cogstay-room-price">₹14,400 <span>/ night</span></div>
+                        <a href="/Guest/Login" class="btn-reserve">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room 2 -->
+            <div class="cogstay-room-card">
+                <div class="cogstay-room-image-container">
+                    <img class="cogstay-room-card-img" src="/images/rooms/room_suite.png" alt="Luxury Penthouse Suite" />
+                    <span class="cogstay-room-badge"><i class="fa-solid fa-crown"></i> Exclusive</span>
+                </div>
+                <div class="cogstay-room-body">
+                    <h3 class="cogstay-room-title">Luxury Penthouse Suite</h3>
+                    <p class="cogstay-room-desc">Spacious layout with a king-sized master bedroom, separate lounge, marble bath, and panoramic view.</p>
+                    <div class="cogstay-room-chips">
+                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-wifi"></i> Free Wifi</span>
+                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-hot-tub-person"></i> Hot Tub</span>
+                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-wine-glass"></i> Minibar</span>
+                    </div>
+                    <div class="cogstay-room-footer">
+                        <div class="cogstay-room-price">₹28,000 <span>/ night</span></div>
+                        <a href="/Guest/Login" class="btn-reserve">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room 3 -->
+            <div class="cogstay-room-card">
+                <div class="cogstay-room-image-container">
+                    <img class="cogstay-room-card-img" src="/images/rooms/room_standard.png" alt="Classic Superior King" />
+                    <span class="cogstay-room-badge"><i class="fa-solid fa-bed"></i> Classic</span>
+                </div>
+                <div class="cogstay-room-body">
+                    <h3 class="cogstay-room-title">Classic Superior King</h3>
+                    <p class="cogstay-room-desc">Warm textures and traditional hospitality. Features garden vistas, private balcony, and plush beddings.</p>
+                    <div class="cogstay-room-chips">
+                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-wifi"></i> Free Wifi</span>
+                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-martini-glass"></i> Room Bar</span>
+                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-snowflake"></i> AC</span>
+                    </div>
+                    <div class="cogstay-room-footer">
+                        <div class="cogstay-room-price">₹11,200 <span>/ night</span></div>
+                        <a href="/Guest/Login" class="btn-reserve">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Portals / Login Options Section -->
+<section id="portals" class="cogstay-section">
+    <div class="cogstay-section-header">
+        <h2 class="cogstay-section-title">Access Our Portals</h2>
+        <div class="cogstay-section-divider"></div>
+        <p class="cogstay-section-subtitle">
+            Log in to manage your stay as a guest, or access staff systems to coordinate operations.
+        </p>
+    </div>
+
+    <div class="grid-container grid-cols-2" style="max-width: 900px; margin: 0 auto;">
+        <!-- Guest Portal Card -->
+        <div class="cogstay-card settings-section-card" style="text-align: center; border-bottom: 4px solid var(--accent-customer);">
+            <div class="cogstay-card-body" style="padding: 40px 30px;">
+                <div class="cogstay-stat-icon" style="background-color: rgba(200, 160, 77, 0.08); color: var(--color-accent); width: 64px; height: 64px; font-size: 24px; margin: 0 auto 20px;">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h3 style="font-family: var(--font-serif); font-size: 22px; color: var(--color-primary-dark); margin-bottom: 12px;">Guest Portal</h3>
+                <p style="color: var(--color-text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5;">
+                    Reserve rooms, view active stay details, request housekeeping services, make payments, and view billing invoices.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="/Guest/Login" class="btn btn-accent" style="color: var(--color-primary-dark);">Guest Login</a>
+                    <a href="/Guest/Register" style="color: var(--color-primary); font-size: 13.5px; font-weight: 600; text-decoration: underline;">New guest? Register here</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Portal Card -->
+        <div class="cogstay-card settings-section-card" style="text-align: center; border-bottom: 4px solid var(--color-primary);">
+            <div class="cogstay-card-body" style="padding: 40px 30px;">
+                <div class="cogstay-stat-icon" style="background-color: rgba(31, 58, 95, 0.08); color: var(--color-primary); width: 64px; height: 64px; font-size: 24px; margin: 0 auto 20px;">
+                    <i class="fa-solid fa-clipboard-user"></i>
+                </div>
+                <h3 style="font-family: var(--font-serif); font-size: 22px; color: var(--color-primary-dark); margin-bottom: 12px;">Staff Portal</h3>
+                <p style="color: var(--color-text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5;">
+                    Access operations panels for Front Desk operations, Housekeeping schedules, Manager oversight, and Administration.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="/Staff/Login" class="btn btn-primary">Staff Login</a>
+                    <span style="color: var(--color-text-muted); font-size: 13.5px; font-weight: 500;">Staff registration is not available</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="cogstay-section" style="border-top: 1px solid var(--color-border);">
+    <div class="cogstay-section-header">
+        <h2 class="cogstay-section-title">Contact Us</h2>
+        <div class="cogstay-section-divider"></div>
+        <p class="cogstay-section-subtitle">
+            Get in touch with our team for inquiries, feedback, or custom accommodation bookings.
+        </p>
+    </div>
+
+    <div class="grid-container grid-cols-2" style="gap: 40px;">
+        <div class="cogstay-card">
+            <div class="cogstay-card-header">
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-envelope"></i> Send a Message</h3>
+            </div>
+            <div class="cogstay-card-body">
+                <form action="/Home/Index" method="post">
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label">Full Name</label>
+                        <input type="text" class="cogstay-form-control" placeholder="Jane Doe" required />
+                    </div>
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label">Email Address</label>
+                        <input type="email" class="cogstay-form-control" placeholder="jane@example.com" required />
+                    </div>
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label">Message</label>
+                        <textarea class="cogstay-form-control" rows="4" placeholder="Your inquiry..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Message</button>
+                </form>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+            <div>
+                <h4 style="font-family: var(--font-serif); font-size: 20px; color: var(--color-primary-dark); margin-bottom: 8px;">Address</h4>
+                <p style="color: var(--color-text-muted); font-size: 14px;"><i class="fa-solid fa-map-pin"></i> 102 Luxury Boulevard, hospitality district, India</p>
+            </div>
+            <div>
+                <h4 style="font-family: var(--font-serif); font-size: 20px; color: var(--color-primary-dark); margin-bottom: 8px;">Phone Number</h4>
+                <p style="color: var(--color-text-muted); font-size: 14px;"><i class="fa-solid fa-phone"></i> +91 1800-400-001</p>
+            </div>
+            <div>
+                <h4 style="font-family: var(--font-serif); font-size: 20px; color: var(--color-primary-dark); margin-bottom: 8px;">Email Inquiries</h4>
+                <p style="color: var(--color-text-muted); font-size: 14px;"><i class="fa-solid fa-envelope"></i> reservations@cogstay.com</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="cogstay-footer">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; align-items: center;">
+        <span style="font-family: var(--font-serif); font-size: 20px; font-weight: 700; color: var(--color-primary-dark);">CogStay Hospitality</span>
+        <p style="font-size: 13px; color: var(--color-text-muted);">Unified reservation and management system for five-star hotel operations.</p>
+        <p style="font-size: 12px; color: var(--color-text-muted); margin-top: 10px;">&copy; 2026 CogStay. All rights reserved.</p>
+    </div>
+</footer>
