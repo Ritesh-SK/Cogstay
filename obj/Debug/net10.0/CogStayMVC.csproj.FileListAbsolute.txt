@@ -203,3 +203,4 @@ C:\Users\farha\Downloads\CogStay---Project-Main\CogStay---Project-Main\bin\Debug
 C:\Users\farha\Downloads\CogStay---Project-Main\CogStay---Project-Main\bin\Debug\net10.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\farha\Downloads\CogStay---Project-Main\CogStay---Project-Main\bin\Debug\net10.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\farha\Downloads\CogStay---Project-Main\CogStay---Project-Main\obj\Debug\net10.0\CogStayMVC.csproj.Up2Date
+C:\Users\farha\Downloads\CogStay---Project-Main\CogStay---Project-Main\obj\Debug\net10.0\CogStayMVC.sourcelink.json
