@@ -1,3 +1,5 @@
+@model CogStayMVC.DTOs.CreateStaffDTO
+@using CogStayMVC.Enums
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Add Staff Member";
@@ -14,35 +16,44 @@
         <h3 class="cogstay-card-title"><i class="fa-solid fa-user-plus"></i> Staff Enrollment Form</h3>
     </div>
     <div class="cogstay-card-body">
-        <form action="/Staff/Index" method="get">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
             <div class="cogstay-form-group">
-                <label class="cogstay-form-label">Full Name</label>
-                <input type="text" class="cogstay-form-control" placeholder="Jane Doe" required />
+                <label class="cogstay-form-label" asp-for="FullName">Full Name</label>
+                <input asp-for="FullName" class="cogstay-form-control" placeholder="Jane Doe" required />
+                <span asp-validation-for="FullName" class="text-danger"></span>
             </div>
 
             <div class="cogstay-form-row">
                 <div class="cogstay-form-group">
-                    <label class="cogstay-form-label">Corporate Email Address</label>
-                    <input type="email" class="cogstay-form-control" placeholder="j.doe@cogstay.com" required />
+                    <label class="cogstay-form-label" asp-for="Email">Corporate Email Address</label>
+                    <input asp-for="Email" type="email" class="cogstay-form-control" placeholder="j.doe@cogstay.com" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="cogstay-form-group">
-                    <label class="cogstay-form-label">Contact Phone Number</label>
-                    <input type="tel" class="cogstay-form-control" placeholder="+91 99999-77777" required />
+                    <label class="cogstay-form-label" asp-for="PhoneNumber">Contact Phone Number</label>
+                    <input asp-for="PhoneNumber" type="tel" class="cogstay-form-control" placeholder="+91 99999-77777" required />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
             </div>
 
-            <div class="cogstay-form-group">
-                <label class="cogstay-form-label">Assigned Role</label>
-                <select class="cogstay-form-control" required>
-                    <option value="FrontDesk">Front Desk Staff</option>
-                    <option value="Housekeeping">Housekeeping Staff</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Admin">Admin</option>
-                </select>
+            <div class="cogstay-form-row">
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label" asp-for="Password">Initial Access Password</label>
+                    <input asp-for="Password" type="password" class="cogstay-form-control" placeholder="••••••••" required />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label" asp-for="Role">Assigned Role</label>
+                    <select asp-for="Role" asp-items="Html.GetEnumSelectList<StaffRole>()" class="cogstay-form-control" required></select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
             </div>
 
             <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
-                <a href="/Staff/Index" class="btn btn-secondary">Cancel</a>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Enroll Staff Member</button>
             </div>
         </form>

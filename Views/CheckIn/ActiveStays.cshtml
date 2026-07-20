@@ -1,3 +1,4 @@
+@model IEnumerable<CogStayMVC.DTOs.StayRecordResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Active Guest Stays";
@@ -10,14 +11,23 @@
         <p style="color: var(--color-text-muted);">Monitor currently checked-in guests, active stays, and expected departures.</p>
     </div>
     <div>
-        <a href="/CheckIn/CheckIn?role=@ViewData["Role"]" class="btn btn-primary"><i class="fa-solid fa-sign-in-alt"></i> New Guest Check-In</a>
+        <a asp-action="CheckIn" class="btn btn-primary"><i class="fa-solid fa-sign-in-alt"></i> New Guest Check-In</a>
     </div>
 </div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
 <div class="cogstay-card">
     <div class="cogstay-card-header">
         <h3 class="cogstay-card-title"><i class="fa-solid fa-key"></i> Active Guest Stays</h3>
-        <span class="cogstay-badge success">1 Active Guest Stay</span>
+        <span class="cogstay-badge success">@Model.Count() Active Guest Stays</span>
     </div>
     <div class="cogstay-table-responsive">
         <table class="cogstay-table">
@@ -27,21 +37,40 @@
                     <th>Guest Name</th>
                     <th>Allotted Room</th>
                     <th>Check-In Date</th>
-                    <th>Expected Departure</th>
+                    <th>Check-Out Date</th>
                     <th style="text-align: right;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><strong>#STAY-77291</strong></td>
-                    <td>John Henderson</td>
-                    <td>Room 304 (Penthouse Suite)</td>
-                    <td>June 24, 2026 at 2:15 PM</td>
-                    <td>June 28, 2026 at 11:00 AM</td>
-                    <td style="text-align: right;">
-                        <a href="/CheckIn/CheckOut?role=@ViewData["Role"]" class="btn btn-danger btn-sm">Process Check-Out</a>
-                    </td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--color-text-muted);">No active stay records found.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><strong>#STAY-@item.StayId</strong></td>
+                            <td>@item.GuestName</td>
+                            <td>Room @item.RoomNumber</td>
+                            <td>@(item.ActualCheckIn.HasValue ? item.ActualCheckIn.Value.ToString("MMM dd, yyyy HH:mm") : "N/A")</td>
+                            <td>@(item.ActualCheckOut.HasValue ? item.ActualCheckOut.Value.ToString("MMM dd, yyyy HH:mm") : "Active Stay")</td>
+                            <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                                @if (!item.ActualCheckOut.HasValue)
+                                {
+                                    <a asp-action="CheckOut" asp-route-id="@item.StayId" class="btn btn-danger btn-sm">Process Check-Out</a>
+                                }
+                                <form asp-action="Delete" asp-route-id="@item.StayId" method="post" style="display:inline;" onsubmit="return confirm('Delete stay record #STAY-@item.StayId?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-secondary btn-sm" style="border-color: var(--color-danger); color: var(--color-danger);">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

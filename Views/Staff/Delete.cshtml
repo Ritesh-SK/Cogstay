@@ -1,3 +1,4 @@
+@model CogStayMVC.DTOs.StaffResponseDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Delete Staff Profile";
@@ -15,21 +16,19 @@
     </div>
     <div class="cogstay-card-body">
         <p style="font-size: 14.5px; margin-bottom: 20px; line-height: 1.5;">
-            Are you sure you want to delete the corporate profile for <strong>Alexander Pierce</strong> (Front Desk Staff)? This action will clear their credentials and cannot be undone.
+            Are you sure you want to delete the corporate profile for <strong>@Model.FullName</strong> (@Model.Role)? This action will clear their credentials and cannot be undone.
         </p>
 
         <div style="background-color: #FAF9F6; border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 15px; margin-bottom: 25px; font-size: 13.5px; color: var(--color-text-muted);">
-            <strong>Email:</strong> a.pierce@cogstay.com<br/>
-            <strong>Phone:</strong> +91 98888-77777<br/>
-            <strong>Role:</strong> Front Desk Staff
+            <strong>Email:</strong> @Model.Email<br/>
+            <strong>Phone:</strong> @Model.PhoneNumber<br/>
+            <strong>Role:</strong> @Model.Role
         </div>
 
-        <form action="/Staff/Index" method="get">
-            <!-- Retain role query parameter on redirect -->
-            <input type="hidden" name="role" value="@ViewData["Role"]" />
-            
+        <form asp-action="Delete" asp-route-id="@Model.StaffId" method="post">
+            @Html.AntiForgeryToken()
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <a href="/Staff/Index?role=@ViewData["Role"]" class="btn btn-secondary">Cancel</a>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i> Delete Profile</button>
             </div>
         </form>

@@ -1,59 +1,43 @@
+@model CogStayMVC.DTOs.CheckOutDTO
+@using CogStayMVC.DTOs
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Guest Check-Out";
     ViewData["Role"] = "FrontDesk";
+    var stays = ViewBag.Stays as IEnumerable<StayRecordResponseDTO> ?? Enumerable.Empty<StayRecordResponseDTO>();
+    var activeStays = stays.Where(s => !s.ActualCheckOut.HasValue).ToList();
 }
 
 <div style="margin-bottom: 30px;">
     <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Process Guest Departure</h1>
-    <p style="color: var(--color-text-muted);">Clear keycard databases, log departure timestamps, and generate invoices for departures.</p>
+    <p style="color: var(--color-text-muted);">Initiate checkout and proceed to billing payment settlement.</p>
 </div>
 
-<div class="booking-checkout-container">
-    <div class="cogstay-card">
-        <div class="cogstay-card-header">
-            <h3 class="cogstay-card-title"><i class="fa-solid fa-sign-out-alt"></i> Guest Check-Out Registration</h3>
-        </div>
-        <div class="cogstay-card-body">
-            <form action="/CheckIn/ActiveStays" method="get">
-                <div class="cogstay-form-group">
-                    <label class="cogstay-form-label">Select Checked-In Guest Stay Record</label>
-                    <select class="cogstay-form-control" required>
-                        <option value="1">John Henderson (Room 304 - Penthouse Suite)</option>
-                    </select>
-                </div>
-
-                <div class="cogstay-form-row">
-                    <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Actual Check-Out Date & Time</label>
-                        <input type="datetime-local" class="cogstay-form-control" value="2026-07-14T11:00" required />
-                    </div>
-                    <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Key Status on Return</label>
-                        <select class="cogstay-form-control" required>
-                            <option value="Cleared">Returned & Cleared</option>
-                            <option value="Lost">Lost Key Card (Extra Charge)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
-                    <a href="/Staff/Dashboard?role=FrontDesk" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Process Check-Out & Finalize Bill</button>
-                </div>
-            </form>
-        </div>
+<div class="cogstay-card" style="max-width: 800px;">
+    <div class="cogstay-card-header">
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-sign-out-alt"></i> Select Guest Stay for Departure</h3>
     </div>
+    <div class="cogstay-card-body">
+        <form asp-action="CheckOut" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-    <div>
-        <div class="cogstay-card">
-            <div class="cogstay-card-header">
-                <h3 class="cogstay-card-title"><i class="fa-solid fa-money-bill-transfer"></i> Billing Quick Action</h3>
+            <div class="cogstay-form-group">
+                <label class="cogstay-form-label" asp-for="StayId">Active Guest Stay</label>
+                <select asp-for="StayId" class="cogstay-form-control" required>
+                    <option value="">-- Select Active Stay --</option>
+                    @foreach (var s in activeStays)
+                    {
+                        <option value="@s.StayId">#STAY-@s.StayId - @s.GuestName (Room @s.RoomNumber)</option>
+                    }
+                </select>
+                <span asp-validation-for="StayId" class="text-danger"></span>
             </div>
-            <div class="cogstay-card-body" style="font-size: 13.5px; line-height: 1.5; color: var(--color-text-muted);">
-                Before checking out, ensure housekeeping tasks are completed and all minibar/dining orders are billed to the invoice.
-                <a href="/Billing/Create" class="btn btn-secondary btn-sm" style="width: 100%; margin-top: 15px;"><i class="fa-solid fa-file-invoice-dollar"></i> Generate Invoice First</a>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <a asp-action="ActiveStays" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Proceed to Billing & Checkout</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>

@@ -1,3 +1,4 @@
+@model IEnumerable<CogStayMVC.DTOs.ReservationResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Reservations Queue";
@@ -14,14 +15,23 @@
         <p style="color: var(--color-text-muted);">Monitor guest stays, confirm new bookings, and process cancellations.</p>
     </div>
     <div>
-        <a href="/Reservation/Create" class="btn btn-primary"><i class="fa-solid fa-calendar-plus"></i> New Reservation</a>
+        <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-calendar-plus"></i> New Reservation</a>
     </div>
 </div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
 <div class="cogstay-card">
     <div class="cogstay-card-header">
         <h3 class="cogstay-card-title"><i class="fa-solid fa-list-check"></i> Reservation Bookings</h3>
-        <span class="cogstay-badge success">2 Bookings Registered</span>
+        <span class="cogstay-badge success">@Model.Count() Bookings Registered</span>
     </div>
     <div class="cogstay-table-responsive">
         <table class="cogstay-table">
@@ -33,32 +43,51 @@
                     <th>Check-In</th>
                     <th>Check-Out</th>
                     <th>Status</th>
-                    <th style="text-align: right;">Action</th>
+                    <th style="text-align: right;">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><strong>#RES-94021</strong></td>
-                    <td>John Henderson</td>
-                    <td>Room 304 (Penthouse Suite)</td>
-                    <td>June 24, 2026</td>
-                    <td>June 28, 2026</td>
-                    <td><span class="cogstay-badge success">Booked</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Reservation/Details?id=94021" class="btn btn-secondary btn-sm">Details</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>#RES-95843</strong></td>
-                    <td>Sarah Jenkins</td>
-                    <td>Room 205 (Deluxe Room)</td>
-                    <td>July 22, 2026</td>
-                    <td>July 26, 2026</td>
-                    <td><span class="cogstay-badge success">Booked</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Reservation/Details?id=95843" class="btn btn-secondary btn-sm">Details</a>
-                    </td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--color-text-muted);">No reservations found. Create a reservation to get started.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        string badgeClass = item.ReservationStatus switch
+                        {
+                            CogStayMVC.Enums.ReservationStatus.Booked => "success",
+                            CogStayMVC.Enums.ReservationStatus.Cancelled => "danger",
+                            _ => "secondary"
+                        };
+
+                        <tr>
+                            <td><strong>#RES-@item.ReservationId</strong></td>
+                            <td>@item.GuestName</td>
+                            <td>Room @item.RoomNumber (@item.RoomType)</td>
+                            <td>@item.CheckInDate.ToString("MMM dd, yyyy")</td>
+                            <td>@item.CheckOutDate.ToString("MMM dd, yyyy")</td>
+                            <td><span class="cogstay-badge @badgeClass">@item.ReservationStatus</span></td>
+                            <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                                <a asp-action="Details" asp-route-id="@item.ReservationId" class="btn btn-secondary btn-sm">Details</a>
+                                @if (item.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@item.ReservationId" method="post" style="display:inline;" onsubmit="return confirm('Cancel reservation #RES-@item.ReservationId?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);">Cancel</button>
+                                    </form>
+                                }
+                                <form asp-action="Delete" asp-route-id="@item.ReservationId" method="post" style="display:inline;" onsubmit="return confirm('Delete reservation #RES-@item.ReservationId?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-secondary btn-sm" style="border-color: var(--color-danger); color: var(--color-danger);">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

@@ -1,6 +1,7 @@
+@model IEnumerable<CogStayMVC.DTOs.BillingResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Billing History";
+    ViewData["Title"] = "Billing History Archive";
     if (ViewData["Role"] == null)
     {
         var roleParam = Context.Request.Query["role"].ToString();
@@ -11,43 +12,52 @@
 <div class="table-action-header">
     <div>
         <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Billing History Archive</h1>
-        <p style="color: var(--color-text-muted);">View records of all paid invoices and historical stay billing transactions.</p>
+        <p style="color: var(--color-text-muted);">View all processed payments and completed invoice records.</p>
     </div>
     <div>
-        <a href="/Billing/Index" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> Active Invoices List</a>
+        <a asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back to Active Billing</a>
     </div>
 </div>
 
 <div class="cogstay-card">
     <div class="cogstay-card-header">
-        <h3 class="cogstay-card-title"><i class="fa-solid fa-clock-rotate-left"></i> Paid Invoices Statement Log</h3>
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-clock-rotate-left"></i> Invoices Log</h3>
+        <span class="cogstay-badge success">@Model.Count() Total Invoices</span>
     </div>
     <div class="cogstay-table-responsive">
         <table class="cogstay-table">
             <thead>
                 <tr>
                     <th>Bill ID</th>
-                    <th>Guest Stay Account</th>
-                    <th>Amount Paid</th>
+                    <th>Guest Name</th>
+                    <th>Room Number</th>
+                    <th>Total Amount</th>
                     <th>Payment Status</th>
                     <th>Remarks</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><strong>#BILL-00912</strong></td>
-                    <td>Alexander Pierce (Room 101)</td>
-                    <td>₹37,632.00</td>
-                    <td><span class="cogstay-badge success">Paid</span></td>
-                    <td>Room charge for 3 nights, no extra service bills.</td>
-                </tr>
-                <tr>
-                    <td><strong>#BILL-00894</strong></td>
-                    <td>Jane Henderson (Room 205)</td>
-                    <td>₹68,000.00</td>
-                    <td><span class="cogstay-badge success">Paid</span></td>
-                    <td>Room charge for 4 nights, wellness spa therapy request bill.</td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--color-text-muted);">No invoice history records found.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        string badgeClass = item.PaymentStatus == CogStayMVC.Enums.PaymentStatus.Paid ? "success" : "danger";
+                        <tr>
+                            <td><strong>#BILL-@item.BillId</strong></td>
+                            <td>@item.GuestName</td>
+                            <td>Room @item.RoomNumber</td>
+                            <td>@item.TotalAmount.ToString("C")</td>
+                            <td><span class="cogstay-badge @badgeClass">@item.PaymentStatus</span></td>
+                            <td>@item.Remarks</td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

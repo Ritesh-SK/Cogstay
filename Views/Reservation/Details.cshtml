@@ -1,3 +1,4 @@
+@model CogStayMVC.DTOs.ReservationResponseDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Reservation Details";
@@ -6,6 +7,12 @@
         var roleParam = Context.Request.Query["role"].ToString();
         ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
     }
+    string badgeClass = Model.ReservationStatus switch
+    {
+        CogStayMVC.Enums.ReservationStatus.Booked => "success",
+        CogStayMVC.Enums.ReservationStatus.Cancelled => "danger",
+        _ => "secondary"
+    };
 }
 
 <div style="margin-bottom: 30px;">
@@ -16,47 +23,35 @@
 <div class="booking-checkout-container">
     <div class="cogstay-card">
         <div class="cogstay-card-header">
-            <h3 class="cogstay-card-title"><i class="fa-solid fa-file-invoice"></i> Booking Reference #RES-94021</h3>
-            <span class="cogstay-badge success">Booked</span>
+            <h3 class="cogstay-card-title"><i class="fa-solid fa-file-invoice"></i> Booking Reference #RES-@Model.ReservationId</h3>
+            <span class="cogstay-badge @badgeClass">@Model.ReservationStatus</span>
         </div>
         <div class="cogstay-card-body">
             <div class="grid-container grid-cols-2" style="gap: 15px; margin-bottom: 25px;">
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Guest Profile</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">John Henderson</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.GuestName</p>
                 </div>
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Allotted Room Unit</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Room 304 (Penthouse Suite)</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Room @Model.RoomNumber (@Model.RoomType)</p>
                 </div>
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Expected Check-In</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">June 24, 2026</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.CheckInDate.ToString("MMM dd, yyyy")</p>
                 </div>
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Expected Check-Out</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">June 28, 2026</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.CheckOutDate.ToString("MMM dd, yyyy")</p>
                 </div>
             </div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--color-border); padding-top: 20px;">
-                <a href="/Reservation/Index" class="btn btn-secondary">Back to List</a>
-                <a href="/CheckIn/CheckIn" class="btn btn-primary"><i class="fa-solid fa-sign-in-alt"></i> Process Guest Check-In</a>
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <div class="cogstay-card">
-            <div class="cogstay-card-header">
-                <h3 class="cogstay-card-title"><i class="fa-solid fa-clipboard-user"></i> Status Tracking</h3>
-            </div>
-            <div class="cogstay-card-body" style="font-size: 13.5px; line-height: 1.5; color: var(--color-text-muted);">
-                In Development Mode, booking statuses can be navigated freely:
-                <ul style="margin-top: 10px; margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
-                    <li>Booked (Pending check-in)</li>
-                    <li>Cancelled (Released catalog)</li>
-                </ul>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                @if (Model.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked)
+                {
+                    <a asp-controller="CheckIn" asp-action="CheckIn" class="btn btn-primary"><i class="fa-solid fa-sign-in-alt"></i> Process Guest Check-In</a>
+                }
             </div>
         </div>
     </div>

@@ -1,3 +1,5 @@
+@model CogStayMVC.DTOs.CreateBillDTO
+@using CogStayMVC.DTOs
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Generate Invoice";
@@ -6,6 +8,7 @@
         var roleParam = Context.Request.Query["role"].ToString();
         ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
     }
+    var activeStays = ViewBag.ActiveStays as IEnumerable<StayRecordResponseDTO> ?? Enumerable.Empty<StayRecordResponseDTO>();
 }
 
 <div style="margin-bottom: 30px;">
@@ -18,33 +21,39 @@
         <h3 class="cogstay-card-title"><i class="fa-solid fa-file-invoice"></i> Compile Statement Details</h3>
     </div>
     <div class="cogstay-card-body">
-        <form action="/Billing/Index" method="get">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
             <div class="cogstay-form-group">
-                <label class="cogstay-form-label">Select Active Guest Stay Account</label>
-                <select class="cogstay-form-control" required>
-                    <option value="1">John Henderson (Room 304 - Penthouse Suite)</option>
+                <label class="cogstay-form-label" asp-for="StayId">Select Active Guest Stay Account</label>
+                <select asp-for="StayId" class="cogstay-form-control" required>
+                    <option value="">-- Select Stay Record --</option>
+                    @foreach (var s in activeStays)
+                    {
+                        <option value="@s.StayId">#STAY-@s.StayId - @s.GuestName (Room @s.RoomNumber)</option>
+                    }
                 </select>
+                <span asp-validation-for="StayId" class="text-danger"></span>
             </div>
 
             <div class="cogstay-form-row">
                 <div class="cogstay-form-group">
-                    <label class="cogstay-form-label">Total Room Stay Charge (₹)</label>
-                    <input type="number" class="cogstay-form-control" value="112000.00" required />
-                </div>
-                <div class="cogstay-form-group">
-                    <label class="cogstay-form-label">Minibar & Room Service Dining (₹)</label>
-                    <input type="number" class="cogstay-form-control" value="12000.00" required />
+                    <label class="cogstay-form-label" asp-for="TotalAmount">Total Amount (₹) (Leave 0 to calculate automatically)</label>
+                    <input asp-for="TotalAmount" type="number" step="0.01" class="cogstay-form-control" placeholder="0.00" />
+                    <span asp-validation-for="TotalAmount" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="cogstay-form-group">
-                <label class="cogstay-form-label">Remarks / Special Adjustments</label>
-                <input type="text" class="cogstay-form-control" placeholder="E.g., Added extra dry cleaning service fees." value="Minibar snack selections, extra laundry dry-cleaning services." />
+                <label class="cogstay-form-label" asp-for="Remarks">Remarks / Special Adjustments</label>
+                <input asp-for="Remarks" type="text" class="cogstay-form-control" placeholder="E.g., Added extra dry cleaning service fees." />
+                <span asp-validation-for="Remarks" class="text-danger"></span>
             </div>
 
             <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
-                <a href="/Billing/Index" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Generate & Print Invoice</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Generate Invoice</button>
             </div>
         </form>
     </div>

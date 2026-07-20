@@ -1,3 +1,4 @@
+@model IEnumerable<CogStayMVC.DTOs.HousekeepingTaskResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     if (ViewData["Role"] == null)
@@ -14,18 +15,27 @@
         <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Housekeeping & Maintenance Task Board</h1>
         <p style="color: var(--color-text-muted);">Coordinate and monitor room status, cleaning schedules, and service requests.</p>
     </div>
-    @if (role == "Admin" || role == "Manager")
+    @if (role == "Admin" || role == "Manager" || role == "Housekeeping" || role == "FrontDesk")
     {
         <div>
-            <a href="/Housekeeping/Create" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Assign New Cleaning Task</a>
+            <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Assign New Cleaning Task</a>
         </div>
     }
 </div>
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 <div class="cogstay-card">
     <div class="cogstay-card-header">
         <h3 class="cogstay-card-title"><i class="fa-solid fa-spray-can-sparkles"></i> Room Task Queue</h3>
-        <span class="cogstay-badge warning">3 Tasks Active</span>
+        <span class="cogstay-badge warning">@Model.Count() Tasks Active</span>
     </div>
     <div class="cogstay-table-responsive">
         <table class="cogstay-table">
@@ -33,42 +43,44 @@
                 <tr>
                     <th>Room</th>
                     <th>Task Description</th>
-                    <th>Priority</th>
                     <th>Task Status</th>
                     <th style="text-align: right;">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><strong>Room 101</strong></td>
-                    <td>Standard check-out cleaning: sweep, mop, bed linens change, and toiletries refill.</td>
-                    <td><span class="cogstay-badge danger">High</span></td>
-                    <td><span class="cogstay-badge danger">Pending</span></td>
-                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
-                        <a href="/Housekeeping/Details?id=1" class="btn btn-secondary btn-sm">Details</a>
-                        <a href="/Housekeeping/Edit?id=1" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);">Update Status</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Room 304</strong></td>
-                    <td>Deliver requested extra towels and Aromatherapy spa soap set to John Henderson.</td>
-                    <td><span class="cogstay-badge info">Medium</span></td>
-                    <td><span class="cogstay-badge warning">In Progress</span></td>
-                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
-                        <a href="/Housekeeping/Details?id=2" class="btn btn-secondary btn-sm">Details</a>
-                        <a href="/Housekeeping/Edit?id=2" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);">Update Status</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Room 205</strong></td>
-                    <td>AC thermostat replacement in master bedroom suite.</td>
-                    <td><span class="cogstay-badge info">Medium</span></td>
-                    <td><span class="cogstay-badge success">Completed</span></td>
-                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
-                        <a href="/Housekeeping/Details?id=3" class="btn btn-secondary btn-sm">Details</a>
-                        <a href="/Housekeeping/Edit?id=3" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);">Update Status</a>
-                    </td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--color-text-muted);">No housekeeping tasks found.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        string badgeClass = item.TaskStatus switch
+                        {
+                            CogStayMVC.Enums.TaskStatus.Pending => "danger",
+                            CogStayMVC.Enums.TaskStatus.InProgress => "warning",
+                            CogStayMVC.Enums.TaskStatus.Completed => "success",
+                            _ => "secondary"
+                        };
+
+                        <tr>
+                            <td><strong>Room @item.RoomNumber</strong></td>
+                            <td>@item.TaskDescription</td>
+                            <td><span class="cogstay-badge @badgeClass">@item.TaskStatus</span></td>
+                            <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                                <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-secondary btn-sm">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);">Update Status</a>
+                                <form asp-action="Delete" asp-route-id="@item.TaskId" method="post" style="display:inline;" onsubmit="return confirm('Delete this housekeeping task?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-secondary btn-sm" style="border-color: var(--color-danger); color: var(--color-danger);">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

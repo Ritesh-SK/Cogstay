@@ -1,3 +1,4 @@
+@model IEnumerable<CogStayMVC.DTOs.BillingResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Billing Statements";
@@ -6,6 +7,7 @@
         var roleParam = Context.Request.Query["role"].ToString();
         ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
     }
+    var pendingBills = Model.Where(b => b.PaymentStatus == CogStayMVC.Enums.PaymentStatus.Pending).ToList();
 }
 
 <div class="table-action-header">
@@ -14,15 +16,24 @@
         <p style="color: var(--color-text-muted);">Process room charge invoices, record guest payments, and view billing archives.</p>
     </div>
     <div style="display: flex; gap: 10px;">
-        <a href="/Billing/History" class="btn btn-secondary"><i class="fa-solid fa-clock-rotate-left"></i> Billing History Archive</a>
-        <a href="/Billing/Create" class="btn btn-primary"><i class="fa-solid fa-file-invoice"></i> Generate Invoice</a>
+        <a asp-action="History" class="btn btn-secondary"><i class="fa-solid fa-clock-rotate-left"></i> Billing History Archive</a>
+        <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-file-invoice"></i> Generate Invoice</a>
     </div>
 </div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
 <div class="cogstay-card">
     <div class="cogstay-card-header">
         <h3 class="cogstay-card-title"><i class="fa-solid fa-receipt"></i> Pending Guest Invoices</h3>
-        <span class="cogstay-badge danger">1 Pending Settlement</span>
+        <span class="cogstay-badge danger">@pendingBills.Count Pending Settlement</span>
     </div>
     <div class="cogstay-table-responsive">
         <table class="cogstay-table">
@@ -37,16 +48,32 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><strong>#BILL-00924</strong></td>
-                    <td>John Henderson (Room 304)</td>
-                    <td>₹12,000.00</td>
-                    <td><span class="cogstay-badge danger">Pending</span></td>
-                    <td>Minibar snack selections, extra laundry dry-cleaning services.</td>
-                    <td style="text-align: right;">
-                        <a href="/Billing/Payment?id=00924" class="btn btn-primary btn-sm">Process Payment</a>
-                    </td>
-                </tr>
+                @if (!pendingBills.Any())
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--color-text-muted);">No pending invoices found.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in pendingBills)
+                    {
+                        <tr>
+                            <td><strong>#BILL-@item.BillId</strong></td>
+                            <td>@item.GuestName (Room @item.RoomNumber)</td>
+                            <td>@item.TotalAmount.ToString("C")</td>
+                            <td><span class="cogstay-badge danger">@item.PaymentStatus</span></td>
+                            <td>@item.Remarks</td>
+                            <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                                <a asp-action="Payment" asp-route-billId="@item.BillId" class="btn btn-primary btn-sm">Process Payment</a>
+                                <form asp-action="Delete" asp-route-id="@item.BillId" method="post" style="display:inline;" onsubmit="return confirm('Delete bill #BILL-@item.BillId?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-secondary btn-sm" style="border-color: var(--color-danger); color: var(--color-danger);">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

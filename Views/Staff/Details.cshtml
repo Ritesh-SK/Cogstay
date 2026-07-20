@@ -1,3 +1,4 @@
+@model CogStayMVC.DTOs.StaffResponseDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Staff Member Details";
@@ -13,43 +14,38 @@
     <div class="cogstay-card">
         <div class="cogstay-card-header">
             <h3 class="cogstay-card-title"><i class="fa-solid fa-address-card"></i> Staff Information Details</h3>
-            <span class="cogstay-badge info">Active</span>
+            @if (Model.IsActive)
+            {
+                <span class="cogstay-badge success">Active</span>
+            }
+            else
+            {
+                <span class="cogstay-badge danger">Inactive</span>
+            }
         </div>
         <div class="cogstay-card-body">
             <div class="grid-container grid-cols-2" style="gap: 15px; margin-bottom: 25px;">
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Full Name</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Alexander Pierce</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.FullName</p>
                 </div>
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Assigned Role</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Front Desk Staff</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.Role</p>
                 </div>
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Corporate Email</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">a.pierce@cogstay.com</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.Email</p>
                 </div>
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Phone Number</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">+91 98888-77777</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.PhoneNumber</p>
                 </div>
             </div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--color-border); padding-top: 20px;">
-                <a href="/Staff/Index" class="btn btn-secondary">Back to List</a>
-                <a href="/Staff/Edit?id=1" class="btn btn-primary"><i class="fa-solid fa-user-pen"></i> Update Profile</a>
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <div class="profile-header-card" style="background-color: var(--accent-frontdesk); margin-bottom: 20px;">
-            <div style="display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; gap: 15px;">
-                <div class="profile-avatar-large" style="border-color: #ffffff; color: #ffffff;">AP</div>
-                <div>
-                    <h3 style="font-family: var(--font-serif); font-size: 20px; color: #ffffff;">Alexander Pierce</h3>
-                    <span style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px;">Front Desk Operator</span>
-                </div>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <a asp-action="Edit" asp-route-id="@Model.StaffId" class="btn btn-primary"><i class="fa-solid fa-user-pen"></i> Update Profile</a>
             </div>
         </div>
     </div>

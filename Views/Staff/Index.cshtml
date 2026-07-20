@@ -1,3 +1,4 @@
+@model IEnumerable<CogStayMVC.DTOs.StaffResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Staff Management";
@@ -10,14 +11,23 @@
         <p style="color: var(--color-text-muted);">Manage corporate staff profiles, roles, and accessibility permissions.</p>
     </div>
     <div>
-        <a href="/Staff/Create?role=@ViewData["Role"]" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Add Staff Member</a>
+        <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Add Staff Member</a>
     </div>
 </div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
 <div class="cogstay-card">
     <div class="cogstay-card-header">
         <h3 class="cogstay-card-title"><i class="fa-solid fa-users"></i> CogStay Staff Members</h3>
-        <span class="cogstay-badge success">4 Staff Profiles</span>
+        <span class="cogstay-badge success">@Model.Count() Staff Profiles</span>
     </div>
     <div class="cogstay-table-responsive">
         <table class="cogstay-table">
@@ -27,54 +37,44 @@
                     <th>Email Address</th>
                     <th>Phone Number</th>
                     <th>Assigned Role</th>
+                    <th>Status</th>
                     <th style="text-align: right;">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><strong>Alexander Pierce</strong></td>
-                    <td>a.pierce@cogstay.com</td>
-                    <td>+91 98888-77777</td>
-                    <td><span class="cogstay-badge info">Front Desk Staff</span></td>
-                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
-                        <a href="/Staff/Details?id=1&role=@ViewData["Role"]" class="btn btn-secondary btn-sm">View</a>
-                        <a href="/Staff/Edit?id=1&role=@ViewData["Role"]" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-user-pen"></i> Update</a>
-                        <a href="/Staff/Delete?id=1&role=@ViewData["Role"]" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Jane Henderson</strong></td>
-                    <td>j.henderson@cogstay.com</td>
-                    <td>+91 98888-66666</td>
-                    <td><span class="cogstay-badge success">Housekeeping Staff</span></td>
-                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
-                        <a href="/Staff/Details?id=2&role=@ViewData["Role"]" class="btn btn-secondary btn-sm">View</a>
-                        <a href="/Staff/Edit?id=2&role=@ViewData["Role"]" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-user-pen"></i> Update</a>
-                        <a href="/Staff/Delete?id=2&role=@ViewData["Role"]" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Vikram Malhotra</strong></td>
-                    <td>v.malhotra@cogstay.com</td>
-                    <td>+91 97777-55555</td>
-                    <td><span class="cogstay-badge admin" style="background-color: rgba(31, 58, 95, 0.08); color: var(--color-primary);">Manager</span></td>
-                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
-                        <a href="/Staff/Details?id=3&role=@ViewData["Role"]" class="btn btn-secondary btn-sm">View</a>
-                        <a href="/Staff/Edit?id=3&role=@ViewData["Role"]" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-user-pen"></i> Update</a>
-                        <a href="/Staff/Delete?id=3&role=@ViewData["Role"]" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Admin Administrator</strong></td>
-                    <td>admin@cogstay.com</td>
-                    <td>+91 91111-22222</td>
-                    <td><span class="cogstay-badge admin" style="background-color: rgba(107, 63, 160, 0.08); color: var(--accent-admin);">Admin</span></td>
-                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
-                        <a href="/Staff/Details?id=4&role=@ViewData["Role"]" class="btn btn-secondary btn-sm">View</a>
-                        <a href="/Staff/Edit?id=4&role=@ViewData["Role"]" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-user-pen"></i> Update</a>
-                        <a href="/Staff/Delete?id=4&role=@ViewData["Role"]" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
-                    </td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--color-text-muted);">No staff records found. Add your first staff member.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><strong>@item.FullName</strong></td>
+                            <td>@item.Email</td>
+                            <td>@item.PhoneNumber</td>
+                            <td><span class="cogstay-badge info">@item.Role</span></td>
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <span class="cogstay-badge success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="cogstay-badge danger">Inactive</span>
+                                }
+                            </td>
+                            <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                                <a asp-action="Details" asp-route-id="@item.StaffId" class="btn btn-secondary btn-sm">View</a>
+                                <a asp-action="Edit" asp-route-id="@item.StaffId" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-user-pen"></i> Update</a>
+                                <a asp-action="Delete" asp-route-id="@item.StaffId" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>
