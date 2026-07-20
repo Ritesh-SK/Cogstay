@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CogStayMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial_Update : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -115,6 +115,35 @@ namespace CogStayMVC.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Feedbacks",
+                columns: table => new
+                {
+                    FeedbackId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GuestId = table.Column<int>(type: "int", nullable: false),
+                    ReservationId = table.Column<int>(type: "int", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Comments = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feedbacks", x => x.FeedbackId);
+                    table.ForeignKey(
+                        name: "FK_Feedbacks_Guests_GuestId",
+                        column: x => x.GuestId,
+                        principalTable: "Guests",
+                        principalColumn: "GuestId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Feedbacks_Reservations_ReservationId",
+                        column: x => x.ReservationId,
+                        principalTable: "Reservations",
+                        principalColumn: "ReservationId",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StayRecords",
                 columns: table => new
                 {
@@ -171,6 +200,16 @@ namespace CogStayMVC.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_GuestId",
+                table: "Feedbacks",
+                column: "GuestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_ReservationId",
+                table: "Feedbacks",
+                column: "ReservationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Guests_Email",
                 table: "Guests",
                 column: "Email",
@@ -220,6 +259,9 @@ namespace CogStayMVC.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Billings");
+
+            migrationBuilder.DropTable(
+                name: "Feedbacks");
 
             migrationBuilder.DropTable(
                 name: "HousekeepingTasks");

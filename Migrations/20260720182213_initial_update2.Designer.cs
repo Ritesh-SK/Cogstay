@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CogStayMVC.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    [Migration("20260714175710_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260720182213_initial_update2")]
+    partial class initial_update2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,40 @@ namespace CogStayMVC.Migrations
                         .IsUnique();
 
                     b.ToTable("Billings");
+                });
+
+            modelBuilder.Entity("CogStayMVC.Models.Feedback", b =>
+                {
+                    b.Property<int>("FeedbackId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedbackId"));
+
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GuestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FeedbackId");
+
+                    b.HasIndex("GuestId");
+
+                    b.HasIndex("ReservationId");
+
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("CogStayMVC.Models.Guest", b =>
@@ -284,6 +318,24 @@ namespace CogStayMVC.Migrations
                         .IsRequired();
 
                     b.Navigation("StayRecord");
+                });
+
+            modelBuilder.Entity("CogStayMVC.Models.Feedback", b =>
+                {
+                    b.HasOne("CogStayMVC.Models.Guest", "Guest")
+                        .WithMany()
+                        .HasForeignKey("GuestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CogStayMVC.Models.Reservation", "Reservation")
+                        .WithMany()
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Guest");
+
+                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("CogStayMVC.Models.HousekeepingTask", b =>

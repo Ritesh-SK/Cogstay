@@ -69,7 +69,12 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Edit(int id)
     {
         var task = await _housekeepingService.GetTaskByIdAsync(id);
-        if (task == null) return NotFound();
+
+        if (task == null)
+        {
+            // Temporary test message:
+            return Content($"Task with ID {id} was not found in the database.");
+        }
 
         var dto = new UpdateTaskStatusDTO
         {
