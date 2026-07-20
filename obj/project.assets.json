@@ -3091,19 +3091,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\farha\\.nuget\\packages\\": {}
+    "C:\\Users\\Ritesh SK\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\farha\\Downloads\\CogStay---Project-Main\\CogStay---Project-Main\\CogStayMVC.csproj",
+      "projectUniqueName": "C:\\Users\\Ritesh SK\\Desktop\\Project New Structure\\CogStay---Project2\\CogStayMVC.csproj",
       "projectName": "CogStayMVC",
-      "projectPath": "C:\\Users\\farha\\Downloads\\CogStay---Project-Main\\CogStay---Project-Main\\CogStayMVC.csproj",
-      "packagesPath": "C:\\Users\\farha\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\farha\\Downloads\\CogStay---Project-Main\\CogStay---Project-Main\\obj\\",
+      "projectPath": "C:\\Users\\Ritesh SK\\Desktop\\Project New Structure\\CogStay---Project2\\CogStayMVC.csproj",
+      "packagesPath": "C:\\Users\\Ritesh SK\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Ritesh SK\\Desktop\\Project New Structure\\CogStay---Project2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\farha\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Ritesh SK\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -3175,7 +3175,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

@@ -1,3 +1,4 @@
+@model CogStayMVC.DTOs.CreateGuestDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Guest Registration";
@@ -7,7 +8,7 @@
     <div class="split-login-hero">
         <div class="split-login-hero-overlay"></div>
         <div class="split-login-hero-content">
-            <a href="/Home/Index" class="split-login-brand">
+            <a asp-controller="Home" asp-action="Index" class="split-login-brand">
                 <i class="fa-solid fa-hotel"></i> CogStay
             </a>
             <h1>Join CogStay Club</h1>
@@ -23,37 +24,39 @@
                     <p class="cogstay-login-desc">Sign up to enjoy personalized luxury services</p>
                 </div>
                 
-                <form action="/Guest/Login" method="get">
+                <form asp-action="Register" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Full Name</label>
-                        <input type="text" class="cogstay-form-control" placeholder="John Doe" required />
+                        <label class="cogstay-form-label" asp-for="FullName">Full Name</label>
+                        <input asp-for="FullName" class="cogstay-form-control" placeholder="John Doe" required />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
                     </div>
                     
                     <div class="cogstay-form-row">
                         <div class="cogstay-form-group">
-                            <label class="cogstay-form-label">Email Address</label>
-                            <input type="email" class="cogstay-form-control" placeholder="john@example.com" required />
+                            <label class="cogstay-form-label" asp-for="Email">Email Address</label>
+                            <input asp-for="Email" type="email" class="cogstay-form-control" placeholder="john@example.com" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="cogstay-form-group">
-                            <label class="cogstay-form-label">Phone Number</label>
-                            <input type="tel" class="cogstay-form-control" placeholder="+91 99999-88888" required />
+                            <label class="cogstay-form-label" asp-for="PhoneNumber">Phone Number</label>
+                            <input asp-for="PhoneNumber" type="tel" class="cogstay-form-control" placeholder="+91 99999-88888" required />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Address</label>
-                        <input type="text" class="cogstay-form-control" placeholder="Flat 401, Crescent Enclave, New Delhi" required />
+                        <label class="cogstay-form-label" asp-for="Address">Address</label>
+                        <input asp-for="Address" class="cogstay-form-control" placeholder="Flat 401, Crescent Enclave, New Delhi" required />
+                        <span asp-validation-for="Address" class="text-danger"></span>
                     </div>
                     
-                    <div class="cogstay-form-row">
-                        <div class="cogstay-form-group">
-                            <label class="cogstay-form-label">Password</label>
-                            <input type="password" class="cogstay-form-control" placeholder="••••••••" required />
-                        </div>
-                        <div class="cogstay-form-group">
-                            <label class="cogstay-form-label">Confirm Password</label>
-                            <input type="password" class="cogstay-form-control" placeholder="••••••••" required />
-                        </div>
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label" asp-for="Password">Password</label>
+                        <input asp-for="Password" type="password" class="cogstay-form-control" placeholder="••••••••" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Register</button>
@@ -61,11 +64,11 @@
                 
                 <div style="text-align: center; margin-top: 20px; font-size: 14px;">
                     <span style="color: var(--color-text-muted);">Already have an account? </span>
-                    <a href="/Guest/Login" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">Login here</a>
+                    <a asp-action="Login" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">Login here</a>
                 </div>
             </div>
             
-            <a href="/Home/Index" style="text-align: center; color: var(--color-text-muted); font-size: 14px; font-weight: 500;">
+            <a asp-controller="Home" asp-action="Index" style="text-align: center; color: var(--color-text-muted); font-size: 14px; font-weight: 500;">
                 <i class="fa-solid fa-arrow-left-long"></i> Back to Homepage
             </a>
         </div>

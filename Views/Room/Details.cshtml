@@ -1,3 +1,4 @@
+@model CogStayMVC.DTOs.RoomResponseDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Room Details";
@@ -6,6 +7,13 @@
         var roleParam = Context.Request.Query["role"].ToString();
         ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
     }
+    string badgeClass = Model.Status switch
+    {
+        RoomStatus.Available => "success",
+        RoomStatus.Booked => "info",
+        RoomStatus.Occupied => "danger",
+        _ => "warning"
+    };
 }
 
 <div style="margin-bottom: 30px;">
@@ -17,31 +25,31 @@
     <div class="cogstay-card">
         <div class="cogstay-card-header">
             <h3 class="cogstay-card-title"><i class="fa-solid fa-door-open"></i> Room Profile Information</h3>
-            <span class="cogstay-badge danger">Occupied</span>
+            <span class="cogstay-badge @badgeClass">@Model.Status</span>
         </div>
         <div class="cogstay-card-body">
             <div class="grid-container grid-cols-2" style="gap: 15px; margin-bottom: 25px;">
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Room Number</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Room 205</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Room @Model.RoomNumber</p>
                 </div>
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Room Type Classification</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">Deluxe Executive Room</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.RoomType</p>
                 </div>
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Price Per Night</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">₹14,400.00</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.PricePerNight.ToString("C")</p>
                 </div>
                 <div>
                     <span style="font-size: 13px; color: var(--color-text-muted); text-transform: uppercase;">Current Operational Status</span>
-                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px; color: var(--color-danger);">Occupied (Checked In)</p>
+                    <p style="font-size: 16px; font-weight: 600; margin-top: 3px;">@Model.Status</p>
                 </div>
             </div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--color-border); padding-top: 20px;">
-                <a href="/Room/Index" class="btn btn-secondary">Back to Catalog</a>
-                <a href="/Room/Edit?id=205" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i> Edit Room</a>
+                <a asp-action="Index" class="btn btn-secondary">Back to Catalog</a>
+                <a asp-action="Edit" asp-route-id="@Model.RoomId" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i> Edit Room</a>
             </div>
         </div>
     </div>
@@ -52,11 +60,11 @@
                 <h3 class="cogstay-card-title"><i class="fa-solid fa-hotel"></i> Room Amenity Summary</h3>
             </div>
             <div class="cogstay-card-body" style="font-size: 13.5px; line-height: 1.5; color: var(--color-text-muted);">
-                Deluxe Executive Room features:
+                @Model.RoomType Features & Amenities:
                 <ul style="margin-top: 10px; margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
                     <li>High speed Wi-Fi access</li>
-                    <li>Plush King bedding</li>
-                    <li>Writing desk & mini bar</li>
+                    <li>Plush Luxury bedding & Climate control</li>
+                    <li>Writing desk, Smart TV & Mini bar</li>
                 </ul>
             </div>
         </div>

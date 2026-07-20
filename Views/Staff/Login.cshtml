@@ -1,3 +1,4 @@
+@model CogStayMVC.DTOs.StaffLoginDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Staff Login";
@@ -7,7 +8,7 @@
     <div class="split-login-hero">
         <div class="split-login-hero-overlay"></div>
         <div class="split-login-hero-content">
-            <a href="/Home/Index" class="split-login-brand">
+            <a asp-controller="Home" asp-action="Index" class="split-login-brand">
                 <i class="fa-solid fa-hotel"></i> CogStay
             </a>
             <h1>Operations Console</h1>
@@ -23,18 +24,26 @@
                     <p class="cogstay-login-desc">Sign in with your corporate credentials</p>
                 </div>
                 
-                <form action="/Staff/Dashboard" method="get">
-                    <!-- Default to Admin for standard form action -->
-                    <input type="hidden" name="role" value="Admin" />
+                <form asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Corporate Email Address</label>
-                        <input type="email" class="cogstay-form-control" placeholder="staff@cogstay.com" required />
+                        <label class="cogstay-form-label" asp-for="Email">Corporate Email Address</label>
+                        <input asp-for="Email" type="email" class="cogstay-form-control" placeholder="staff@cogstay.com" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="cogstay-form-group">
+                        <label class="cogstay-form-label" asp-for="Role">Department Role</label>
+                        <select asp-for="Role" asp-items="Html.GetEnumSelectList<StaffRole>()" class="cogstay-form-control" required></select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
                     </div>
                     
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Security Password</label>
-                        <input type="password" class="cogstay-form-control" placeholder="••••••••" required />
+                        <label class="cogstay-form-label" asp-for="Password">Security Password</label>
+                        <input asp-for="Password" type="password" class="cogstay-form-control" placeholder="••••••••" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Access Panel</button>
@@ -44,15 +53,15 @@
                 <div style="border-top: 1px dashed var(--color-border); margin-top: 30px; padding-top: 20px;">
                     <span style="font-size: 12px; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 12px; text-align: center;">Simulate Staff Roles (Development Preview)</span>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        <a href="/Staff/Dashboard?role=FrontDesk" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-clipboard-list" style="color: var(--accent-frontdesk);"></i> Front Desk</a>
-                        <a href="/Staff/Dashboard?role=Housekeeping" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-broom" style="color: var(--accent-housekeeping);"></i> Housekeeping</a>
-                        <a href="/Staff/Dashboard?role=Manager" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-gauge-high" style="color: var(--accent-manager);"></i> Manager</a>
-                        <a href="/Staff/Dashboard?role=Admin" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-chart-pie" style="color: var(--accent-admin);"></i> Admin</a>
+                        <a asp-action="Dashboard" asp-route-role="FrontDesk" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-clipboard-list" style="color: var(--accent-frontdesk);"></i> Front Desk</a>
+                        <a asp-action="Dashboard" asp-route-role="Housekeeping" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-broom" style="color: var(--accent-housekeeping);"></i> Housekeeping</a>
+                        <a asp-action="Dashboard" asp-route-role="Manager" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-gauge-high" style="color: var(--accent-manager);"></i> Manager</a>
+                        <a asp-action="Dashboard" asp-route-role="Admin" class="btn btn-secondary btn-sm" style="font-size: 11.5px;"><i class="fa-solid fa-chart-pie" style="color: var(--accent-admin);"></i> Admin</a>
                     </div>
                 </div>
             </div>
             
-            <a href="/Home/Index" style="text-align: center; color: var(--color-text-muted); font-size: 14px; font-weight: 500;">
+            <a asp-controller="Home" asp-action="Index" style="text-align: center; color: var(--color-text-muted); font-size: 14px; font-weight: 500;">
                 <i class="fa-solid fa-arrow-left-long"></i> Back to Homepage
             </a>
         </div>

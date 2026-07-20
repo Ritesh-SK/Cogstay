@@ -1,12 +1,46 @@
 using Microsoft.EntityFrameworkCore;
 using CogStayMVC.Data;
+using CogStayMVC.Repositories.Implementations;
+using CogStayMVC.Repositories.Interfaces;
+using CogStayMVC.Services.Implementations;
+using CogStayMVC.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddDbContext<HotelDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Session Configuration
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// Register Repositories
+builder.Services.AddScoped<IGuestRepository, GuestRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IStayRecordRepository, StayRecordRepository>();
+builder.Services.AddScoped<IBillingRepository, BillingRepository>();
+builder.Services.AddScoped<IHousekeepingTaskRepository, HousekeepingTaskRepository>();
+builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+
+// Register Services
+builder.Services.AddScoped<IGuestService, GuestService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<ICheckInService, CheckInService>();
+builder.Services.AddScoped<IBillingService, BillingService>();
+builder.Services.AddScoped<IHousekeepingService, HousekeepingService>();
+builder.Services.AddScoped<IStaffService, StaffService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 
 var app = builder.Build();
 
@@ -22,8 +56,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthorization();
-
 
 // Default Route
 app.MapControllerRoute(

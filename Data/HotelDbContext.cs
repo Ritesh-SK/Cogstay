@@ -16,6 +16,7 @@ public class HotelDbContext : DbContext
     public DbSet<HousekeepingTask> HousekeepingTasks { get; set; } = null!;
     public DbSet<Billing> Billings { get; set; } = null!;
     public DbSet<Staff> Staff { get; set; } = null!;
+    public DbSet<Feedback> Feedbacks { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -127,5 +128,24 @@ public class HotelDbContext : DbContext
             // Unique constraint on Email
             entity.HasIndex(s => s.Email).IsUnique();
         });
+
+        // --- Feedback Configuration ---
+        modelBuilder.Entity<Feedback>(entity =>
+        {
+            entity.HasKey(f => f.FeedbackId);
+            entity.Property(f => f.Comments).IsRequired().HasMaxLength(1000);
+            entity.Property(f => f.Rating).IsRequired();
+
+            entity.HasOne(f => f.Guest)
+                .WithMany()
+                .HasForeignKey(f => f.GuestId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(f => f.Reservation)
+                .WithMany()
+                .HasForeignKey(f => f.ReservationId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
     }
+
 }

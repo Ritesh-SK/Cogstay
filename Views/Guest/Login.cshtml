@@ -1,3 +1,4 @@
+@model CogStayMVC.DTOs.GuestLoginDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Guest Login";
@@ -7,7 +8,7 @@
     <div class="split-login-hero">
         <div class="split-login-hero-overlay"></div>
         <div class="split-login-hero-content">
-            <a href="/Home/Index" class="split-login-brand">
+            <a asp-controller="Home" asp-action="Index" class="split-login-brand">
                 <i class="fa-solid fa-hotel"></i> CogStay
             </a>
             <h1>Experience Exclusive Hospitality</h1>
@@ -23,15 +24,20 @@
                     <p class="cogstay-login-desc">Sign in to manage your luxury stay</p>
                 </div>
                 
-                <form action="/Guest/Dashboard" method="get">
+                <form asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Email Address</label>
-                        <input type="email" class="cogstay-form-control" placeholder="guest@example.com" required />
+                        <label class="cogstay-form-label" asp-for="Email">Email Address</label>
+                        <input asp-for="Email" type="email" class="cogstay-form-control" placeholder="guest@example.com" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Password</label>
-                        <input type="password" class="cogstay-form-control" placeholder="••••••••" required />
+                        <label class="cogstay-form-label" asp-for="Password">Password</label>
+                        <input asp-for="Password" type="password" class="cogstay-form-control" placeholder="••••••••" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     
                     <button type="submit" class="btn btn-accent" style="width: 100%; color: var(--color-primary-dark); font-weight: 700; margin-top: 10px;">Sign In</button>
@@ -39,11 +45,11 @@
                 
                 <div style="text-align: center; margin-top: 20px; font-size: 14px;">
                     <span style="color: var(--color-text-muted);">Don't have an account? </span>
-                    <a href="/Guest/Register" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">Register here</a>
+                    <a asp-action="Register" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">Register here</a>
                 </div>
             </div>
             
-            <a href="/Home/Index" style="text-align: center; color: var(--color-text-muted); font-size: 14px; font-weight: 500;">
+            <a asp-controller="Home" asp-action="Index" style="text-align: center; color: var(--color-text-muted); font-size: 14px; font-weight: 500;">
                 <i class="fa-solid fa-arrow-left-long"></i> Back to Homepage
             </a>
         </div>

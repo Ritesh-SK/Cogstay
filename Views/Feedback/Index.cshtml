@@ -1,0 +1,74 @@
+@model IEnumerable<CogStayMVC.DTOs.FeedbackResponseDTO>
+@{
+    ViewData["Title"] = "Guest Feedback & Reviews";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 font-weight-bold text-dark">Guest Feedbacks & Ratings</h2>
+            <p class="text-muted">Reviews submitted by guests after stay</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary shadow-sm"><i class="fas fa-plus"></i> Submit Feedback</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Guest Name</th>
+                            <th>Rating</th>
+                            <th>Comments</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">No feedbacks submitted yet.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>#@item.FeedbackId</td>
+                                    <td class="font-weight-bold">@item.GuestName</td>
+                                    <td>
+                                        <span class="badge badge-warning text-dark">
+                                            @for (int i = 0; i < item.Rating; i++) { <span>★</span> } (@item.Rating/5)
+                                        </span>
+                                    </td>
+                                    <td>@item.Comments</td>
+                                    <td>@item.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                                    <td>
+                                        <form asp-action="Delete" asp-route-id="@item.FeedbackId" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this feedback?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
