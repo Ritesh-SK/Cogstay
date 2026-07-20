@@ -1,3 +1,4 @@
+@model IEnumerable<CogStayMVC.DTOs.RoomResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Premium Hotel & Guest Experience";
@@ -101,68 +102,37 @@
         </div>
 
         <div class="cogstay-grid">
-            <!-- Room 1 -->
-            <div class="cogstay-room-card">
-                <div class="cogstay-room-image-container">
-                    <img class="cogstay-room-card-img" src="/images/rooms/room_deluxe.png" alt="Deluxe Executive Room" />
-                    <span class="cogstay-room-badge"><i class="fa-solid fa-star"></i> Popular</span>
+            @if (Model == null || !Model.Any())
+            {
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--color-text-muted);">
+                    <p style="font-size: 16px;">No room inventory currently available in database.</p>
                 </div>
-                <div class="cogstay-room-body">
-                    <h3 class="cogstay-room-title">Deluxe Executive Room</h3>
-                    <p class="cogstay-room-desc">Perfect balance of design and comfort. Includes high speed internet, writing desk, and city views.</p>
-                    <div class="cogstay-room-chips">
-                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-wifi"></i> Free Wifi</span>
-                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-tv"></i> Smart TV</span>
-                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-coffee"></i> Espresso</span>
+            }
+            else
+            {
+                foreach (var room in Model)
+                {
+                    <div class="cogstay-room-card">
+                        <div class="cogstay-room-image-container">
+                            <img class="cogstay-room-card-img" src="/images/rooms/room_deluxe.png" alt="@room.RoomType" />
+                            <span class="cogstay-room-badge"><i class="fa-solid fa-door-open"></i> Room @room.RoomNumber</span>
+                        </div>
+                        <div class="cogstay-room-body">
+                            <h3 class="cogstay-room-title">@room.RoomType</h3>
+                            <p class="cogstay-room-desc">Room Number @room.RoomNumber. Includes high speed internet, air conditioning, and luxury hospitality amenities.</p>
+                            <div class="cogstay-room-chips">
+                                <span class="cogstay-amenity-chip"><i class="fa-solid fa-wifi"></i> Free Wifi</span>
+                                <span class="cogstay-amenity-chip"><i class="fa-solid fa-tv"></i> Smart TV</span>
+                                <span class="cogstay-amenity-chip"><i class="fa-solid fa-snowflake"></i> AC</span>
+                            </div>
+                            <div class="cogstay-room-footer">
+                                <div class="cogstay-room-price">@room.PricePerNight.ToString("C") <span>/ night</span></div>
+                                <a href="/Guest/Login" class="btn-reserve">Book Now</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="cogstay-room-footer">
-                        <div class="cogstay-room-price">₹14,400 <span>/ night</span></div>
-                        <a href="/Guest/Login" class="btn-reserve">Book Now</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Room 2 -->
-            <div class="cogstay-room-card">
-                <div class="cogstay-room-image-container">
-                    <img class="cogstay-room-card-img" src="/images/rooms/room_suite.png" alt="Luxury Penthouse Suite" />
-                    <span class="cogstay-room-badge"><i class="fa-solid fa-crown"></i> Exclusive</span>
-                </div>
-                <div class="cogstay-room-body">
-                    <h3 class="cogstay-room-title">Luxury Penthouse Suite</h3>
-                    <p class="cogstay-room-desc">Spacious layout with a king-sized master bedroom, separate lounge, marble bath, and panoramic view.</p>
-                    <div class="cogstay-room-chips">
-                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-wifi"></i> Free Wifi</span>
-                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-hot-tub-person"></i> Hot Tub</span>
-                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-wine-glass"></i> Minibar</span>
-                    </div>
-                    <div class="cogstay-room-footer">
-                        <div class="cogstay-room-price">₹28,000 <span>/ night</span></div>
-                        <a href="/Guest/Login" class="btn-reserve">Book Now</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Room 3 -->
-            <div class="cogstay-room-card">
-                <div class="cogstay-room-image-container">
-                    <img class="cogstay-room-card-img" src="/images/rooms/room_standard.png" alt="Classic Superior King" />
-                    <span class="cogstay-room-badge"><i class="fa-solid fa-bed"></i> Classic</span>
-                </div>
-                <div class="cogstay-room-body">
-                    <h3 class="cogstay-room-title">Classic Superior King</h3>
-                    <p class="cogstay-room-desc">Warm textures and traditional hospitality. Features garden vistas, private balcony, and plush beddings.</p>
-                    <div class="cogstay-room-chips">
-                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-wifi"></i> Free Wifi</span>
-                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-martini-glass"></i> Room Bar</span>
-                        <span class="cogstay-amenity-chip"><i class="fa-solid fa-snowflake"></i> AC</span>
-                    </div>
-                    <div class="cogstay-room-footer">
-                        <div class="cogstay-room-price">₹11,200 <span>/ night</span></div>
-                        <a href="/Guest/Login" class="btn-reserve">Book Now</a>
-                    </div>
-                </div>
-            </div>
+                }
+            }
         </div>
     </div>
 </section>

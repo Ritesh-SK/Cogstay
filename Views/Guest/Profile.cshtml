@@ -1,7 +1,9 @@
+@model CogStayMVC.DTOs.UpdateGuestDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Guest Profile";
     ViewData["Role"] = "Guest";
+    var initials = string.IsNullOrEmpty(Model?.FullName) ? "G" : string.Join("", Model.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper();
 }
 
 <div style="margin-bottom: 30px;">
@@ -9,32 +11,49 @@
     <p style="color: var(--color-text-muted);">View or update your hospitality profile information and address details.</p>
 </div>
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 <div class="booking-checkout-container">
     <div class="cogstay-card">
         <div class="cogstay-card-header">
             <h3 class="cogstay-card-title"><i class="fa-solid fa-user-gear"></i> Update Profile Details</h3>
         </div>
         <div class="cogstay-card-body">
-            <form action="/Guest/Profile" method="get">
+            <form asp-action="Profile" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="GuestId" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
                 <div class="cogstay-form-group">
-                    <label class="cogstay-form-label">Full Name</label>
-                    <input type="text" class="cogstay-form-control" value="John Henderson" required />
+                    <label class="cogstay-form-label" asp-for="FullName">Full Name</label>
+                    <input asp-for="FullName" type="text" class="cogstay-form-control" required />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
                 
                 <div class="cogstay-form-row">
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Email Address</label>
-                        <input type="email" class="cogstay-form-control" value="guest@example.com" required readonly />
+                        <label class="cogstay-form-label" asp-for="Email">Email Address</label>
+                        <input asp-for="Email" type="email" class="cogstay-form-control" required readonly />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Phone Number</label>
-                        <input type="tel" class="cogstay-form-control" value="+91 98765-43210" required />
+                        <label class="cogstay-form-label" asp-for="PhoneNumber">Phone Number</label>
+                        <input asp-for="PhoneNumber" type="tel" class="cogstay-form-control" required />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="cogstay-form-group">
-                    <label class="cogstay-form-label">Address</label>
-                    <input type="text" class="cogstay-form-control" value="Flat 3B, luxury Apartment Tower C, Mumbai, Maharashtra" required />
+                    <label class="cogstay-form-label" asp-for="Address">Address</label>
+                    <input asp-for="Address" type="text" class="cogstay-form-control" required />
+                    <span asp-validation-for="Address" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Save Profile Changes</button>
@@ -45,10 +64,10 @@
     <div>
         <div class="profile-header-card">
             <div style="display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; gap: 15px;">
-                <div class="profile-avatar-large">JH</div>
+                <div class="profile-avatar-large">@initials</div>
                 <div>
-                    <h3 style="font-family: var(--font-serif); font-size: 20px; color: var(--color-accent-light);">John Henderson</h3>
-                    <span style="font-size: 12px; color: rgba(255,255,255,0.75); text-transform: uppercase; letter-spacing: 0.5px;">Gold Class Guest</span>
+                    <h3 style="font-family: var(--font-serif); font-size: 20px; color: var(--color-accent-light);">@Model?.FullName</h3>
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.75); text-transform: uppercase; letter-spacing: 0.5px;">Registered Guest</span>
                 </div>
             </div>
         </div>
@@ -58,10 +77,10 @@
                 <h3 class="cogstay-card-title"><i class="fa-solid fa-crown"></i> Membership Benefits</h3>
             </div>
             <div class="cogstay-card-body" style="font-size: 13.5px; line-height: 1.5; color: var(--color-text-muted);">
-                As a premium <strong>Gold Class Member</strong>, you receive:
+                As a registered guest, you receive:
                 <ul style="margin-top: 10px; margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
-                    <li>15% discount on in-room dining services</li>
-                    <li>Priority early check-in privileges</li>
+                    <li>Access to online room reservations</li>
+                    <li>Priority early check-in requests</li>
                     <li>Complimentary high-speed premium Wi-Fi</li>
                 </ul>
             </div>

@@ -84,7 +84,13 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
-        ViewBag.GuestName = HttpContext.Session.GetString("GuestName");
+        var guest = await _guestService.GetGuestByIdAsync(guestId.Value);
+        if (guest == null) return RedirectToAction(nameof(Login));
+
+        ViewBag.GuestName = guest.FullName;
+        HttpContext.Session.SetString("GuestName", guest.FullName);
+        HttpContext.Session.SetString("GuestEmail", guest.Email);
+
         var reservations = await _reservationService.GetReservationsByGuestAsync(guestId.Value);
         return View(reservations);
     }

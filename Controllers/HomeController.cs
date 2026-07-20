@@ -1,13 +1,22 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using CogStayMVC.Services.Interfaces;
 
 namespace CogStayMVC.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly IRoomService _roomService;
+
+    public HomeController(IRoomService roomService)
     {
-        return View();
+        _roomService = roomService;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var availableRooms = await _roomService.GetAvailableRoomsAsync();
+        return View(availableRooms);
     }
 
     public IActionResult Error()

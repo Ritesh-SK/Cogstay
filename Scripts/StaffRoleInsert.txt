@@ -1,0 +1,42 @@
+-- ===============================================================================
+-- CogStay Hospitality Management System - Staff Role SQL Insert Script
+-- ===============================================================================
+-- This script contains SQL INSERT statements to populate the four required staff 
+-- role user records needed for testing.
+--
+-- Roles: FrontDesk, Housekeeping, Manager, Admin
+-- Default Password for testing accounts: Password123
+-- SHA256 Base64 Hash for 'Password123': 73l8gRjwLftklgf9XT+MdiMEjJwGPVMsyVxe16iYpk8=
+-- ===============================================================================
+
+-- Insert into [Staff] table (EF Core DbContext Model)
+
+INSERT INTO [Staff] ([FullName], [Email], [PhoneNumber], [PasswordHash], [Role], [IsActive], [CreatedAt])
+VALUES ('Front Desk Agent', 'frontdesk@cogstay.com', '+91 9876543210', '73l8gRjwLftklgf9XT+MdiMEjJwGPVMsyVxe16iYpk8=', 'FrontDesk', 1, GETDATE());
+
+INSERT INTO [Staff] ([FullName], [Email], [PhoneNumber], [PasswordHash], [Role], [IsActive], [CreatedAt])
+VALUES ('Housekeeping Supervisor', 'housekeeping@cogstay.com', '+91 9876543211', '73l8gRjwLftklgf9XT+MdiMEjJwGPVMsyVxe16iYpk8=', 'Housekeeping', 1, GETDATE());
+
+INSERT INTO [Staff] ([FullName], [Email], [PhoneNumber], [PasswordHash], [Role], [IsActive], [CreatedAt])
+VALUES ('Hotel Operations Manager', 'manager@cogstay.com', '+91 9876543212', '73l8gRjwLftklgf9XT+MdiMEjJwGPVMsyVxe16iYpk8=', 'Manager', 1, GETDATE());
+
+INSERT INTO [Staff] ([FullName], [Email], [PhoneNumber], [PasswordHash], [Role], [IsActive], [CreatedAt])
+VALUES ('System Administrator', 'admin@cogstay.com', '+91 9876543213', '73l8gRjwLftklgf9XT+MdiMEjJwGPVMsyVxe16iYpk8=', 'Admin', 1, GETDATE());
+
+
+-- Insert into [User] table (Alternative table mapping if user table is referenced)
+
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'User' OR name = 'Users')
+BEGIN
+    INSERT INTO [User] ([FullName], [Email], [PhoneNumber], [PasswordHash], [Role], [IsActive], [CreatedAt])
+    VALUES ('Front Desk Agent', 'frontdesk@cogstay.com', '+91 9876543210', '73l8gRjwLftklgf9XT+MdiMEjJwGPVMsyVxe16iYpk8=', 'FrontDesk', 1, GETDATE());
+
+    INSERT INTO [User] ([FullName], [Email], [PhoneNumber], [PasswordHash], [Role], [IsActive], [CreatedAt])
+    VALUES ('Housekeeping Supervisor', 'housekeeping@cogstay.com', '+91 9876543211', '73l8gRjwLftklgf9XT+MdiMEjJwGPVMsyVxe16iYpk8=', 'Housekeeping', 1, GETDATE());
+
+    INSERT INTO [User] ([FullName], [Email], [PhoneNumber], [PasswordHash], [Role], [IsActive], [CreatedAt])
+    VALUES ('Hotel Operations Manager', 'manager@cogstay.com', '+91 9876543212', '73l8gRjwLftklgf9XT+MdiMEjJwGPVMsyVxe16iYpk8=', 'Manager', 1, GETDATE());
+
+    INSERT INTO [User] ([FullName], [Email], [PhoneNumber], [PasswordHash], [Role], [IsActive], [CreatedAt])
+    VALUES ('System Administrator', 'admin@cogstay.com', '+91 9876543213', '73l8gRjwLftklgf9XT+MdiMEjJwGPVMsyVxe16iYpk8=', 'Admin', 1, GETDATE());
+END;

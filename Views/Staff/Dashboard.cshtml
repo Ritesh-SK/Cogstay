@@ -2,6 +2,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var role = ViewData["Role"]?.ToString() ?? "Admin";
     ViewData["Title"] = role + " Dashboard";
+
+    var arrivalsList = ViewBag.ArrivalsList as IEnumerable<CogStayMVC.DTOs.ReservationResponseDTO> ?? Enumerable.Empty<CogStayMVC.DTOs.ReservationResponseDTO>();
+    var housekeepingTasksList = ViewBag.HousekeepingTasksList as IEnumerable<CogStayMVC.DTOs.HousekeepingTaskResponseDTO> ?? Enumerable.Empty<CogStayMVC.DTOs.HousekeepingTaskResponseDTO>();
+    
+    int availableRoomsCount = ViewBag.AvailableRoomsCount ?? 0;
+    int totalRoomsCount = ViewBag.TotalRoomsCount ?? 0;
+    int reservationsCount = ViewBag.ReservationsCount ?? 0;
+    int activeStaysCount = ViewBag.ActiveStaysCount ?? 0;
+    int pendingTasksCount = ViewBag.PendingTasksCount ?? 0;
+    int inProgressTasksCount = ViewBag.InProgressTasksCount ?? 0;
+    int completedTasksCount = ViewBag.CompletedTasksCount ?? 0;
+    decimal pendingPaymentAmount = ViewBag.PendingPaymentAmount ?? 0m;
+    int pendingBillsCount = ViewBag.PendingBillsCount ?? 0;
 }
 
 <div style="margin-bottom: 30px;">
@@ -15,8 +28,8 @@
     <div class="grid-container grid-cols-3" style="margin-bottom: 30px;">
         <div class="cogstay-stat-card frontdesk">
             <div class="cogstay-stat-details">
-                <p>Today's Reservations</p>
-                <h3>8 Bookings</h3>
+                <p>Today's Bookings</p>
+                <h3>@reservationsCount Bookings</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-calendar-check"></i>
@@ -26,7 +39,7 @@
         <div class="cogstay-stat-card frontdesk">
             <div class="cogstay-stat-details">
                 <p>Active Stays</p>
-                <h3>14 Guests</h3>
+                <h3>@activeStaysCount Guests</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-users"></i>
@@ -36,7 +49,7 @@
         <div class="cogstay-stat-card frontdesk">
             <div class="cogstay-stat-details">
                 <p>Available Rooms</p>
-                <h3>4 Rooms</h3>
+                <h3>@availableRoomsCount Rooms</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-door-open"></i>
@@ -48,8 +61,8 @@
         <!-- Today's Queue List -->
         <div class="cogstay-card">
             <div class="cogstay-card-header">
-                <h3 class="cogstay-card-title"><i class="fa-solid fa-clock"></i> Today's Expected Arrivals</h3>
-                <span class="cogstay-badge info">3 Pending</span>
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-clock"></i> Expected Arrivals Queue</h3>
+                <span class="cogstay-badge info">@arrivalsList.Count() Pending Arrival</span>
             </div>
             <div class="cogstay-table-responsive">
                 <table class="cogstay-table">
@@ -57,26 +70,31 @@
                         <tr>
                             <th>Guest Name</th>
                             <th>Room Preferred</th>
-                            <th>Arriving</th>
+                            <th>Check-In Date</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>Sarah Jenkins</strong></td>
-                            <td>Room 205 (Deluxe)</td>
-                            <td>Today, 2:30 PM</td>
-                            <td><span class="cogstay-badge warning">Booked</span></td>
-                            <td><a href="/CheckIn/CheckIn" class="btn btn-primary btn-sm">Check-In</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Michael Chang</strong></td>
-                            <td>Room 101 (Standard)</td>
-                            <td>Today, 4:00 PM</td>
-                            <td><span class="cogstay-badge warning">Booked</span></td>
-                            <td><a href="/CheckIn/CheckIn" class="btn btn-primary btn-sm">Check-In</a></td>
-                        </tr>
+                        @if (!arrivalsList.Any())
+                        {
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--color-text-muted);">No pending expected arrivals found.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in arrivalsList)
+                            {
+                                <tr>
+                                    <td><strong>@item.GuestName</strong></td>
+                                    <td>Room @item.RoomNumber (@item.RoomType)</td>
+                                    <td>@item.CheckInDate.ToString("MMM dd, yyyy")</td>
+                                    <td><span class="cogstay-badge warning">@item.ReservationStatus</span></td>
+                                    <td><a href="/CheckIn/CheckIn" class="btn btn-primary btn-sm">Check-In</a></td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>
@@ -110,7 +128,7 @@ else if (role == "Housekeeping")
         <div class="cogstay-stat-card housekeeping">
             <div class="cogstay-stat-details">
                 <p>Pending Tasks</p>
-                <h3>5 Tasks</h3>
+                <h3>@pendingTasksCount Tasks</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-clock"></i>
@@ -120,7 +138,7 @@ else if (role == "Housekeeping")
         <div class="cogstay-stat-card housekeeping">
             <div class="cogstay-stat-details">
                 <p>In Progress Tasks</p>
-                <h3>2 Tasks</h3>
+                <h3>@inProgressTasksCount Tasks</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-spinner"></i>
@@ -129,8 +147,8 @@ else if (role == "Housekeeping")
 
         <div class="cogstay-stat-card housekeeping">
             <div class="cogstay-stat-details">
-                <p>Completed Today</p>
-                <h3>12 Tasks</h3>
+                <p>Completed Tasks</p>
+                <h3>@completedTasksCount Tasks</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-circle-check"></i>
@@ -142,33 +160,38 @@ else if (role == "Housekeeping")
     <div class="cogstay-card">
         <div class="cogstay-card-header">
             <h3 class="cogstay-card-title"><i class="fa-solid fa-broom"></i> Active Room Cleaning Duties</h3>
+            <span class="cogstay-badge warning">@housekeepingTasksList.Count() Active Duties</span>
         </div>
         <div class="cogstay-table-responsive">
             <table class="cogstay-table">
                 <thead>
                     <tr>
-                        <th>Room</th>
+                        <th>Room Number</th>
                         <th>Task Details</th>
                         <th>Status</th>
-                        <th>Priority</th>
                         <th style="text-align: right;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><strong>Room 101</strong></td>
-                        <td>Full checkout cleaning & amenity refill</td>
-                        <td><span class="cogstay-badge danger">Pending</span></td>
-                        <td><span class="cogstay-badge danger">High</span></td>
-                        <td style="text-align: right;"><a href="/Housekeeping/Edit?id=1" class="btn btn-primary btn-sm">Update</a></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Room 304</strong></td>
-                        <td>Extra towels request</td>
-                        <td><span class="cogstay-badge warning">In Progress</span></td>
-                        <td><span class="cogstay-badge info">Medium</span></td>
-                        <td style="text-align: right;"><a href="/Housekeeping/Edit?id=2" class="btn btn-primary btn-sm">Update</a></td>
-                    </tr>
+                    @if (!housekeepingTasksList.Any())
+                    {
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--color-text-muted);">No active housekeeping tasks.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var task in housekeepingTasksList)
+                        {
+                            string badgeClass = task.TaskStatus == CogStayMVC.Enums.TaskStatus.Pending ? "danger" : "warning";
+                            <tr>
+                                <td><strong>Room @task.RoomNumber</strong></td>
+                                <td>@task.TaskDescription</td>
+                                <td><span class="cogstay-badge @badgeClass">@task.TaskStatus</span></td>
+                                <td style="text-align: right;"><a asp-controller="Housekeeping" asp-action="Edit" asp-route-id="@task.TaskId" class="btn btn-primary btn-sm">Update</a></td>
+                            </tr>
+                        }
+                    }
                 </tbody>
             </table>
         </div>
@@ -181,7 +204,7 @@ else if (role == "Manager")
         <div class="cogstay-stat-card manager">
             <div class="cogstay-stat-details">
                 <p>Available Rooms</p>
-                <h3>4 Rooms</h3>
+                <h3>@availableRoomsCount Rooms</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-door-open"></i>
@@ -191,7 +214,7 @@ else if (role == "Manager")
         <div class="cogstay-stat-card manager">
             <div class="cogstay-stat-details">
                 <p>Active Reservations</p>
-                <h3>22 Bookings</h3>
+                <h3>@reservationsCount Bookings</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-calendar-check"></i>
@@ -201,7 +224,7 @@ else if (role == "Manager")
         <div class="cogstay-stat-card manager">
             <div class="cogstay-stat-details">
                 <p>Active Stays</p>
-                <h3>14 Stays</h3>
+                <h3>@activeStaysCount Stays</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-key"></i>
@@ -211,7 +234,7 @@ else if (role == "Manager")
         <div class="cogstay-stat-card manager">
             <div class="cogstay-stat-details">
                 <p>Pending Payments</p>
-                <h3>₹34,200.00</h3>
+                <h3>@pendingPaymentAmount.ToString("C")</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
@@ -220,23 +243,23 @@ else if (role == "Manager")
     </div>
 
     <div class="booking-checkout-container">
-        <!-- Revenue Overview -->
+        <!-- Status Overview -->
         <div class="cogstay-card">
             <div class="cogstay-card-header">
-                <h3 class="cogstay-card-title"><i class="fa-solid fa-chart-line"></i> Today's Occupancy Status</h3>
+                <h3 class="cogstay-card-title"><i class="fa-solid fa-chart-line"></i> Operations Summary</h3>
             </div>
             <div class="cogstay-card-body">
                 <div class="manager-kpi-row">
-                    <span>Occupancy Rate</span>
-                    <strong>85% (34 / 40 Rooms)</strong>
+                    <span>Available / Total Rooms</span>
+                    <strong>@availableRoomsCount / @totalRoomsCount Rooms</strong>
                 </div>
                 <div class="manager-kpi-row">
-                    <span>Housekeeping Completion</span>
-                    <strong>90% Completed</strong>
+                    <span>Housekeeping Active Tasks</span>
+                    <strong>@pendingTasksCount Pending / @inProgressTasksCount In-Progress</strong>
                 </div>
                 <div class="manager-kpi-row">
                     <span>Outstanding Invoices</span>
-                    <strong>₹34,200.00 (3 pending)</strong>
+                    <strong>@pendingPaymentAmount.ToString("C") (@pendingBillsCount pending)</strong>
                 </div>
             </div>
         </div>
@@ -261,7 +284,7 @@ else if (role == "Admin")
         <div class="cogstay-stat-card admin">
             <div class="cogstay-stat-details">
                 <p>Total Rooms</p>
-                <h3>40 Rooms</h3>
+                <h3>@totalRoomsCount Rooms</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-door-open"></i>
@@ -271,7 +294,7 @@ else if (role == "Admin")
         <div class="cogstay-stat-card admin">
             <div class="cogstay-stat-details">
                 <p>Active Reservations</p>
-                <h3>22 Bookings</h3>
+                <h3>@reservationsCount Bookings</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-calendar-check"></i>
@@ -281,7 +304,7 @@ else if (role == "Admin")
         <div class="cogstay-stat-card admin">
             <div class="cogstay-stat-details">
                 <p>Active Stays</p>
-                <h3>14 Stays</h3>
+                <h3>@activeStaysCount Stays</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-key"></i>
@@ -291,7 +314,7 @@ else if (role == "Admin")
         <div class="cogstay-stat-card admin">
             <div class="cogstay-stat-details">
                 <p>Pending Payments</p>
-                <h3>₹34,200.00</h3>
+                <h3>@pendingPaymentAmount.ToString("C")</h3>
             </div>
             <div class="cogstay-stat-icon">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
@@ -318,7 +341,7 @@ else if (role == "Admin")
                 <h3 class="cogstay-card-title"><i class="fa-solid fa-info-circle"></i> Quick Admin Info</h3>
             </div>
             <div class="cogstay-card-body" style="font-size: 13.5px; line-height: 1.5; color: var(--color-text-muted);">
-                Welcome to administrative dashboard. System is running under **Development Mode (Temporary Navigation)**. Security checks, migrations, and model binding are disabled.
+                Welcome to the administrative control dashboard. Monitor operations, staff profiles, room inventory, and guest reservations in real time.
             </div>
         </div>
     </div>

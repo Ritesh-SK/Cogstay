@@ -10,10 +10,26 @@ namespace CogStayMVC.Controllers;
 public class StaffController : Controller
 {
     private readonly IStaffService _staffService;
+    private readonly IRoomService _roomService;
+    private readonly IReservationService _reservationService;
+    private readonly ICheckInService _checkInService;
+    private readonly IHousekeepingService _housekeepingService;
+    private readonly IBillingService _billingService;
 
-    public StaffController(IStaffService staffService)
+    public StaffController(
+        IStaffService staffService,
+        IRoomService roomService,
+        IReservationService reservationService,
+        ICheckInService checkInService,
+        IHousekeepingService housekeepingService,
+        IBillingService billingService)
     {
         _staffService = staffService;
+        _roomService = roomService;
+        _reservationService = reservationService;
+        _checkInService = checkInService;
+        _housekeepingService = housekeepingService;
+        _billingService = billingService;
     }
 
     [HttpGet]
@@ -40,11 +56,34 @@ public class StaffController : Controller
     }
 
     [HttpGet]
-    public IActionResult Dashboard(string role = "Admin")
+    public async Task<IActionResult> Dashboard(string role = "Admin")
     {
         string sessionRole = HttpContext.Session.GetString("StaffRole") ?? role;
         ViewData["Role"] = sessionRole;
         ViewBag.StaffName = HttpContext.Session.GetString("StaffName") ?? "Staff Member";
+
+        var rooms = await _roomService.GetAllRoomsAsync();
+        var availableRooms = rooms.Where(r => r.Status == Enums.RoomStatus.Available).ToList();
+        var reservations = await _reservationService.GetAllReservationsAsync();
+        var activeStays = await _checkInService.GetAllStaysAsync();
+        var currentActiveStays = activeStays.Where(s => !s.ActualCheckOut.HasValue).ToList();
+        var housekeepingTasks = await _housekeepingService.GetAllTasksAsync();
+        var bills = await _billingService.GetAllBillsAsync();
+        var pendingBills = bills.Where(b => b.PaymentStatus == Enums.PaymentStatus.Pending).ToList();
+
+        ViewBag.TotalRoomsCount = rooms.Count();
+        ViewBag.AvailableRoomsCount = availableRooms.Count();
+        ViewBag.ReservationsCount = reservations.Count(r => r.ReservationStatus == Enums.ReservationStatus.Booked);
+        ViewBag.ActiveStaysCount = currentActiveStays.Count();
+        ViewBag.PendingTasksCount = housekeepingTasks.Count(t => t.TaskStatus == Enums.TaskStatus.Pending);
+        ViewBag.InProgressTasksCount = housekeepingTasks.Count(t => t.TaskStatus == Enums.TaskStatus.InProgress);
+        ViewBag.CompletedTasksCount = housekeepingTasks.Count(t => t.TaskStatus == Enums.TaskStatus.Completed);
+        ViewBag.PendingPaymentAmount = pendingBills.Sum(b => b.TotalAmount);
+        ViewBag.PendingBillsCount = pendingBills.Count();
+
+        ViewBag.ArrivalsList = reservations.Where(r => r.ReservationStatus == Enums.ReservationStatus.Booked).Take(5).ToList();
+        ViewBag.HousekeepingTasksList = housekeepingTasks.Where(t => t.TaskStatus != Enums.TaskStatus.Completed).Take(5).ToList();
+
         return View();
     }
 

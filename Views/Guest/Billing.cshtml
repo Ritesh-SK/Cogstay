@@ -1,3 +1,4 @@
+@model IEnumerable<CogStayMVC.DTOs.BillingResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Billing & Invoices";
@@ -11,39 +12,41 @@
 
 <div class="cogstay-card">
     <div class="cogstay-card-header">
-        <h3 class="cogstay-card-title"><i class="fa-solid fa-file-invoice-dollar"></i> Active Invoice Statements</h3>
-        <span class="cogstay-badge danger">1 Invoice Pending</span>
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-file-invoice-dollar"></i> Invoice Statements</h3>
+        <span class="cogstay-badge info">@Model.Count() Statements</span>
     </div>
     <div class="cogstay-table-responsive">
         <table class="cogstay-table">
             <thead>
                 <tr>
                     <th>Invoice Number</th>
-                    <th>Billing Period</th>
-                    <th>Amount Due</th>
+                    <th>Guest / Room</th>
+                    <th>Amount</th>
                     <th>Payment Status</th>
-                    <th style="text-align: right;">Action</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><strong>#INV-5502</strong></td>
-                    <td>June 24 - June 28, 2026</td>
-                    <td>₹12,000.00</td>
-                    <td><span class="cogstay-badge danger">Pending</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Guest/Dashboard" class="btn btn-primary btn-sm">Pay Balance</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>#INV-5489</strong></td>
-                    <td>Jan 12 - Jan 15, 2026</td>
-                    <td>₹37,632.00</td>
-                    <td><span class="cogstay-badge success">Paid</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Guest/Dashboard" class="btn btn-secondary btn-sm">Receipt</a>
-                    </td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--color-text-muted);">No billing invoices found.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var bill in Model)
+                    {
+                        string badgeClass = bill.PaymentStatus == CogStayMVC.Enums.PaymentStatus.Paid ? "success" : "danger";
+                        <tr>
+                            <td><strong>#INV-@bill.BillId</strong></td>
+                            <td>Room @bill.RoomNumber (@bill.GuestName)</td>
+                            <td>@bill.TotalAmount.ToString("C")</td>
+                            <td><span class="cogstay-badge @badgeClass">@bill.PaymentStatus</span></td>
+                            <td>@bill.Remarks</td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

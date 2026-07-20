@@ -1,13 +1,24 @@
+@model CogStayMVC.DTOs.CreateReservationDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Book Room";
     ViewData["Role"] = "Guest";
+    var availableRooms = ViewBag.AvailableRooms as IEnumerable<CogStayMVC.DTOs.RoomResponseDTO> ?? Enumerable.Empty<CogStayMVC.DTOs.RoomResponseDTO>();
 }
 
 <div style="margin-bottom: 30px;">
     <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Reserve Your Stay</h1>
-    <p style="color: var(--color-text-muted);">Please fill out the booking configuration details to secure your reservation.</p>
+    <p style="color: var(--color-text-muted);">Please select your room and dates to secure your reservation.</p>
 </div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
 <div class="booking-checkout-container">
     <!-- Left Column: Booking Form -->
@@ -16,36 +27,34 @@
             <h3 class="cogstay-card-title"><i class="fa-solid fa-calendar-days"></i> Booking Configuration</h3>
         </div>
         <div class="cogstay-card-body">
-            <form action="/Guest/MyReservations" method="get">
-                <div class="cogstay-form-row">
-                    <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Check-In Date</label>
-                        <input type="date" class="cogstay-form-control" value="2026-07-22" required />
-                    </div>
-                    <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Check-Out Date</label>
-                        <input type="date" class="cogstay-form-control" value="2026-07-26" required />
-                    </div>
+            <form asp-action="BookRoom" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="GuestId" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="cogstay-form-group">
+                    <label class="cogstay-form-label" asp-for="RoomId">Select Available Room</label>
+                    <select asp-for="RoomId" class="cogstay-form-control" required>
+                        <option value="">-- Choose Room --</option>
+                        @foreach (var room in availableRooms)
+                        {
+                            <option value="@room.RoomId">Room @room.RoomNumber - @room.RoomType (@room.PricePerNight.ToString("C") / Night)</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RoomId" class="text-danger"></span>
                 </div>
 
                 <div class="cogstay-form-row">
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Room Type Choice</label>
-                        <select class="cogstay-form-control" required>
-                            <option value="Deluxe">Deluxe Executive Room (₹14,400 / Night)</option>
-                            <option value="Suite" selected>Luxury Penthouse Suite (₹28,000 / Night)</option>
-                            <option value="Standard">Classic Superior King (₹11,200 / Night)</option>
-                        </select>
+                        <label class="cogstay-form-label" asp-for="CheckInDate">Check-In Date</label>
+                        <input asp-for="CheckInDate" type="date" class="cogstay-form-control" required />
+                        <span asp-validation-for="CheckInDate" class="text-danger"></span>
                     </div>
                     <div class="cogstay-form-group">
-                        <label class="cogstay-form-label">Number of Guests</label>
-                        <input type="number" class="cogstay-form-control" min="1" max="4" value="2" required />
+                        <label class="cogstay-form-label" asp-for="CheckOutDate">Check-Out Date</label>
+                        <input asp-for="CheckOutDate" type="date" class="cogstay-form-control" required />
+                        <span asp-validation-for="CheckOutDate" class="text-danger"></span>
                     </div>
-                </div>
-
-                <div class="cogstay-form-group" style="margin-top: 10px;">
-                    <label class="cogstay-form-label">Special Requests or Comments</label>
-                    <textarea class="cogstay-form-control" rows="3" placeholder="Airport pick-up services, extra towels, near-elevator placement..."></textarea>
                 </div>
 
                 <div style="margin-top: 20px;">
@@ -55,31 +64,18 @@
         </div>
     </div>
 
-    <!-- Right Column: Cost Breakdown -->
+    <!-- Right Column: Info Card -->
     <div class="cogstay-card booking-summary-card">
         <div class="cogstay-card-header">
-            <h3 class="cogstay-card-title"><i class="fa-solid fa-file-invoice"></i> Stay Cost Summary</h3>
+            <h3 class="cogstay-card-title"><i class="fa-solid fa-circle-info"></i> Reservation Information</h3>
         </div>
         <div class="cogstay-card-body">
-            <div class="booking-price-row">
-                <span>Penthouse Suite (4 Nights)</span>
-                <strong>₹1,12,000.00</strong>
-            </div>
-            <div class="booking-price-row">
-                <span>Stay GST Taxes (18%)</span>
-                <strong>₹20,160.00</strong>
-            </div>
-            <div class="booking-price-row" style="color: var(--color-success);">
-                <span>Loyalty discount (Gold Status)</span>
-                <strong>-₹11,200.00</strong>
-            </div>
-            <div class="booking-price-total" style="margin-top: 15px;">
-                <span>Total Due</span>
-                <strong>₹1,20,960.00</strong>
-            </div>
+            <p style="font-size: 14px; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 20px;">
+                Select from our currently available rooms catalog. Your reservation will be automatically assigned and set to <strong>Booked</strong> status upon confirmation.
+            </p>
             
-            <div style="background-color: var(--color-bg); border-radius: var(--border-radius); padding: 12px; font-size: 12.5px; color: var(--color-text-muted); margin-top: 20px; line-height: 1.4;">
-                <i class="fa-solid fa-shield-halved" style="color: var(--color-accent);"></i> Secure stay verification. Payment will be collected in full during guest checkout.
+            <div style="background-color: var(--color-bg); border-radius: var(--border-radius); padding: 12px; font-size: 12.5px; color: var(--color-text-muted); line-height: 1.4;">
+                <i class="fa-solid fa-shield-halved" style="color: var(--color-accent);"></i> Secure stay verification. Payment invoice will be generated upon check-in and checkout processing.
             </div>
         </div>
     </div>

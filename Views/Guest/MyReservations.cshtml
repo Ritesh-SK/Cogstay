@@ -1,3 +1,4 @@
+@model IEnumerable<CogStayMVC.DTOs.ReservationResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "My Reservations";
@@ -12,7 +13,7 @@
 <div class="cogstay-card">
     <div class="cogstay-card-header">
         <h3 class="cogstay-card-title"><i class="fa-solid fa-plane-arrival"></i> Active & Upcoming Stays</h3>
-        <span class="cogstay-badge info">2 Reservations</span>
+        <span class="cogstay-badge info">@Model.Count() Reservations</span>
     </div>
     <div class="cogstay-table-responsive">
         <table class="cogstay-table">
@@ -27,26 +28,29 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><strong>#RES-94021</strong></td>
-                    <td>Room 304 (Penthouse Suite)</td>
-                    <td>June 24, 2026</td>
-                    <td>June 28, 2026</td>
-                    <td><span class="cogstay-badge success">Checked In</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Guest/CheckInStatus" class="btn btn-secondary btn-sm">Details</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>#RES-95843</strong></td>
-                    <td>Room 205 (Deluxe Room)</td>
-                    <td>July 22, 2026</td>
-                    <td>July 26, 2026</td>
-                    <td><span class="cogstay-badge warning">Booked</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Guest/CheckInStatus" class="btn btn-secondary btn-sm">Details</a>
-                    </td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--color-text-muted);">No reservations found. Book a room to get started.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        string badgeClass = item.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked ? "success" : "danger";
+                        <tr>
+                            <td><strong>#RES-@item.ReservationId</strong></td>
+                            <td>Room @item.RoomNumber (@item.RoomType)</td>
+                            <td>@item.CheckInDate.ToString("MMM dd, yyyy")</td>
+                            <td>@item.CheckOutDate.ToString("MMM dd, yyyy")</td>
+                            <td><span class="cogstay-badge @badgeClass">@item.ReservationStatus</span></td>
+                            <td style="text-align: right;">
+                                <a href="/Guest/CheckInStatus" class="btn btn-secondary btn-sm">Check Status</a>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

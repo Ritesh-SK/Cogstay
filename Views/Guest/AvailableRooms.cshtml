@@ -1,3 +1,4 @@
+@model IEnumerable<CogStayMVC.DTOs.RoomResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Available Rooms";
@@ -9,42 +10,11 @@
     <p style="color: var(--color-text-muted);">Browse our catalog of available luxury suites and standard rooms.</p>
 </div>
 
-<!-- Filter Bar -->
-<div class="cogstay-filter-bar">
-    <div class="cogstay-filter-group">
-        <label class="cogstay-form-label">Room Type</label>
-        <select class="cogstay-form-control" style="padding: 8px 12px; min-width: 180px;">
-            <option>All Types</option>
-            <option>Deluxe Room</option>
-            <option>Penthouse Suite</option>
-            <option>Superior King</option>
-        </select>
-    </div>
-    <div class="cogstay-filter-group">
-        <label class="cogstay-form-label">Availability</label>
-        <select class="cogstay-form-control" style="padding: 8px 12px; min-width: 150px;">
-            <option>Available Only</option>
-            <option>All Rooms</option>
-        </select>
-    </div>
-    <div class="cogstay-filter-group">
-        <label class="cogstay-form-label">Sort By</label>
-        <select class="cogstay-form-control" style="padding: 8px 12px; min-width: 150px;">
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-            <option>Room Number</option>
-        </select>
-    </div>
-    <div style="margin-top: 22px;">
-        <button class="btn btn-primary" style="padding: 8px 20px;">Apply Filters</button>
-    </div>
-</div>
-
 <!-- Rooms Table Catalog -->
 <div class="cogstay-card">
     <div class="cogstay-card-header">
-        <h3 class="cogstay-card-title"><i class="fa-solid fa-hotel"></i> Available Rooms Log</h3>
-        <span class="cogstay-badge success">4 Rooms Available</span>
+        <h3 class="cogstay-card-title"><i class="fa-solid fa-hotel"></i> Available Rooms Catalog</h3>
+        <span class="cogstay-badge success">@Model.Count() Rooms Available</span>
     </div>
     <div class="cogstay-table-responsive">
         <table class="cogstay-table">
@@ -58,42 +28,27 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><strong>101</strong></td>
-                    <td>Classic Superior King</td>
-                    <td>₹11,200.00</td>
-                    <td><span class="cogstay-badge success">Available</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Guest/BookRoom" class="btn btn-primary btn-sm">Book</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>205</strong></td>
-                    <td>Deluxe Executive Room</td>
-                    <td>₹14,400.00</td>
-                    <td><span class="cogstay-badge success">Available</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Guest/BookRoom" class="btn btn-primary btn-sm">Book</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>304</strong></td>
-                    <td>Luxury Penthouse Suite</td>
-                    <td>₹28,000.00</td>
-                    <td><span class="cogstay-badge success">Available</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Guest/BookRoom" class="btn btn-primary btn-sm">Book</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>402</strong></td>
-                    <td>Deluxe Executive Room</td>
-                    <td>₹14,400.00</td>
-                    <td><span class="cogstay-badge success">Available</span></td>
-                    <td style="text-align: right;">
-                        <a href="/Guest/BookRoom" class="btn btn-primary btn-sm">Book</a>
-                    </td>
-                </tr>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--color-text-muted);">No rooms currently available for booking.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var room in Model)
+                    {
+                        <tr>
+                            <td><strong>@room.RoomNumber</strong></td>
+                            <td>@room.RoomType</td>
+                            <td>@room.PricePerNight.ToString("C")</td>
+                            <td><span class="cogstay-badge success">Available</span></td>
+                            <td style="text-align: right;">
+                                <a asp-controller="Guest" asp-action="BookRoom" asp-route-roomId="@room.RoomId" class="btn btn-primary btn-sm">Book</a>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>
