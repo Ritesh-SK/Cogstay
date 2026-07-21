@@ -2,8 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using CogStayMVC.Data;
 using CogStayMVC.Repositories.Implementations;
 using CogStayMVC.Repositories.Interfaces;
-using CogStayMVC.Services.Implementations;
 using CogStayMVC.Services.Interfaces;
+using CogStayMVC.Repositories.Admin;
+using CogStayMVC.Repositories.FrontDesk;
+using CogStayMVC.Repositories.GuestModule;
+using CogStayMVC.Repositories.Housekeeping;
+using CogStayMVC.Repositories.Manager;
+using CogStayMVC.Services.Admin;
+using CogStayMVC.Services.FrontDesk;
+using CogStayMVC.Services.GuestModule;
+using CogStayMVC.Services.Housekeeping;
+using CogStayMVC.Services.Manager;
 
 var builder = WebApplication.CreateBuilder(args);
 

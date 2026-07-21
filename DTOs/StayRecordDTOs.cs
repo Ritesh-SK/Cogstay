@@ -14,6 +14,10 @@ public class StayRecordResponseDTO
     public DateTime? ActualCheckOut { get; set; }
     public bool IsCheckedOut => ActualCheckOut.HasValue;
     public BillingResponseDTO? Billing { get; set; }
+
+    public string? BookingReference { get; set; }
+    public string? BillingReference { get; set; }
+    public string? StayDetails { get; set; }
 }
 
 public class CreateCheckInDTO

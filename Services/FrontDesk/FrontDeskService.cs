@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using CogStayMVC.DTOs;
 using CogStayMVC.Enums;
@@ -11,191 +9,7 @@ using CogStayMVC.Repositories.Interfaces;
 using CogStayMVC.Services.Interfaces;
 using TaskStatus = CogStayMVC.Enums.TaskStatus;
 
-
-namespace CogStayMVC.Services.Implementations;
-
-public class GuestService : IGuestService
-{
-    private readonly IGuestRepository _guestRepository;
-
-    public GuestService(IGuestRepository guestRepository)
-    {
-        _guestRepository = guestRepository;
-    }
-
-    public async Task<IEnumerable<GuestResponseDTO>> GetAllGuestsAsync()
-    {
-        var guests = await _guestRepository.GetAllAsync();
-        return guests.Select(MapToDTO);
-    }
-
-    public async Task<GuestResponseDTO?> GetGuestByIdAsync(int id)
-    {
-        var guest = await _guestRepository.GetByIdAsync(id);
-        return guest != null ? MapToDTO(guest) : null;
-    }
-
-    public async Task<GuestResponseDTO?> GetGuestByEmailAsync(string email)
-    {
-        var guest = await _guestRepository.GetByEmailAsync(email);
-        return guest != null ? MapToDTO(guest) : null;
-    }
-
-    public async Task<GuestResponseDTO> RegisterGuestAsync(CreateGuestDTO dto)
-    {
-        var existing = await _guestRepository.GetByEmailAsync(dto.Email);
-        if (existing != null)
-        {
-            throw new InvalidOperationException("A guest with this email already exists.");
-        }
-
-        var guest = new Guest
-        {
-            FullName = dto.FullName,
-            Email = dto.Email,
-            PhoneNumber = dto.PhoneNumber,
-            Address = dto.Address,
-            PasswordHash = HashPassword(dto.Password),
-            CreatedAt = DateTime.Now
-        };
-
-        await _guestRepository.AddAsync(guest);
-        return MapToDTO(guest);
-    }
-
-    public async Task<GuestResponseDTO?> ValidateGuestLoginAsync(GuestLoginDTO dto)
-    {
-        var guest = await _guestRepository.GetByEmailAsync(dto.Email);
-        if (guest == null || guest.PasswordHash != HashPassword(dto.Password))
-        {
-            return null;
-        }
-
-        return MapToDTO(guest);
-    }
-
-    public async Task UpdateGuestAsync(UpdateGuestDTO dto)
-    {
-        var guest = await _guestRepository.GetByIdAsync(dto.GuestId);
-        if (guest == null)
-            throw new KeyNotFoundException("Guest not found.");
-
-        guest.FullName = dto.FullName;
-        guest.Email = dto.Email;
-        guest.PhoneNumber = dto.PhoneNumber;
-        guest.Address = dto.Address;
-
-        await _guestRepository.UpdateAsync(guest);
-    }
-
-    public async Task DeleteGuestAsync(int id)
-    {
-        await _guestRepository.DeleteAsync(id);
-    }
-
-    private static GuestResponseDTO MapToDTO(Guest guest) => new()
-    {
-        GuestId = guest.GuestId,
-        FullName = guest.FullName,
-        Email = guest.Email,
-        PhoneNumber = guest.PhoneNumber,
-        Address = guest.Address,
-        CreatedAt = guest.CreatedAt
-    };
-
-    private static string HashPassword(string password)
-    {
-        using var sha256 = SHA256.Create();
-        var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-        return Convert.ToBase64String(bytes);
-    }
-}
-
-public class RoomService : IRoomService
-{
-    private readonly IRoomRepository _roomRepository;
-
-    public RoomService(IRoomRepository roomRepository)
-    {
-        _roomRepository = roomRepository;
-    }
-
-    public async Task<IEnumerable<RoomResponseDTO>> GetAllRoomsAsync()
-    {
-        var rooms = await _roomRepository.GetAllAsync();
-        return rooms.Select(MapToDTO);
-    }
-
-    public async Task<IEnumerable<RoomResponseDTO>> GetAvailableRoomsAsync()
-    {
-        var rooms = await _roomRepository.GetRoomsByStatusAsync(RoomStatus.Available);
-        return rooms.Select(MapToDTO);
-    }
-
-    public async Task<RoomResponseDTO?> GetRoomByIdAsync(int id)
-    {
-        var room = await _roomRepository.GetByIdAsync(id);
-        return room != null ? MapToDTO(room) : null;
-    }
-
-    public async Task<RoomResponseDTO> CreateRoomAsync(CreateRoomDTO dto)
-    {
-        var existing = await _roomRepository.GetByRoomNumberAsync(dto.RoomNumber);
-        if (existing != null)
-        {
-            throw new InvalidOperationException($"Room number '{dto.RoomNumber}' already exists.");
-        }
-
-        var room = new Room
-        {
-            RoomNumber = dto.RoomNumber,
-            RoomType = dto.RoomType,
-            PricePerNight = dto.PricePerNight,
-            Status = dto.Status
-        };
-
-        await _roomRepository.AddAsync(room);
-        return MapToDTO(room);
-    }
-
-    public async Task UpdateRoomAsync(UpdateRoomDTO dto)
-    {
-        var room = await _roomRepository.GetByIdAsync(dto.RoomId);
-        if (room == null)
-            throw new KeyNotFoundException("Room not found.");
-
-        room.RoomNumber = dto.RoomNumber;
-        room.RoomType = dto.RoomType;
-        room.PricePerNight = dto.PricePerNight;
-        room.Status = dto.Status;
-
-        await _roomRepository.UpdateAsync(room);
-    }
-
-    public async Task UpdateRoomStatusAsync(int roomId, RoomStatus status)
-    {
-        var room = await _roomRepository.GetByIdAsync(roomId);
-        if (room == null)
-            throw new KeyNotFoundException("Room not found.");
-
-        room.Status = status;
-        await _roomRepository.UpdateAsync(room);
-    }
-
-    public async Task DeleteRoomAsync(int id)
-    {
-        await _roomRepository.DeleteAsync(id);
-    }
-
-    private static RoomResponseDTO MapToDTO(Room room) => new()
-    {
-        RoomId = room.RoomId,
-        RoomNumber = room.RoomNumber,
-        RoomType = room.RoomType,
-        PricePerNight = room.PricePerNight,
-        Status = room.Status
-    };
-}
+namespace CogStayMVC.Services.FrontDesk;
 
 public class ReservationService : IReservationService
 {
@@ -390,7 +204,11 @@ public class CheckInService : ICheckInService
         {
             GuestId = reservation.GuestId,
             ReservationId = reservation.ReservationId,
-            ActualCheckIn = DateTime.Now
+            ActualCheckIn = DateTime.Now,
+            GuestName = reservation.Guest?.FullName ?? "Unknown",
+            BookingReference = $"BK-{reservation.ReservationId}",
+            BillingReference = "Pending",
+            StayDetails = $"Room {reservation.Room?.RoomNumber ?? "N/A"} - Stay from {reservation.CheckInDate:yyyy-MM-dd} to {reservation.CheckOutDate:yyyy-MM-dd}"
         };
 
         await _stayRecordRepository.AddAsync(stay);
@@ -444,11 +262,14 @@ public class CheckInService : ICheckInService
     {
         StayId = stay.StayId,
         GuestId = stay.GuestId,
-        GuestName = stay.Guest?.FullName ?? "Unknown",
+        GuestName = string.IsNullOrEmpty(stay.GuestName) ? (stay.Guest?.FullName ?? "Unknown") : stay.GuestName,
         ReservationId = stay.ReservationId,
         RoomNumber = stay.Reservation?.Room?.RoomNumber ?? "N/A",
         ActualCheckIn = stay.ActualCheckIn,
         ActualCheckOut = stay.ActualCheckOut,
+        BookingReference = stay.BookingReference,
+        BillingReference = stay.BillingReference,
+        StayDetails = stay.StayDetails,
         Billing = stay.Billing != null ? new BillingResponseDTO
         {
             BillId = stay.Billing.BillId,
@@ -525,6 +346,13 @@ public class BillingService : IBillingService
         };
 
         await _billingRepository.AddAsync(bill);
+
+        if (stay != null)
+        {
+            stay.BillingReference = $"BILL-{bill.BillId}";
+            await _stayRecordRepository.UpdateAsync(stay);
+        }
+
         var created = await _billingRepository.GetBillingWithDetailsAsync(bill.BillId);
         return MapToDTO(created ?? bill);
     }
@@ -540,6 +368,14 @@ public class BillingService : IBillingService
         };
 
         await _billingRepository.AddAsync(bill);
+
+        var stay = await _stayRecordRepository.GetStayRecordWithDetailsAsync(dto.StayId);
+        if (stay != null)
+        {
+            stay.BillingReference = $"BILL-{bill.BillId}";
+            await _stayRecordRepository.UpdateAsync(stay);
+        }
+
         var created = await _billingRepository.GetBillingWithDetailsAsync(bill.BillId);
         return MapToDTO(created ?? bill);
     }
@@ -594,253 +430,5 @@ public class BillingService : IBillingService
         TotalAmount = bill.TotalAmount,
         PaymentStatus = bill.PaymentStatus,
         Remarks = bill.Remarks
-    };
-}
-
-public class HousekeepingService : IHousekeepingService
-{
-    private readonly IHousekeepingTaskRepository _taskRepository;
-    private readonly IRoomRepository _roomRepository;
-
-    public HousekeepingService(
-        IHousekeepingTaskRepository taskRepository,
-        IRoomRepository roomRepository)
-    {
-        _taskRepository = taskRepository;
-        _roomRepository = roomRepository;
-    }
-
-    public async Task<IEnumerable<HousekeepingTaskResponseDTO>> GetAllTasksAsync()
-    {
-        var tasks = await _taskRepository.GetTasksWithDetailsAsync();
-        return tasks.Select(MapToDTO);
-    }
-
-    public async Task<HousekeepingTaskResponseDTO?> GetTaskByIdAsync(int id)
-    {
-        var task = await _taskRepository.GetTaskWithDetailsAsync(id);
-        return task != null ? MapToDTO(task) : null;
-    }
-
-    public async Task<IEnumerable<HousekeepingTaskResponseDTO>> GetTasksByRoomIdAsync(int roomId)
-    {
-        var tasks = await _taskRepository.GetTasksByRoomIdAsync(roomId);
-        return tasks.Select(MapToDTO);
-    }
-
-    public async Task<HousekeepingTaskResponseDTO> CreateTaskAsync(CreateHousekeepingTaskDTO dto)
-    {
-        var room = await _roomRepository.GetByIdAsync(dto.RoomId);
-        if (room == null)
-            throw new InvalidOperationException("Room not found.");
-
-        var task = new HousekeepingTask
-        {
-            RoomId = dto.RoomId,
-            TaskDescription = dto.TaskDescription,
-            TaskStatus = TaskStatus.Pending
-        };
-
-        await _taskRepository.AddAsync(task);
-        var created = await _taskRepository.GetTaskWithDetailsAsync(task.TaskId);
-        return MapToDTO(created ?? task);
-    }
-
-    public async Task UpdateTaskStatusAsync(UpdateTaskStatusDTO dto)
-    {
-        var task = await _taskRepository.GetTaskWithDetailsAsync(dto.TaskId);
-        if (task == null)
-            throw new KeyNotFoundException("Housekeeping task not found.");
-
-        task.TaskStatus = dto.TaskStatus;
-        await _taskRepository.UpdateAsync(task);
-
-        // Room status state machine update
-        if (task.Room != null)
-        {
-            if (dto.TaskStatus == TaskStatus.InProgress)
-            {
-                task.Room.Status = RoomStatus.CleaningInProgress;
-                await _roomRepository.UpdateAsync(task.Room);
-            }
-            else if (dto.TaskStatus == TaskStatus.Completed)
-            {
-                task.Room.Status = RoomStatus.Available; // Visible again for public booking!
-                await _roomRepository.UpdateAsync(task.Room);
-            }
-        }
-    }
-
-    public async Task DeleteTaskAsync(int id)
-    {
-        await _taskRepository.DeleteAsync(id);
-    }
-
-    private static HousekeepingTaskResponseDTO MapToDTO(HousekeepingTask task) => new()
-    {
-        TaskId = task.TaskId,
-        RoomId = task.RoomId,
-        RoomNumber = task.Room?.RoomNumber ?? "N/A",
-        TaskDescription = task.TaskDescription,
-        TaskStatus = task.TaskStatus
-    };
-}
-
-public class StaffService : IStaffService
-{
-    private readonly IStaffRepository _staffRepository;
-
-    public StaffService(IStaffRepository staffRepository)
-    {
-        _staffRepository = staffRepository;
-    }
-
-    public async Task<IEnumerable<StaffResponseDTO>> GetAllStaffAsync()
-    {
-        var staffList = await _staffRepository.GetAllAsync();
-        return staffList.Select(MapToDTO);
-    }
-
-    public async Task<StaffResponseDTO?> GetStaffByIdAsync(int id)
-    {
-        var staff = await _staffRepository.GetByIdAsync(id);
-        return staff != null ? MapToDTO(staff) : null;
-    }
-
-    public async Task<StaffResponseDTO> CreateStaffAsync(CreateStaffDTO dto)
-    {
-        var existing = await _staffRepository.GetByEmailAsync(dto.Email);
-        if (existing != null)
-            throw new InvalidOperationException("Staff member with this email already exists.");
-
-        var staff = new Staff
-        {
-            FullName = dto.FullName,
-            Email = dto.Email,
-            PhoneNumber = dto.PhoneNumber,
-            PasswordHash = HashPassword(dto.Password),
-            Role = dto.Role,
-            IsActive = true,
-            CreatedAt = DateTime.Now
-        };
-
-        await _staffRepository.AddAsync(staff);
-        return MapToDTO(staff);
-    }
-
-    public async Task UpdateStaffAsync(UpdateStaffDTO dto)
-    {
-        var staff = await _staffRepository.GetByIdAsync(dto.StaffId);
-        if (staff == null)
-            throw new KeyNotFoundException("Staff member not found.");
-
-        staff.FullName = dto.FullName;
-        staff.Email = dto.Email;
-        staff.PhoneNumber = dto.PhoneNumber;
-        staff.Role = dto.Role;
-        staff.IsActive = dto.IsActive;
-
-        await _staffRepository.UpdateAsync(staff);
-    }
-
-    public async Task DeleteStaffAsync(int id)
-    {
-        await _staffRepository.DeleteAsync(id);
-    }
-
-    public async Task<StaffResponseDTO?> ValidateStaffLoginAsync(StaffLoginDTO dto)
-    {
-        var staff = await _staffRepository.GetByEmailAsync(dto.Email);
-        if (staff == null || !staff.IsActive || staff.PasswordHash != HashPassword(dto.Password))
-        {
-            return null;
-        }
-
-        if (staff.Role != dto.Role && dto.Role != StaffRole.Admin)
-        {
-            return null; // Role mismatch
-        }
-
-        return MapToDTO(staff);
-    }
-
-    private static StaffResponseDTO MapToDTO(Staff staff) => new()
-    {
-        StaffId = staff.StaffId,
-        FullName = staff.FullName,
-        Email = staff.Email,
-        PhoneNumber = staff.PhoneNumber,
-        Role = staff.Role,
-        IsActive = staff.IsActive,
-        CreatedAt = staff.CreatedAt
-    };
-
-    private static string HashPassword(string password)
-    {
-        using var sha256 = SHA256.Create();
-        var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-        return Convert.ToBase64String(bytes);
-    }
-}
-
-public class FeedbackService : IFeedbackService
-{
-    private readonly IFeedbackRepository _feedbackRepository;
-    private readonly IGuestRepository _guestRepository;
-
-    public FeedbackService(
-        IFeedbackRepository feedbackRepository,
-        IGuestRepository guestRepository)
-    {
-        _feedbackRepository = feedbackRepository;
-        _guestRepository = guestRepository;
-    }
-
-    public async Task<IEnumerable<FeedbackResponseDTO>> GetAllFeedbacksAsync()
-    {
-        var feedbacks = await _feedbackRepository.GetFeedbacksWithDetailsAsync();
-        return feedbacks.Select(MapToDTO);
-    }
-
-    public async Task<FeedbackResponseDTO?> GetFeedbackByIdAsync(int id)
-    {
-        var feedbacks = await _feedbackRepository.GetFeedbacksWithDetailsAsync();
-        var feedback = feedbacks.FirstOrDefault(f => f.FeedbackId == id);
-        return feedback != null ? MapToDTO(feedback) : null;
-    }
-
-    public async Task<FeedbackResponseDTO> SubmitFeedbackAsync(CreateFeedbackDTO dto)
-    {
-        var guest = await _guestRepository.GetByIdAsync(dto.GuestId);
-        if (guest == null)
-            throw new InvalidOperationException("Guest account not found.");
-
-        var feedback = new Feedback
-        {
-            GuestId = dto.GuestId,
-            ReservationId = dto.ReservationId,
-            Rating = dto.Rating,
-            Comments = dto.Comments,
-            CreatedAt = DateTime.Now
-        };
-
-        await _feedbackRepository.AddAsync(feedback);
-        return MapToDTO(feedback);
-    }
-
-    public async Task DeleteFeedbackAsync(int id)
-    {
-        await _feedbackRepository.DeleteAsync(id);
-    }
-
-    private static FeedbackResponseDTO MapToDTO(Feedback f) => new()
-    {
-        FeedbackId = f.FeedbackId,
-        GuestId = f.GuestId,
-        GuestName = f.Guest?.FullName ?? "Guest",
-        ReservationId = f.ReservationId,
-        Rating = f.Rating,
-        Comments = f.Comments,
-        CreatedAt = f.CreatedAt
     };
 }

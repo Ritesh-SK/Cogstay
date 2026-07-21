@@ -73,6 +73,11 @@ public class HotelDbContext : DbContext
         {
             entity.HasKey(s => s.StayId);
 
+            entity.Property(s => s.GuestName).IsRequired().HasMaxLength(100).HasDefaultValue("");
+            entity.Property(s => s.BookingReference).HasMaxLength(100);
+            entity.Property(s => s.BillingReference).HasMaxLength(100);
+            entity.Property(s => s.StayDetails).HasMaxLength(500);
+
             // Many StayRecords -> One Guest (One-to-Many)
             entity.HasOne(s => s.Guest)
                 .WithMany(g => g.StayRecords)

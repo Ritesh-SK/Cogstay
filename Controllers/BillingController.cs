@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStayMVC.DTOs;
 using CogStayMVC.Services.Interfaces;
@@ -22,6 +23,14 @@ public class BillingController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         var bills = await _billingService.GetAllBillsAsync();
         return View(bills);
     }
@@ -29,6 +38,14 @@ public class BillingController : Controller
     [HttpGet]
     public async Task<IActionResult> Create(int? stayId)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         ViewBag.ActiveStays = await _checkInService.GetAllStaysAsync();
         return View(new CreateBillDTO { StayId = stayId ?? 0 });
     }
@@ -37,6 +54,14 @@ public class BillingController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateBillDTO dto)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         if (!ModelState.IsValid)
         {
             ViewBag.ActiveStays = await _checkInService.GetAllStaysAsync();
@@ -54,8 +79,8 @@ public class BillingController : Controller
                 await _billingService.GenerateBillForStayAsync(dto.StayId, dto.Remarks);
             }
 
-            TempData["Success"] = "Bill generated successfully by Front Desk.";
-            return RedirectToAction(nameof(Index));
+            TempData["Success"] = "Bill generated successfully.";
+            return RedirectToAction(nameof(Index), new { role = staffRole });
         }
         catch (Exception ex)
         {
@@ -68,6 +93,14 @@ public class BillingController : Controller
     [HttpGet]
     public async Task<IActionResult> Payment(int? stayId, int? billId)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         BillingResponseDTO? bill = null;
 
         if (billId.HasValue)
@@ -83,7 +116,7 @@ public class BillingController : Controller
         if (bill == null)
         {
             TempData["Error"] = "No billing record found for this stay.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { role = staffRole });
         }
 
         var dto = new ProcessPaymentDTO
@@ -100,6 +133,14 @@ public class BillingController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Payment(ProcessPaymentDTO dto)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         if (!ModelState.IsValid)
         {
             ViewBag.Bill = await _billingService.GetBillByIdAsync(dto.BillId);
@@ -110,7 +151,7 @@ public class BillingController : Controller
         {
             await _billingService.ProcessPaymentAsync(dto);
             TempData["Success"] = "Payment accepted and checkout completed! Housekeeping cleaning request automatically generated.";
-            return RedirectToAction(nameof(History));
+            return RedirectToAction(nameof(History), new { role = staffRole });
         }
         catch (Exception ex)
         {
@@ -123,6 +164,14 @@ public class BillingController : Controller
     [HttpGet]
     public async Task<IActionResult> History()
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         var bills = await _billingService.GetAllBillsAsync();
         return View(bills);
     }
@@ -131,6 +180,14 @@ public class BillingController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         try
         {
             await _billingService.DeleteBillAsync(id);
@@ -140,6 +197,6 @@ public class BillingController : Controller
         {
             TempData["Error"] = ex.Message;
         }
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { role = staffRole });
     }
 }

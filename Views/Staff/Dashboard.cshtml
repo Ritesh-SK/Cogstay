@@ -15,6 +15,7 @@
     int completedTasksCount = ViewBag.CompletedTasksCount ?? 0;
     decimal pendingPaymentAmount = ViewBag.PendingPaymentAmount ?? 0m;
     int pendingBillsCount = ViewBag.PendingBillsCount ?? 0;
+    int totalStaffCount = ViewBag.TotalStaffCount ?? 0;
 }
 
 <div style="margin-bottom: 30px;">
@@ -115,6 +116,12 @@
                     </a>
                     <a href="/Room/CheckAvailability" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
                         <i class="fa-solid fa-door-open"></i> Check Room Availability
+                    </a>
+                    <a href="/Billing/Index" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                        <i class="fa-solid fa-file-invoice-dollar"></i> Billing Operations
+                    </a>
+                    <a href="/Billing/History" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Payment History
                     </a>
                 </div>
             </div>
@@ -280,7 +287,7 @@ else if (role == "Manager")
 else if (role == "Admin")
 {
     <!-- Admin Stats Counters -->
-    <div class="grid-container grid-cols-4" style="margin-bottom: 30px;">
+    <div class="grid-container grid-cols-2" style="margin-bottom: 30px;">
         <div class="cogstay-stat-card admin">
             <div class="cogstay-stat-details">
                 <p>Total Rooms</p>
@@ -293,31 +300,11 @@ else if (role == "Admin")
 
         <div class="cogstay-stat-card admin">
             <div class="cogstay-stat-details">
-                <p>Active Reservations</p>
-                <h3>@reservationsCount Bookings</h3>
+                <p>Total Staff Members</p>
+                <h3>@totalStaffCount Staff</h3>
             </div>
             <div class="cogstay-stat-icon">
-                <i class="fa-solid fa-calendar-check"></i>
-            </div>
-        </div>
-
-        <div class="cogstay-stat-card admin">
-            <div class="cogstay-stat-details">
-                <p>Active Stays</p>
-                <h3>@activeStaysCount Stays</h3>
-            </div>
-            <div class="cogstay-stat-icon">
-                <i class="fa-solid fa-key"></i>
-            </div>
-        </div>
-
-        <div class="cogstay-stat-card admin">
-            <div class="cogstay-stat-details">
-                <p>Pending Payments</p>
-                <h3>@pendingPaymentAmount.ToString("C")</h3>
-            </div>
-            <div class="cogstay-stat-icon">
-                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <i class="fa-solid fa-users-gear"></i>
             </div>
         </div>
     </div>
@@ -331,8 +318,6 @@ else if (role == "Admin")
             <div class="cogstay-card-body" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
                 <a href="/Staff/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-users"></i> Staff CRUD Portal</a>
                 <a href="/Room/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-door-open"></i> Add/Edit Room Catalog</a>
-                <a href="/Reservation/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-list-check"></i> Monitor Reservations</a>
-                <a href="/Billing/Index" class="btn btn-secondary" style="justify-content: flex-start;"><i class="fa-solid fa-wallet"></i> Invoice Billing Panel</a>
             </div>
         </div>
 
@@ -341,7 +326,7 @@ else if (role == "Admin")
                 <h3 class="cogstay-card-title"><i class="fa-solid fa-info-circle"></i> Quick Admin Info</h3>
             </div>
             <div class="cogstay-card-body" style="font-size: 13.5px; line-height: 1.5; color: var(--color-text-muted);">
-                Welcome to the administrative control dashboard. Monitor operations, staff profiles, room inventory, and guest reservations in real time.
+                Welcome to the administrative control dashboard. Manage staff profiles and room inventory in real time.
             </div>
         </div>
     </div>

@@ -19,6 +19,14 @@ public class FeedbackController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Manager")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Manager";
         var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
         return View(feedbacks);
     }
@@ -29,6 +37,7 @@ public class FeedbackController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction("Login", "Guest");
 
+        ViewData["Role"] = "Guest";
         var dto = new CreateFeedbackDTO
         {
             GuestId = guestId.Value,
@@ -43,12 +52,14 @@ public class FeedbackController : Controller
     public async Task<IActionResult> Create(CreateFeedbackDTO dto)
     {
         int? guestId = HttpContext.Session.GetInt32("GuestId");
-        if (guestId.HasValue) dto.GuestId = guestId.Value;
+        if (!guestId.HasValue) return RedirectToAction("Login", "Guest");
+        dto.GuestId = guestId.Value;
 
+        ViewData["Role"] = "Guest";
         if (!ModelState.IsValid) return View(dto);
 
         try
-        {
+         {
             await _feedbackService.SubmitFeedbackAsync(dto);
             TempData["Success"] = "Thank you for your feedback!";
             return RedirectToAction("Dashboard", "Guest");
@@ -64,6 +75,13 @@ public class FeedbackController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Manager")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
         try
         {
             await _feedbackService.DeleteFeedbackAsync(id);
@@ -73,6 +91,6 @@ public class FeedbackController : Controller
         {
             TempData["Error"] = ex.Message;
         }
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { role = "Manager" });
     }
 }

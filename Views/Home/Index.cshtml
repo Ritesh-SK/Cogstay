@@ -243,3 +243,103 @@
         <p style="font-size: 12px; color: var(--color-text-muted); margin-top: 10px;">&copy; 2026 CogStay. All rights reserved.</p>
     </div>
 </footer>
+
+<style>
+    /* Fade-in and entrance animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* Apply animations on load */
+    .cogstay-hero {
+        overflow: hidden;
+    }
+    .cogstay-hero-content {
+        animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .cogstay-public-nav {
+        animation: fadeIn 1s ease-out both;
+    }
+
+    /* Scroll reveal base classes */
+    .reveal-item {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-item.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Hover effects */
+    .cogstay-service-card, .cogstay-room-card, .cogstay-card.settings-section-card {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .cogstay-service-card:hover, .cogstay-room-card:hover, .cogstay-card.settings-section-card:hover {
+        transform: translateY(-8px) !important;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* Image soft zoom on hover */
+    .cogstay-room-image-container {
+        overflow: hidden;
+    }
+    .cogstay-room-card-img {
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .cogstay-room-card:hover .cogstay-room-card-img {
+        transform: scale(1.06) !important;
+    }
+
+    /* Button hover micro-interactions */
+    .btn, .btn-reserve {
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        position: relative;
+        overflow: hidden;
+    }
+    .btn:hover, .btn-reserve:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.05);
+    }
+    .btn:active, .btn-reserve:active {
+        transform: translateY(0);
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Add scroll reveal to sections / cards
+        const revealElements = document.querySelectorAll(
+            '#about, #services .cogstay-section-header, .cogstay-service-card, #rooms .cogstay-section-header, .cogstay-room-card, #portals .cogstay-section-header, .cogstay-card.settings-section-card, #contact .cogstay-card, #contact div'
+        );
+        
+        revealElements.forEach(el => el.classList.add('reveal-item'));
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target); // Reveal only once
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        });
+
+        revealElements.forEach(el => observer.observe(el));
+    });
+</script>

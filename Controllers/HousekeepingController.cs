@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStayMVC.DTOs;
 using CogStayMVC.Services.Interfaces;
@@ -22,6 +23,14 @@ public class HousekeepingController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         var tasks = await _housekeepingService.GetAllTasksAsync();
         return View(tasks);
     }
@@ -29,6 +38,14 @@ public class HousekeepingController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         var task = await _housekeepingService.GetTaskByIdAsync(id);
         if (task == null) return NotFound();
         return View(task);
@@ -37,6 +54,14 @@ public class HousekeepingController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         ViewBag.Rooms = await _roomService.GetAllRoomsAsync();
         return View(new CreateHousekeepingTaskDTO());
     }
@@ -45,6 +70,14 @@ public class HousekeepingController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateHousekeepingTaskDTO dto)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         if (!ModelState.IsValid)
         {
             ViewBag.Rooms = await _roomService.GetAllRoomsAsync();
@@ -55,7 +88,7 @@ public class HousekeepingController : Controller
         {
             await _housekeepingService.CreateTaskAsync(dto);
             TempData["Success"] = "Housekeeping cleaning request created.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { role = staffRole });
         }
         catch (Exception ex)
         {
@@ -68,11 +101,18 @@ public class HousekeepingController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         var task = await _housekeepingService.GetTaskByIdAsync(id);
 
         if (task == null)
         {
-            // Temporary test message:
             return Content($"Task with ID {id} was not found in the database.");
         }
 
@@ -89,6 +129,14 @@ public class HousekeepingController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, UpdateTaskStatusDTO dto)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         if (id != dto.TaskId) return BadRequest();
 
         if (!ModelState.IsValid)
@@ -101,7 +149,7 @@ public class HousekeepingController : Controller
         {
             await _housekeepingService.UpdateTaskStatusAsync(dto);
             TempData["Success"] = "Task status updated! Room status synchronized.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { role = staffRole });
         }
         catch (Exception ex)
         {
@@ -115,6 +163,14 @@ public class HousekeepingController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = staffRole;
         try
         {
             await _housekeepingService.DeleteTaskAsync(id);
@@ -124,6 +180,6 @@ public class HousekeepingController : Controller
         {
             TempData["Error"] = ex.Message;
         }
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { role = staffRole });
     }
 }

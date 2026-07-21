@@ -94,6 +94,11 @@
                                 <i class="fa-solid fa-user-gear"></i> Profile
                             </a>
                         </li>
+                        <li class="cogstay-menu-item">
+                            <a href="/Feedback/Create?role=Guest" class="cogstay-menu-link">
+                                <i class="fa-solid fa-star"></i> Submit Feedback
+                            </a>
+                        </li>
                     }
                     else if (role == "FrontDesk")
                     {
@@ -120,6 +125,16 @@
                         <li class="cogstay-menu-item">
                             <a href="/Room/CheckAvailability?role=FrontDesk" class="cogstay-menu-link">
                                 <i class="fa-solid fa-magnifying-glass"></i> Room Availability
+                            </a>
+                        </li>
+                        <li class="cogstay-menu-item">
+                            <a href="/Billing/Index?role=FrontDesk" class="cogstay-menu-link">
+                                <i class="fa-solid fa-file-invoice-dollar"></i> Billing
+                            </a>
+                        </li>
+                        <li class="cogstay-menu-item">
+                            <a href="/Billing/History?role=FrontDesk" class="cogstay-menu-link">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Payments History
                             </a>
                         </li>
                     }
@@ -168,6 +183,11 @@
                                 <i class="fa-solid fa-file-invoice-dollar"></i> Billing
                             </a>
                         </li>
+                        <li class="cogstay-menu-item">
+                            <a href="/Feedback/Index?role=Manager" class="cogstay-menu-link">
+                                <i class="fa-solid fa-comment-dots"></i> Guest Feedbacks
+                            </a>
+                        </li>
                     }
                     else if (role == "Admin")
                     {
@@ -179,21 +199,6 @@
                         <li class="cogstay-menu-item">
                             <a href="/Room/Index?role=Admin" class="cogstay-menu-link">
                                 <i class="fa-solid fa-door-open"></i> Rooms
-                            </a>
-                        </li>
-                        <li class="cogstay-menu-item">
-                            <a href="/Reservation/Index?role=Admin" class="cogstay-menu-link">
-                                <i class="fa-solid fa-list-check"></i> Reservations
-                            </a>
-                        </li>
-                        <li class="cogstay-menu-item">
-                            <a href="/Housekeeping/Index?role=Admin" class="cogstay-menu-link">
-                                <i class="fa-solid fa-broom"></i> Housekeeping
-                            </a>
-                        </li>
-                        <li class="cogstay-menu-item">
-                            <a href="/Billing/Index?role=Admin" class="cogstay-menu-link">
-                                <i class="fa-solid fa-file-invoice-dollar"></i> Billing
                             </a>
                         </li>
                         <li class="cogstay-menu-item">

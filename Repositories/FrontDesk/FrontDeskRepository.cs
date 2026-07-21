@@ -6,33 +6,9 @@ using CogStayMVC.Data;
 using CogStayMVC.Enums;
 using CogStayMVC.Models;
 using CogStayMVC.Repositories.Interfaces;
+using CogStayMVC.Repositories.Implementations;
 
-namespace CogStayMVC.Repositories.Implementations;
-
-public class GuestRepository : Repository<Guest>, IGuestRepository
-{
-    public GuestRepository(HotelDbContext context) : base(context) { }
-
-    public async Task<Guest?> GetByEmailAsync(string email)
-    {
-        return await _dbSet.FirstOrDefaultAsync(g => g.Email == email);
-    }
-}
-
-public class RoomRepository : Repository<Room>, IRoomRepository
-{
-    public RoomRepository(HotelDbContext context) : base(context) { }
-
-    public async Task<Room?> GetByRoomNumberAsync(string roomNumber)
-    {
-        return await _dbSet.FirstOrDefaultAsync(r => r.RoomNumber == roomNumber);
-    }
-
-    public async Task<IEnumerable<Room>> GetRoomsByStatusAsync(RoomStatus status)
-    {
-        return await _dbSet.Where(r => r.Status == status).ToListAsync();
-    }
-}
+namespace CogStayMVC.Repositories.FrontDesk;
 
 public class ReservationRepository : Repository<Reservation>, IReservationRepository
 {
@@ -136,57 +112,5 @@ public class BillingRepository : Repository<Billing>, IBillingRepository
                 .ThenInclude(s => s.Reservation)
                     .ThenInclude(r => r.Room)
             .FirstOrDefaultAsync(b => b.StayId == stayId);
-    }
-}
-
-public class HousekeepingTaskRepository : Repository<HousekeepingTask>, IHousekeepingTaskRepository
-{
-    public HousekeepingTaskRepository(HotelDbContext context) : base(context) { }
-
-    public async Task<IEnumerable<HousekeepingTask>> GetTasksWithDetailsAsync()
-    {
-        return await _dbSet
-            .Include(t => t.Room)
-            .ToListAsync();
-    }
-
-    public async Task<HousekeepingTask?> GetTaskWithDetailsAsync(int id)
-    {
-        return await _dbSet
-            .Include(t => t.Room)
-            .FirstOrDefaultAsync(t => t.TaskId == id);
-    }
-
-    public async Task<IEnumerable<HousekeepingTask>> GetTasksByRoomIdAsync(int roomId)
-    {
-        return await _dbSet
-            .Include(t => t.Room)
-            .Where(t => t.RoomId == roomId)
-            .ToListAsync();
-    }
-}
-
-public class StaffRepository : Repository<Staff>, IStaffRepository
-{
-    public StaffRepository(HotelDbContext context) : base(context) { }
-
-    public async Task<Staff?> GetByEmailAsync(string email)
-    {
-        return await _dbSet.FirstOrDefaultAsync(s => s.Email == email);
-    }
-}
-
-public class FeedbackRepository : Repository<Feedback>, IFeedbackRepository
-{
-    public FeedbackRepository(HotelDbContext context) : base(context) { }
-
-    public async Task<IEnumerable<Feedback>> GetFeedbacksWithDetailsAsync()
-    {
-        return await _dbSet
-            .Include(f => f.Guest)
-            .Include(f => f.Reservation)
-                .ThenInclude(r => r!.Room)
-            .OrderByDescending(f => f.CreatedAt)
-            .ToListAsync();
     }
 }

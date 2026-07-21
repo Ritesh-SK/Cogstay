@@ -58,7 +58,12 @@ public class StaffController : Controller
     [HttpGet]
     public async Task<IActionResult> Dashboard(string role = "Admin")
     {
-        string sessionRole = HttpContext.Session.GetString("StaffRole") ?? role;
+        int? staffId = HttpContext.Session.GetInt32("StaffId");
+        if (!staffId.HasValue) return RedirectToAction(nameof(Login));
+
+        string? sessionRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(sessionRole)) return RedirectToAction(nameof(Login));
+
         ViewData["Role"] = sessionRole;
         ViewBag.StaffName = HttpContext.Session.GetString("StaffName") ?? "Staff Member";
 
@@ -70,8 +75,10 @@ public class StaffController : Controller
         var housekeepingTasks = await _housekeepingService.GetAllTasksAsync();
         var bills = await _billingService.GetAllBillsAsync();
         var pendingBills = bills.Where(b => b.PaymentStatus == Enums.PaymentStatus.Pending).ToList();
+        var staffList = await _staffService.GetAllStaffAsync();
 
         ViewBag.TotalRoomsCount = rooms.Count();
+        ViewBag.TotalStaffCount = staffList.Count();
         ViewBag.AvailableRoomsCount = availableRooms.Count();
         ViewBag.ReservationsCount = reservations.Count(r => r.ReservationStatus == Enums.ReservationStatus.Booked);
         ViewBag.ActiveStaysCount = currentActiveStays.Count();
@@ -90,6 +97,14 @@ public class StaffController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
+            return RedirectToAction("Dashboard", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
         var staffList = await _staffService.GetAllStaffAsync();
         return View(staffList);
     }
@@ -97,25 +112,52 @@ public class StaffController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
+            return RedirectToAction("Dashboard", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
         var staff = await _staffService.GetStaffByIdAsync(id);
         if (staff == null) return NotFound();
         return View(staff);
     }
 
     [HttpGet]
-    public IActionResult Create() => View(new CreateStaffDTO());
+    public IActionResult Create()
+    {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
+            return RedirectToAction("Dashboard", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
+        return View(new CreateStaffDTO());
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateStaffDTO dto)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
+            return RedirectToAction("Dashboard", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
         if (!ModelState.IsValid) return View(dto);
 
         try
         {
             await _staffService.CreateStaffAsync(dto);
             TempData["Success"] = "Staff member created successfully!";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { role = "Admin" });
         }
         catch (Exception ex)
         {
@@ -127,6 +169,14 @@ public class StaffController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
+            return RedirectToAction("Dashboard", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
         var staff = await _staffService.GetStaffByIdAsync(id);
         if (staff == null) return NotFound();
 
@@ -146,6 +196,14 @@ public class StaffController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, UpdateStaffDTO dto)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
+            return RedirectToAction("Dashboard", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
         if (id != dto.StaffId) return BadRequest();
         if (!ModelState.IsValid) return View(dto);
 
@@ -153,7 +211,7 @@ public class StaffController : Controller
         {
             await _staffService.UpdateStaffAsync(dto);
             TempData["Success"] = "Staff updated successfully!";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { role = "Admin" });
         }
         catch (Exception ex)
         {
@@ -165,6 +223,14 @@ public class StaffController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
+            return RedirectToAction("Dashboard", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
         var staff = await _staffService.GetStaffByIdAsync(id);
         if (staff == null) return NotFound();
         return View(staff);
@@ -174,6 +240,14 @@ public class StaffController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
+            return RedirectToAction("Dashboard", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
         try
         {
             await _staffService.DeleteStaffAsync(id);
@@ -183,7 +257,7 @@ public class StaffController : Controller
         {
             TempData["Error"] = ex.Message;
         }
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { role = "Admin" });
     }
 
     [HttpGet]

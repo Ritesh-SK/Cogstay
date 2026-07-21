@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStayMVC.DTOs;
 using CogStayMVC.Services.Interfaces;
@@ -22,6 +23,14 @@ public class CheckInController : Controller
     [HttpGet]
     public async Task<IActionResult> ActiveStays()
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "FrontDesk";
         var stays = await _checkInService.GetAllStaysAsync();
         return View(stays);
     }
@@ -29,6 +38,14 @@ public class CheckInController : Controller
     [HttpGet]
     public async Task<IActionResult> CheckIn()
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "FrontDesk";
         ViewBag.Reservations = await _reservationService.GetAllReservationsAsync();
         return View(new CreateCheckInDTO());
     }
@@ -37,6 +54,14 @@ public class CheckInController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CheckIn(CreateCheckInDTO dto)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "FrontDesk";
         if (!ModelState.IsValid)
         {
             ViewBag.Reservations = await _reservationService.GetAllReservationsAsync();
@@ -47,7 +72,7 @@ public class CheckInController : Controller
         {
             await _checkInService.CheckInGuestAsync(dto);
             TempData["Success"] = "Guest checked in successfully! Room status updated to Occupied.";
-            return RedirectToAction(nameof(ActiveStays));
+            return RedirectToAction(nameof(ActiveStays), new { role = "FrontDesk" });
         }
         catch (Exception ex)
         {
@@ -60,6 +85,14 @@ public class CheckInController : Controller
     [HttpGet]
     public async Task<IActionResult> CheckOut(int? id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "FrontDesk";
         var stays = await _checkInService.GetAllStaysAsync();
         ViewBag.Stays = stays;
         return View(new CheckOutDTO { StayId = id ?? 0 });
@@ -69,6 +102,14 @@ public class CheckInController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CheckOut(CheckOutDTO dto)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "FrontDesk";
         if (!ModelState.IsValid)
         {
             ViewBag.Stays = await _checkInService.GetAllStaysAsync();
@@ -78,7 +119,7 @@ public class CheckInController : Controller
         try
         {
             // Front Desk initiates checkout -> redirects to Front Desk Billing Module for final payment & cleaning request creation!
-            return RedirectToAction("Payment", "Billing", new { stayId = dto.StayId });
+            return RedirectToAction("Payment", "Billing", new { stayId = dto.StayId, role = "FrontDesk" });
         }
         catch (Exception ex)
         {
@@ -92,6 +133,14 @@ public class CheckInController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "FrontDesk";
         try
         {
             await _checkInService.DeleteStayAsync(id);
@@ -101,6 +150,6 @@ public class CheckInController : Controller
         {
             TempData["Error"] = ex.Message;
         }
-        return RedirectToAction(nameof(ActiveStays));
+        return RedirectToAction(nameof(ActiveStays), new { role = "FrontDesk" });
     }
 }

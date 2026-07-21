@@ -98,6 +98,10 @@ public class GuestController : Controller
     [HttpGet]
     public async Task<IActionResult> AvailableRooms()
     {
+        int? guestId = HttpContext.Session.GetInt32("GuestId");
+        if (!guestId.HasValue) return RedirectToAction(nameof(Login));
+
+        ViewData["Role"] = "Guest";
         var rooms = await _roomService.GetAvailableRoomsAsync();
         return View(rooms);
     }
