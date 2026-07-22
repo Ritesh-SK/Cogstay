@@ -7,6 +7,7 @@ public class Reservation
 {
     public int ReservationId { get; set; }
     public int GuestId { get; set; }
+    public string GuestName { get; set; } = string.Empty;
     public int RoomId { get; set; }
     public DateTime CheckInDate { get; set; }
     public DateTime CheckOutDate { get; set; }

@@ -261,6 +261,38 @@ public class StaffController : Controller
     }
 
     [HttpGet]
+    public async Task<IActionResult> CheckInStatus()
+    {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
+        var stays = await _checkInService.GetAllStaysAsync();
+        return View(stays);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RequestCheckOut(int stayId)
+    {
+        string? staffRole = HttpContext.Session.GetString("StaffRole");
+        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        {
+            if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
+            return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
+        }
+
+        ViewData["Role"] = "Admin";
+        await _checkInService.RequestCheckOutAsync(stayId);
+        TempData["Success"] = "Checkout requested successfully.";
+        return RedirectToAction(nameof(CheckInStatus));
+    }
+
+    [HttpGet]
     public IActionResult Logout()
     {
         HttpContext.Session.Clear();

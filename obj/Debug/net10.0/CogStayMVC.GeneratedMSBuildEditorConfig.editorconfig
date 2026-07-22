@@ -20,189 +20,189 @@ build_property.TargetFrameworkVersion = v10.0
 build_property.EntryPointFilePath = 
 build_property.RootNamespace = CogStayMVC
 build_property.RootNamespace = CogStayMVC
-build_property.ProjectDir = C:\Users\Ritesh SK\Desktop\Projectwithbackend\CogStay---Project2\
+build_property.ProjectDir = C:\Users\Ritesh SK\Desktop\Cogstay-5\CogStay---Project2\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 10.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Ritesh SK\Desktop\Projectwithbackend\CogStay---Project2
+build_property.MSBuildProjectDirectory = C:\Users\Ritesh SK\Desktop\Cogstay-5\CogStay---Project2
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Billing/Create.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Billing/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlsbGluZ1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Billing/History.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Billing/History.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlsbGluZ1xIaXN0b3J5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Billing/Index.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Billing/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlsbGluZ1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Billing/Payment.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Billing/Payment.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlsbGluZ1xQYXltZW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/CheckIn/ActiveStays.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/CheckIn/ActiveStays.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hlY2tJblxBY3RpdmVTdGF5cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/CheckIn/CheckIn.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/CheckIn/CheckIn.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hlY2tJblxDaGVja0luLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/CheckIn/CheckOut.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/CheckIn/CheckOut.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hlY2tJblxDaGVja091dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Feedback/Create.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Feedback/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmVlZGJhY2tcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Feedback/Index.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Feedback/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmVlZGJhY2tcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/AvailableRooms.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Guest/AvailableRooms.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcQXZhaWxhYmxlUm9vbXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/Billing.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Guest/Billing.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcQmlsbGluZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/BookingHistory.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Guest/BookingHistory.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcQm9va2luZ0hpc3RvcnkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/BookRoom.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Guest/BookRoom.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcQm9va1Jvb20uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/CheckInStatus.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcQ2hlY2tJblN0YXR1cy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/Dashboard.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Guest/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/Login.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Guest/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/MyReservations.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Guest/MyReservations.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcTXlSZXNlcnZhdGlvbnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/Profile.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Guest/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcUHJvZmlsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Guest/Register.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Guest/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcUmVnaXN0ZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Home/Index.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Housekeeping/Create.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Housekeeping/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG91c2VrZWVwaW5nXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Housekeeping/Details.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Housekeeping/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG91c2VrZWVwaW5nXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Housekeeping/Edit.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Housekeeping/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG91c2VrZWVwaW5nXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Housekeeping/Index.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Housekeeping/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG91c2VrZWVwaW5nXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Reservation/Create.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Reservation/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25cQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Reservation/Details.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Reservation/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25cRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Reservation/Index.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Reservation/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Room/CheckAvailability.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Room/CheckAvailability.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxDaGVja0F2YWlsYWJpbGl0eS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Room/Create.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Room/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Room/Details.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Room/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Room/Edit.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Room/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Room/Index.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Room/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Shared/Error.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Shared/_Footer.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Shared/_Footer.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Gb290ZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Shared/_Layout.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Shared/_Navbar.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Shared/_Navbar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9OYXZiYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Staff/Create.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Staff/CheckInStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcQ2hlY2tJblN0YXR1cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Staff/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Staff/Dashboard.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Staff/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Staff/Delete.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Staff/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Staff/Details.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Staff/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Staff/Edit.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Staff/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Staff/Index.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Staff/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/Staff/Login.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/Staff/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ritesh SK/Desktop/Projectwithbackend/CogStay---Project2/Views/_ViewImports.cshtml]
+[C:/Users/Ritesh SK/Desktop/Cogstay-5/CogStay---Project2/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

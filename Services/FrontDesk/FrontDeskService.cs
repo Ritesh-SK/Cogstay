@@ -84,6 +84,7 @@ public class ReservationService : IReservationService
         var reservation = new Reservation
         {
             GuestId = dto.GuestId,
+            GuestName = guest.FullName,
             RoomId = dto.RoomId,
             CheckInDate = dto.CheckInDate,
             CheckOutDate = dto.CheckOutDate,
@@ -138,7 +139,7 @@ public class ReservationService : IReservationService
     {
         ReservationId = res.ReservationId,
         GuestId = res.GuestId,
-        GuestName = res.Guest?.FullName ?? "Unknown",
+        GuestName = string.IsNullOrEmpty(res.GuestName) ? (res.Guest?.FullName ?? "Unknown") : res.GuestName,
         RoomId = res.RoomId,
         RoomNumber = res.Room?.RoomNumber ?? "N/A",
         RoomType = res.Room?.RoomType ?? "N/A",
@@ -205,7 +206,7 @@ public class CheckInService : ICheckInService
             GuestId = reservation.GuestId,
             ReservationId = reservation.ReservationId,
             ActualCheckIn = DateTime.Now,
-            GuestName = reservation.Guest?.FullName ?? "Unknown",
+            GuestName = string.IsNullOrEmpty(reservation.GuestName) ? (reservation.Guest?.FullName ?? "Unknown") : reservation.GuestName,
             BookingReference = $"BK-{reservation.ReservationId}",
             BillingReference = "Pending",
             StayDetails = $"Room {reservation.Room?.RoomNumber ?? "N/A"} - Stay from {reservation.CheckInDate:yyyy-MM-dd} to {reservation.CheckOutDate:yyyy-MM-dd}"
@@ -340,6 +341,8 @@ public class BillingService : IBillingService
         var bill = new Billing
         {
             StayId = stayId,
+            GuestId = stay.GuestId,
+            GuestName = string.IsNullOrEmpty(stay.GuestName) ? (stay.Guest?.FullName ?? "Unknown") : stay.GuestName,
             TotalAmount = totalAmount,
             PaymentStatus = PaymentStatus.Pending,
             Remarks = remarks ?? $"Room charge for {nights} night(s) @ {price:C}/night"
@@ -359,9 +362,15 @@ public class BillingService : IBillingService
 
     public async Task<BillingResponseDTO> CreateBillAsync(CreateBillDTO dto)
     {
+        var stay = await _stayRecordRepository.GetStayRecordWithDetailsAsync(dto.StayId);
+        if (stay == null)
+            throw new InvalidOperationException("Stay record not found.");
+
         var bill = new Billing
         {
             StayId = dto.StayId,
+            GuestId = stay.GuestId,
+            GuestName = string.IsNullOrEmpty(stay.GuestName) ? (stay.Guest?.FullName ?? "Unknown") : stay.GuestName,
             TotalAmount = dto.TotalAmount,
             PaymentStatus = PaymentStatus.Pending,
             Remarks = dto.Remarks
@@ -369,12 +378,8 @@ public class BillingService : IBillingService
 
         await _billingRepository.AddAsync(bill);
 
-        var stay = await _stayRecordRepository.GetStayRecordWithDetailsAsync(dto.StayId);
-        if (stay != null)
-        {
-            stay.BillingReference = $"BILL-{bill.BillId}";
-            await _stayRecordRepository.UpdateAsync(stay);
-        }
+        stay.BillingReference = $"BILL-{bill.BillId}";
+        await _stayRecordRepository.UpdateAsync(stay);
 
         var created = await _billingRepository.GetBillingWithDetailsAsync(bill.BillId);
         return MapToDTO(created ?? bill);
@@ -425,7 +430,7 @@ public class BillingService : IBillingService
     {
         BillId = bill.BillId,
         StayId = bill.StayId,
-        GuestName = bill.StayRecord?.Guest?.FullName ?? "Unknown",
+        GuestName = string.IsNullOrEmpty(bill.GuestName) ? (bill.StayRecord?.Guest?.FullName ?? "Unknown") : bill.GuestName,
         RoomNumber = bill.StayRecord?.Reservation?.Room?.RoomNumber ?? "N/A",
         TotalAmount = bill.TotalAmount,
         PaymentStatus = bill.PaymentStatus,

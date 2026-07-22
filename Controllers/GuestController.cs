@@ -171,27 +171,6 @@ public class GuestController : Controller
         return View(reservations);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> CheckInStatus()
-    {
-        int? guestId = HttpContext.Session.GetInt32("GuestId");
-        if (!guestId.HasValue) return RedirectToAction(nameof(Login));
-
-        var stays = await _checkInService.GetAllStaysAsync();
-        return View(stays);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RequestCheckOut(int stayId)
-    {
-        int? guestId = HttpContext.Session.GetInt32("GuestId");
-        if (!guestId.HasValue) return RedirectToAction(nameof(Login));
-
-        await _checkInService.RequestCheckOutAsync(stayId);
-        TempData["Success"] = "Checkout requested. Please proceed to Front Desk for billing & payment.";
-        return RedirectToAction(nameof(CheckInStatus));
-    }
 
     [HttpGet]
     public async Task<IActionResult> Billing()

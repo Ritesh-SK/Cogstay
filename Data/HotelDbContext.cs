@@ -53,6 +53,7 @@ public class HotelDbContext : DbContext
         modelBuilder.Entity<Reservation>(entity =>
         {
             entity.HasKey(res => res.ReservationId);
+            entity.Property(res => res.GuestName).IsRequired().HasMaxLength(100).HasDefaultValue("");
             entity.Property(res => res.ReservationStatus).HasConversion<string>().HasMaxLength(50);
 
             // One Guest -> Many Reservations
@@ -109,6 +110,8 @@ public class HotelDbContext : DbContext
         modelBuilder.Entity<Billing>(entity =>
         {
             entity.HasKey(b => b.BillId);
+            entity.Property(b => b.GuestId).IsRequired().HasDefaultValue(0);
+            entity.Property(b => b.GuestName).IsRequired().HasMaxLength(100).HasDefaultValue("");
             entity.Property(b => b.TotalAmount).HasPrecision(18, 2);
             entity.Property(b => b.PaymentStatus).HasConversion<string>().HasMaxLength(50);
             entity.Property(b => b.Remarks).HasMaxLength(500);

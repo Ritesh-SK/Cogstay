@@ -20,18 +20,17 @@
             <thead>
                 <tr>
                     <th>Reservation ID</th>
-                    <th>Assigned Room</th>
+                    <th>Room Details</th>
                     <th>Check-In Date</th>
                     <th>Check-Out Date</th>
                     <th>Status</th>
-                    <th style="text-align: right;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @if (!Model.Any())
                 {
                     <tr>
-                        <td colspan="6" style="text-align: center; color: var(--color-text-muted);">No reservations found. Book a room to get started.</td>
+                        <td colspan="5" style="text-align: center; color: var(--color-text-muted);">No reservations found. Book a room to get started.</td>
                     </tr>
                 }
                 else
@@ -45,9 +44,6 @@
                             <td>@item.CheckInDate.ToString("MMM dd, yyyy")</td>
                             <td>@item.CheckOutDate.ToString("MMM dd, yyyy")</td>
                             <td><span class="cogstay-badge @badgeClass">@item.ReservationStatus</span></td>
-                            <td style="text-align: right;">
-                                <a href="/Guest/CheckInStatus" class="btn btn-secondary btn-sm">Check Status</a>
-                            </td>
                         </tr>
                     }
                 }

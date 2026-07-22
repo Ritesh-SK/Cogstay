@@ -2,12 +2,12 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Check-In Status";
-    ViewData["Role"] = "Guest";
+    ViewData["Role"] = "Admin";
 }
 
 <div style="margin-bottom: 30px;">
     <h1 style="font-family: var(--font-serif); font-size: 32px; color: var(--color-primary-dark);">Check-In Operations Status</h1>
-    <p style="color: var(--color-text-muted);">Real-time tracking of your room allotment and arrival clearance status.</p>
+    <p style="color: var(--color-text-muted);">Real-time tracking of room allotment and arrival clearance status.</p>
 </div>
 
 <div class="cogstay-card">
@@ -53,7 +53,7 @@
                             <td style="text-align: right;">
                                 @if (!isCheckedOut)
                                 {
-                                    <form asp-action="RequestCheckOut" method="post" style="display:inline;">
+                                    <form asp-controller="Staff" asp-action="RequestCheckOut" method="post" style="display:inline;">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="stayId" value="@stay.StayId" />
                                         <button type="submit" class="btn btn-warning btn-sm">Request Checkout</button>
