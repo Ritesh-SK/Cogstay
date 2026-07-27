@@ -68,6 +68,9 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthorization();
 
+// Map API Controllers
+app.MapControllers();
+
 // Default Route
 app.MapControllerRoute(
     name: "default",
