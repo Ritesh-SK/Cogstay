@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CogStayMVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+05646a224300dbc34c9aa5af9d0ae19d553e0317")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b6576ebc76350d22c959b7d0c6b20bcf3d1062bb")]
 [assembly: System.Reflection.AssemblyProductAttribute("CogStayMVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CogStayMVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
