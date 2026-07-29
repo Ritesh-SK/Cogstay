@@ -3,17 +3,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStayMVC.Controllers.Api;
 
 namespace CogStayMVC.Controllers;
 
 public class FeedbackController : Controller
 {
-    private readonly IFeedbackService _feedbackService;
+    private readonly FeedbackApiController _feedbackApiController;
 
-    public FeedbackController(IFeedbackService feedbackService)
+    public FeedbackController(FeedbackApiController feedbackApiController)
     {
-        _feedbackService = feedbackService;
+        _feedbackApiController = feedbackApiController;
     }
 
     [HttpGet]
@@ -27,7 +27,7 @@ public class FeedbackController : Controller
         }
 
         ViewData["Role"] = "Manager";
-        var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
+        var feedbacks = ControllerExtensions.Unpack(await _feedbackApiController.GetAllFeedbacks());
         return View(feedbacks);
     }
 
@@ -59,8 +59,8 @@ public class FeedbackController : Controller
         if (!ModelState.IsValid) return View(dto);
 
         try
-         {
-            await _feedbackService.SubmitFeedbackAsync(dto);
+        {
+            ControllerExtensions.Unpack(await _feedbackApiController.SubmitFeedback(dto));
             TempData["Success"] = "Thank you for your feedback!";
             return RedirectToAction("Dashboard", "Guest");
         }
@@ -84,7 +84,7 @@ public class FeedbackController : Controller
 
         try
         {
-            await _feedbackService.DeleteFeedbackAsync(id);
+            ControllerExtensions.Unpack(await _feedbackApiController.DeleteFeedback(id));
             TempData["Success"] = "Feedback removed.";
         }
         catch (Exception ex)

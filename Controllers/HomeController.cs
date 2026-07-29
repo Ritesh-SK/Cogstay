@@ -1,21 +1,21 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.Services.Interfaces;
+using CogStayMVC.Controllers.Api;
 
 namespace CogStayMVC.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly IRoomService _roomService;
+    private readonly RoomApiController _roomApiController;
 
-    public HomeController(IRoomService roomService)
+    public HomeController(RoomApiController roomApiController)
     {
-        _roomService = roomService;
+        _roomApiController = roomApiController;
     }
 
     public async Task<IActionResult> Index()
     {
-        var availableRooms = await _roomService.GetAvailableRoomsAsync();
+        var availableRooms = ControllerExtensions.Unpack(await _roomApiController.GetAvailableRooms());
         return View(availableRooms);
     }
 

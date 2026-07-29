@@ -3,17 +3,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStayMVC.Controllers.Api;
 
 namespace CogStayMVC.Controllers;
 
 public class RoomController : Controller
 {
-    private readonly IRoomService _roomService;
+    private readonly RoomApiController _roomApiController;
 
-    public RoomController(IRoomService roomService)
+    public RoomController(RoomApiController roomApiController)
     {
-        _roomService = roomService;
+        _roomApiController = roomApiController;
     }
 
     [HttpGet]
@@ -27,7 +27,7 @@ public class RoomController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var rooms = await _roomService.GetAllRoomsAsync();
+        var rooms = ControllerExtensions.Unpack(await _roomApiController.GetAllRooms());
         return View(rooms);
     }
 
@@ -42,7 +42,7 @@ public class RoomController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var room = await _roomService.GetRoomByIdAsync(id);
+        var room = ControllerExtensions.Unpack(await _roomApiController.GetRoomById(id));
         if (room == null) return NotFound();
         return View(room);
     }
@@ -77,7 +77,7 @@ public class RoomController : Controller
 
         try
         {
-            await _roomService.CreateRoomAsync(dto);
+            ControllerExtensions.Unpack(await _roomApiController.CreateRoom(dto));
             TempData["Success"] = "Room created successfully!";
             return RedirectToAction(nameof(Index), new { role = staffRole });
         }
@@ -99,7 +99,7 @@ public class RoomController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var room = await _roomService.GetRoomByIdAsync(id);
+        var room = ControllerExtensions.Unpack(await _roomApiController.GetRoomById(id));
         if (room == null) return NotFound();
 
         var dto = new UpdateRoomDTO
@@ -130,7 +130,7 @@ public class RoomController : Controller
 
         try
         {
-            await _roomService.UpdateRoomAsync(dto);
+            ControllerExtensions.Unpack(await _roomApiController.UpdateRoom(id, dto));
             TempData["Success"] = "Room updated successfully!";
             return RedirectToAction(nameof(Index), new { role = staffRole });
         }
@@ -155,7 +155,7 @@ public class RoomController : Controller
         ViewData["Role"] = staffRole;
         try
         {
-            await _roomService.DeleteRoomAsync(id);
+            ControllerExtensions.Unpack(await _roomApiController.DeleteRoom(id));
             TempData["Success"] = "Room deleted successfully!";
         }
         catch (Exception ex)
@@ -176,7 +176,7 @@ public class RoomController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var availableRooms = await _roomService.GetAvailableRoomsAsync();
+        var availableRooms = ControllerExtensions.Unpack(await _roomApiController.GetAvailableRooms());
         return View(availableRooms);
     }
 }

@@ -3,21 +3,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStayMVC.Controllers.Api;
 
 namespace CogStayMVC.Controllers;
 
 public class HousekeepingController : Controller
 {
-    private readonly IHousekeepingService _housekeepingService;
-    private readonly IRoomService _roomService;
+    private readonly HousekeepingApiController _housekeepingApiController;
+    private readonly RoomApiController _roomApiController;
 
     public HousekeepingController(
-        IHousekeepingService housekeepingService,
-        IRoomService roomService)
+        HousekeepingApiController housekeepingApiController,
+        RoomApiController roomApiController)
     {
-        _housekeepingService = housekeepingService;
-        _roomService = roomService;
+        _housekeepingApiController = housekeepingApiController;
+        _roomApiController = roomApiController;
     }
 
     [HttpGet]
@@ -31,7 +31,7 @@ public class HousekeepingController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var tasks = await _housekeepingService.GetAllTasksAsync();
+        var tasks = ControllerExtensions.Unpack(await _housekeepingApiController.GetAllTasks());
         return View(tasks);
     }
 
@@ -46,7 +46,7 @@ public class HousekeepingController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var task = await _housekeepingService.GetTaskByIdAsync(id);
+        var task = ControllerExtensions.Unpack(await _housekeepingApiController.GetTaskById(id));
         if (task == null) return NotFound();
         return View(task);
     }
@@ -62,7 +62,7 @@ public class HousekeepingController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        ViewBag.Rooms = await _roomService.GetAllRoomsAsync();
+        ViewBag.Rooms = ControllerExtensions.Unpack(await _roomApiController.GetAllRooms());
         return View(new CreateHousekeepingTaskDTO());
     }
 
@@ -80,20 +80,20 @@ public class HousekeepingController : Controller
         ViewData["Role"] = staffRole;
         if (!ModelState.IsValid)
         {
-            ViewBag.Rooms = await _roomService.GetAllRoomsAsync();
+            ViewBag.Rooms = ControllerExtensions.Unpack(await _roomApiController.GetAllRooms());
             return View(dto);
         }
 
         try
         {
-            await _housekeepingService.CreateTaskAsync(dto);
+            ControllerExtensions.Unpack(await _housekeepingApiController.CreateTask(dto));
             TempData["Success"] = "Housekeeping cleaning request created.";
             return RedirectToAction(nameof(Index), new { role = staffRole });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Rooms = await _roomService.GetAllRoomsAsync();
+            ViewBag.Rooms = ControllerExtensions.Unpack(await _roomApiController.GetAllRooms());
             return View(dto);
         }
     }
@@ -109,7 +109,7 @@ public class HousekeepingController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var task = await _housekeepingService.GetTaskByIdAsync(id);
+        var task = ControllerExtensions.Unpack(await _housekeepingApiController.GetTaskById(id));
 
         if (task == null)
         {
@@ -141,20 +141,20 @@ public class HousekeepingController : Controller
 
         if (!ModelState.IsValid)
         {
-            ViewBag.Task = await _housekeepingService.GetTaskByIdAsync(dto.TaskId);
+            ViewBag.Task = ControllerExtensions.Unpack(await _housekeepingApiController.GetTaskById(dto.TaskId));
             return View(dto);
         }
 
         try
         {
-            await _housekeepingService.UpdateTaskStatusAsync(dto);
+            ControllerExtensions.Unpack(await _housekeepingApiController.UpdateTaskStatus(dto));
             TempData["Success"] = "Task status updated! Room status synchronized.";
             return RedirectToAction(nameof(Index), new { role = staffRole });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Task = await _housekeepingService.GetTaskByIdAsync(dto.TaskId);
+            ViewBag.Task = ControllerExtensions.Unpack(await _housekeepingApiController.GetTaskById(dto.TaskId));
             return View(dto);
         }
     }
@@ -173,7 +173,7 @@ public class HousekeepingController : Controller
         ViewData["Role"] = staffRole;
         try
         {
-            await _housekeepingService.DeleteTaskAsync(id);
+            ControllerExtensions.Unpack(await _housekeepingApiController.DeleteTask(id));
             TempData["Success"] = "Housekeeping task deleted.";
         }
         catch (Exception ex)

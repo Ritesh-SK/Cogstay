@@ -3,21 +3,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStayMVC.Controllers.Api;
 
 namespace CogStayMVC.Controllers;
 
 public class CheckInController : Controller
 {
-    private readonly ICheckInService _checkInService;
-    private readonly IReservationService _reservationService;
+    private readonly CheckInApiController _checkInApiController;
+    private readonly ReservationApiController _reservationApiController;
 
     public CheckInController(
-        ICheckInService checkInService,
-        IReservationService reservationService)
+        CheckInApiController checkInApiController,
+        ReservationApiController reservationApiController)
     {
-        _checkInService = checkInService;
-        _reservationService = reservationService;
+        _checkInApiController = checkInApiController;
+        _reservationApiController = reservationApiController;
     }
 
     [HttpGet]
@@ -31,7 +31,7 @@ public class CheckInController : Controller
         }
 
         ViewData["Role"] = "FrontDesk";
-        var stays = await _checkInService.GetAllStaysAsync();
+        var stays = ControllerExtensions.Unpack(await _checkInApiController.GetAllStays());
         return View(stays);
     }
 
@@ -46,7 +46,7 @@ public class CheckInController : Controller
         }
 
         ViewData["Role"] = "FrontDesk";
-        ViewBag.Reservations = await _reservationService.GetAllReservationsAsync();
+        ViewBag.Reservations = ControllerExtensions.Unpack(await _reservationApiController.GetAllReservations());
         return View(new CreateCheckInDTO());
     }
 
@@ -64,20 +64,20 @@ public class CheckInController : Controller
         ViewData["Role"] = "FrontDesk";
         if (!ModelState.IsValid)
         {
-            ViewBag.Reservations = await _reservationService.GetAllReservationsAsync();
+            ViewBag.Reservations = ControllerExtensions.Unpack(await _reservationApiController.GetAllReservations());
             return View(dto);
         }
 
         try
         {
-            await _checkInService.CheckInGuestAsync(dto);
+            ControllerExtensions.Unpack(await _checkInApiController.CheckInGuest(dto));
             TempData["Success"] = "Guest checked in successfully! Room status updated to Occupied.";
             return RedirectToAction(nameof(ActiveStays), new { role = "FrontDesk" });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Reservations = await _reservationService.GetAllReservationsAsync();
+            ViewBag.Reservations = ControllerExtensions.Unpack(await _reservationApiController.GetAllReservations());
             return View(dto);
         }
     }
@@ -93,7 +93,7 @@ public class CheckInController : Controller
         }
 
         ViewData["Role"] = "FrontDesk";
-        var stays = await _checkInService.GetAllStaysAsync();
+        var stays = ControllerExtensions.Unpack(await _checkInApiController.GetAllStays());
         ViewBag.Stays = stays;
         return View(new CheckOutDTO { StayId = id ?? 0 });
     }
@@ -112,7 +112,7 @@ public class CheckInController : Controller
         ViewData["Role"] = "FrontDesk";
         if (!ModelState.IsValid)
         {
-            ViewBag.Stays = await _checkInService.GetAllStaysAsync();
+            ViewBag.Stays = ControllerExtensions.Unpack(await _checkInApiController.GetAllStays());
             return View(dto);
         }
 
@@ -124,7 +124,7 @@ public class CheckInController : Controller
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Stays = await _checkInService.GetAllStaysAsync();
+            ViewBag.Stays = ControllerExtensions.Unpack(await _checkInApiController.GetAllStays());
             return View(dto);
         }
     }
@@ -143,7 +143,7 @@ public class CheckInController : Controller
         ViewData["Role"] = "FrontDesk";
         try
         {
-            await _checkInService.DeleteStayAsync(id);
+            ControllerExtensions.Unpack(await _checkInApiController.DeleteStay(id));
             TempData["Success"] = "Stay record deleted.";
         }
         catch (Exception ex)

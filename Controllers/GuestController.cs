@@ -3,30 +3,30 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStayMVC.Controllers.Api;
 
 namespace CogStayMVC.Controllers;
 
 public class GuestController : Controller
 {
-    private readonly IGuestService _guestService;
-    private readonly IRoomService _roomService;
-    private readonly IReservationService _reservationService;
-    private readonly ICheckInService _checkInService;
-    private readonly IBillingService _billingService;
+    private readonly GuestApiController _guestApiController;
+    private readonly RoomApiController _roomApiController;
+    private readonly ReservationApiController _reservationApiController;
+    private readonly CheckInApiController _checkInApiController;
+    private readonly BillingApiController _billingApiController;
 
     public GuestController(
-        IGuestService guestService,
-        IRoomService roomService,
-        IReservationService reservationService,
-        ICheckInService checkInService,
-        IBillingService billingService)
+        GuestApiController guestApiController,
+        RoomApiController roomApiController,
+        ReservationApiController reservationApiController,
+        CheckInApiController checkInApiController,
+        BillingApiController billingApiController)
     {
-        _guestService = guestService;
-        _roomService = roomService;
-        _reservationService = reservationService;
-        _checkInService = checkInService;
-        _billingService = billingService;
+        _guestApiController = guestApiController;
+        _roomApiController = roomApiController;
+        _reservationApiController = reservationApiController;
+        _checkInApiController = checkInApiController;
+        _billingApiController = billingApiController;
     }
 
     [HttpGet]
@@ -38,18 +38,26 @@ public class GuestController : Controller
     {
         if (!ModelState.IsValid) return View(dto);
 
-        var guest = await _guestService.ValidateGuestLoginAsync(dto);
-        if (guest == null)
+        try
         {
-            ModelState.AddModelError(string.Empty, "Invalid email or password.");
+            var guest = ControllerExtensions.Unpack(await _guestApiController.LoginGuest(dto));
+            if (guest == null)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                return View(dto);
+            }
+
+            HttpContext.Session.SetInt32("GuestId", guest.GuestId);
+            HttpContext.Session.SetString("GuestName", guest.FullName);
+            HttpContext.Session.SetString("GuestEmail", guest.Email);
+
+            return RedirectToAction(nameof(Dashboard));
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
             return View(dto);
         }
-
-        HttpContext.Session.SetInt32("GuestId", guest.GuestId);
-        HttpContext.Session.SetString("GuestName", guest.FullName);
-        HttpContext.Session.SetString("GuestEmail", guest.Email);
-
-        return RedirectToAction(nameof(Dashboard));
     }
 
     [HttpGet]
@@ -63,7 +71,7 @@ public class GuestController : Controller
 
         try
         {
-            var guest = await _guestService.RegisterGuestAsync(dto);
+            var guest = ControllerExtensions.Unpack(await _guestApiController.RegisterGuest(dto));
             HttpContext.Session.SetInt32("GuestId", guest.GuestId);
             HttpContext.Session.SetString("GuestName", guest.FullName);
             HttpContext.Session.SetString("GuestEmail", guest.Email);
@@ -84,14 +92,14 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
-        var guest = await _guestService.GetGuestByIdAsync(guestId.Value);
+        var guest = ControllerExtensions.Unpack(await _guestApiController.GetGuestById(guestId.Value));
         if (guest == null) return RedirectToAction(nameof(Login));
 
         ViewBag.GuestName = guest.FullName;
         HttpContext.Session.SetString("GuestName", guest.FullName);
         HttpContext.Session.SetString("GuestEmail", guest.Email);
 
-        var reservations = await _reservationService.GetReservationsByGuestAsync(guestId.Value);
+        var reservations = ControllerExtensions.Unpack(await _reservationApiController.GetReservationsByGuest(guestId.Value));
         return View(reservations);
     }
 
@@ -102,7 +110,7 @@ public class GuestController : Controller
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
         ViewData["Role"] = "Guest";
-        var rooms = await _roomService.GetAvailableRoomsAsync();
+        var rooms = ControllerExtensions.Unpack(await _roomApiController.GetAvailableRooms());
         return View(rooms);
     }
 
@@ -112,7 +120,7 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
-        ViewBag.AvailableRooms = await _roomService.GetAvailableRoomsAsync();
+        ViewBag.AvailableRooms = ControllerExtensions.Unpack(await _roomApiController.GetAvailableRooms());
         var dto = new CreateReservationDTO
         {
             GuestId = guestId.Value,
@@ -133,20 +141,20 @@ public class GuestController : Controller
 
         if (!ModelState.IsValid)
         {
-            ViewBag.AvailableRooms = await _roomService.GetAvailableRoomsAsync();
+            ViewBag.AvailableRooms = ControllerExtensions.Unpack(await _roomApiController.GetAvailableRooms());
             return View(dto);
         }
 
         try
         {
-            await _reservationService.BookRoomAsync(dto);
+            ControllerExtensions.Unpack(await _reservationApiController.BookRoom(dto));
             TempData["Success"] = "Room booked successfully!";
             return RedirectToAction(nameof(MyReservations));
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.AvailableRooms = await _roomService.GetAvailableRoomsAsync();
+            ViewBag.AvailableRooms = ControllerExtensions.Unpack(await _roomApiController.GetAvailableRooms());
             return View(dto);
         }
     }
@@ -157,7 +165,7 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
-        var reservations = await _reservationService.GetReservationsByGuestAsync(guestId.Value);
+        var reservations = ControllerExtensions.Unpack(await _reservationApiController.GetReservationsByGuest(guestId.Value));
         return View(reservations);
     }
 
@@ -167,7 +175,7 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
-        var reservations = await _reservationService.GetReservationsByGuestAsync(guestId.Value);
+        var reservations = ControllerExtensions.Unpack(await _reservationApiController.GetReservationsByGuest(guestId.Value));
         return View(reservations);
     }
 
@@ -178,7 +186,7 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
-        var bills = await _billingService.GetAllBillsAsync();
+        var bills = ControllerExtensions.Unpack(await _billingApiController.GetAllBills());
         return View(bills);
     }
 
@@ -188,7 +196,7 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
-        var guest = await _guestService.GetGuestByIdAsync(guestId.Value);
+        var guest = ControllerExtensions.Unpack(await _guestApiController.GetGuestById(guestId.Value));
         if (guest == null) return NotFound();
 
         var dto = new UpdateGuestDTO
@@ -214,7 +222,7 @@ public class GuestController : Controller
 
         try
         {
-            await _guestService.UpdateGuestAsync(dto);
+            ControllerExtensions.Unpack(await _guestApiController.UpdateGuest(dto.GuestId, dto));
             HttpContext.Session.SetString("GuestName", dto.FullName);
             HttpContext.Session.SetString("GuestEmail", dto.Email);
             TempData["Success"] = "Profile updated successfully!";

@@ -3,24 +3,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStayMVC.Controllers.Api;
 
 namespace CogStayMVC.Controllers;
 
 public class ReservationController : Controller
 {
-    private readonly IReservationService _reservationService;
-    private readonly IRoomService _roomService;
-    private readonly IGuestService _guestService;
+    private readonly ReservationApiController _reservationApiController;
+    private readonly RoomApiController _roomApiController;
+    private readonly GuestApiController _guestApiController;
 
     public ReservationController(
-        IReservationService reservationService,
-        IRoomService roomService,
-        IGuestService guestService)
+        ReservationApiController reservationApiController,
+        RoomApiController roomApiController,
+        GuestApiController guestApiController)
     {
-        _reservationService = reservationService;
-        _roomService = roomService;
-        _guestService = guestService;
+        _reservationApiController = reservationApiController;
+        _roomApiController = roomApiController;
+        _guestApiController = guestApiController;
     }
 
     [HttpGet]
@@ -34,7 +34,7 @@ public class ReservationController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var reservations = await _reservationService.GetAllReservationsAsync();
+        var reservations = ControllerExtensions.Unpack(await _reservationApiController.GetAllReservations());
         return View(reservations);
     }
 
@@ -49,7 +49,7 @@ public class ReservationController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var reservation = await _reservationService.GetReservationByIdAsync(id);
+        var reservation = ControllerExtensions.Unpack(await _reservationApiController.GetReservationById(id));
         if (reservation == null) return NotFound();
         return View(reservation);
     }
@@ -65,8 +65,8 @@ public class ReservationController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        ViewBag.Guests = await _guestService.GetAllGuestsAsync();
-        ViewBag.Rooms = await _roomService.GetAvailableRoomsAsync();
+        ViewBag.Guests = ControllerExtensions.Unpack(await _guestApiController.GetAllGuests());
+        ViewBag.Rooms = ControllerExtensions.Unpack(await _roomApiController.GetAvailableRooms());
         return View(new CreateReservationDTO
         {
             CheckInDate = DateTime.Today,
@@ -88,22 +88,22 @@ public class ReservationController : Controller
         ViewData["Role"] = staffRole;
         if (!ModelState.IsValid)
         {
-            ViewBag.Guests = await _guestService.GetAllGuestsAsync();
-            ViewBag.Rooms = await _roomService.GetAvailableRoomsAsync();
+            ViewBag.Guests = ControllerExtensions.Unpack(await _guestApiController.GetAllGuests());
+            ViewBag.Rooms = ControllerExtensions.Unpack(await _roomApiController.GetAvailableRooms());
             return View(dto);
         }
 
         try
         {
-            await _reservationService.BookRoomAsync(dto);
+            ControllerExtensions.Unpack(await _reservationApiController.BookRoom(dto));
             TempData["Success"] = "Reservation created successfully!";
             return RedirectToAction(nameof(Index), new { role = staffRole });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Guests = await _guestService.GetAllGuestsAsync();
-            ViewBag.Rooms = await _roomService.GetAvailableRoomsAsync();
+            ViewBag.Guests = ControllerExtensions.Unpack(await _guestApiController.GetAllGuests());
+            ViewBag.Rooms = ControllerExtensions.Unpack(await _roomApiController.GetAvailableRooms());
             return View(dto);
         }
     }
@@ -122,7 +122,7 @@ public class ReservationController : Controller
         ViewData["Role"] = staffRole;
         try
         {
-            await _reservationService.CancelReservationAsync(id);
+            ControllerExtensions.Unpack(await _reservationApiController.CancelReservation(id));
             TempData["Success"] = "Reservation cancelled.";
         }
         catch (Exception ex)
@@ -146,7 +146,7 @@ public class ReservationController : Controller
         ViewData["Role"] = staffRole;
         try
         {
-            await _reservationService.DeleteReservationAsync(id);
+            ControllerExtensions.Unpack(await _reservationApiController.DeleteReservation(id));
             TempData["Success"] = "Reservation deleted.";
         }
         catch (Exception ex)
