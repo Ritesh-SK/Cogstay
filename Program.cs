@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using CogStayMVC.Data;
+using CogStayMVC.Models;
+using CogStayMVC.Enums;
 using CogStayMVC.Repositories.Implementations;
 using CogStayMVC.Repositories.Interfaces;
 using CogStayMVC.Services.Interfaces;
@@ -75,5 +77,31 @@ app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Seed Default Administrator Account
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<HotelDbContext>();
+    var defaultAdminEmail = "admin@gmail.com";
+    if (!context.Staff.Any(s => s.Email == defaultAdminEmail))
+    {
+        using var sha256 = System.Security.Cryptography.SHA256.Create();
+        var bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes("123456"));
+        var pwdHash = Convert.ToBase64String(bytes);
+
+        var admin = new Staff
+        {
+            FullName = "Administrator",
+            Email = defaultAdminEmail,
+            PhoneNumber = "0000000000",
+            PasswordHash = pwdHash,
+            Role = StaffRole.Admin,
+            IsActive = true,
+            CreatedAt = DateTime.Now
+        };
+        context.Staff.Add(admin);
+        context.SaveChanges();
+    }
+}
 
 app.Run();

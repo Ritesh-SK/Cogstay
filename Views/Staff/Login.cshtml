@@ -49,10 +49,7 @@
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Access Panel</button>
                 </form>
                 
-                <div id="adminRegisterContainer" style="display: none; text-align: center; margin-top: 20px; font-size: 14px;">
-                    <span style="color: var(--color-text-muted);">New administrator? </span>
-                    <a asp-action="RegisterAdmin" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">Register Now</a>
-                </div>
+
             </div>
             
             <a asp-controller="Home" asp-action="Index" style="text-align: center; color: var(--color-text-muted); font-size: 14px; font-weight: 500;">
@@ -62,30 +59,4 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const roleSelect = document.getElementById("Role");
-        const registerContainer = document.getElementById("adminRegisterContainer");
 
-        if (roleSelect && registerContainer) {
-            function toggleRegisterOption() {
-                const selectedOption = roleSelect.options[roleSelect.selectedIndex];
-                if (selectedOption) {
-                    const value = selectedOption.value;
-                    const text = selectedOption.text;
-                    if (value === "3" || text === "Admin") {
-                        registerContainer.style.display = "block";
-                    } else {
-                        registerContainer.style.display = "none";
-                    }
-                }
-            }
-
-            // Run on initial load
-            toggleRegisterOption();
-
-            // Listen for changes
-            roleSelect.addEventListener("change", toggleRegisterOption);
-        }
-    });
-</script>

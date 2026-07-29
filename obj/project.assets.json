@@ -3096,11 +3096,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Ritesh SK\\Desktop\\cogstay 9\\CogStay---Project2\\CogStayMVC.csproj",
+      "projectUniqueName": "C:\\Users\\Ritesh SK\\Desktop\\Cogstay 11\\CogStay---Project2\\CogStayMVC.csproj",
       "projectName": "CogStayMVC",
-      "projectPath": "C:\\Users\\Ritesh SK\\Desktop\\cogstay 9\\CogStay---Project2\\CogStayMVC.csproj",
+      "projectPath": "C:\\Users\\Ritesh SK\\Desktop\\Cogstay 11\\CogStay---Project2\\CogStayMVC.csproj",
       "packagesPath": "C:\\Users\\Ritesh SK\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Ritesh SK\\Desktop\\cogstay 9\\CogStay---Project2\\obj\\",
+      "outputPath": "C:\\Users\\Ritesh SK\\Desktop\\Cogstay 11\\CogStay---Project2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Ritesh SK\\AppData\\Roaming\\NuGet\\NuGet.Config"

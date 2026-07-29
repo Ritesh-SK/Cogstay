@@ -56,50 +56,6 @@ public class StaffController : Controller
         return RedirectToAction(nameof(Dashboard), new { role = staff.Role.ToString() });
     }
 
-    [HttpGet]
-    public IActionResult RegisterAdmin()
-    {
-        string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (!string.IsNullOrEmpty(staffRole) && staffRole != "Admin")
-        {
-            return RedirectToAction("Dashboard", new { role = staffRole });
-        }
-
-        return View(new CreateStaffDTO { Role = StaffRole.Admin });
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RegisterAdmin(CreateStaffDTO dto)
-    {
-        string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (!string.IsNullOrEmpty(staffRole) && staffRole != "Admin")
-        {
-            return RedirectToAction("Dashboard", new { role = staffRole });
-        }
-
-        // Force role to Admin
-        dto.Role = StaffRole.Admin;
-
-        if (!ModelState.IsValid) return View(dto);
-
-        try
-        {
-            var newAdmin = await _staffService.CreateStaffAsync(dto);
-
-            HttpContext.Session.SetInt32("StaffId", newAdmin.StaffId);
-            HttpContext.Session.SetString("StaffName", newAdmin.FullName);
-            HttpContext.Session.SetString("StaffRole", newAdmin.Role.ToString());
-
-            TempData["Success"] = "Admin account registered successfully!";
-            return RedirectToAction(nameof(Dashboard), new { role = newAdmin.Role.ToString() });
-        }
-        catch (Exception ex)
-        {
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return View(dto);
-        }
-    }
 
     [HttpGet]
     public async Task<IActionResult> Dashboard(string role = "Admin")

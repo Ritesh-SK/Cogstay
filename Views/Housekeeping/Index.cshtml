@@ -70,12 +70,12 @@
                             <td><strong>Room @item.RoomNumber</strong></td>
                             <td>@item.TaskDescription</td>
                             <td><span class="cogstay-badge @badgeClass">@item.TaskStatus</span></td>
-                            <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
-                                <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-secondary btn-sm">Details</a>
-                                <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);">Update Status</a>
-                                <form asp-action="Delete" asp-route-id="@item.TaskId" method="post" style="display:inline;" onsubmit="return confirm('Delete this housekeeping task?');">
+                            <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+                                <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; justify-content: center; height: 32px; box-sizing: border-box;"><i class="fa-solid fa-circle-info"></i> Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; justify-content: center; height: 32px; box-sizing: border-box; border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-pen-to-square"></i> Update Status</a>
+                                <form asp-action="Delete" asp-route-id="@item.TaskId" method="post" style="display: contents;" onsubmit="return confirm('Delete this housekeeping task?');">
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-secondary btn-sm" style="border-color: var(--color-danger); color: var(--color-danger);">Delete</button>
+                                    <button type="submit" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; justify-content: center; height: 32px; box-sizing: border-box; border-color: var(--color-danger); color: var(--color-danger); margin: 0; line-height: normal;"><i class="fa-solid fa-trash"></i> Delete</button>
                                 </form>
                             </td>
                         </tr>
