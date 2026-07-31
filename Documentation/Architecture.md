@@ -1,80 +1,71 @@
-# Solution Architecture - CogStay Lodge Management System
+# System Architecture - CogStay Lodge Management System
 
-This document describes the refactored architecture of the CogStay application, showing the separation of concerns between the user interface front-end (MVC) and the business logic/data access layer (Web API).
+This document outlines the decoupled architecture of the CogStay solution, showing how dependencies are organized and how components communicate.
 
 ---
 
-## 1. Overall Solution Architecture
+## 1. Decoupled Client-Server Architecture
 
-The application is structured as a decoupled client-server architecture consisting of two distinct projects within a single solution:
+The system consists of two separate web applications running in independent processes, coordinated via HTTP:
 
 ```mermaid
 graph TD
-    User([User / Browser]) -->|HTTP Requests / HTML| MVC[CogStay MVC Project - Client]
-    MVC -->|REST Calls / JSON| API[CogStay Web API Project - Server]
-    API -->|Entity Framework Core| DB[(SQL Server Database)]
+    User([User / Web Browser]) -->|HTTP / Razor HTML| MVC[CogStay MVC Project - Client]
+    MVC -->|HTTP REST Client / JSON| API[CogStay Web API Project - Server]
+    API -->|Consumes Logic via Project Reference| MVC
+    API -->|EF Core Queries| DB[(SQL Server Database)]
 ```
 
-1. **CogStay (ASP.NET Core MVC)**:
-   - Acts as the presentation layer.
-   - Responsible for rendering HTML views, styling, managing user sessions, and processing user input.
-   - Communicates with the backend exclusively via standard HTTP REST endpoints.
-   
-2. **CogStayApi (ASP.NET Core Web API)**:
-   - Acts as the business logic and data access layer.
-   - Houses the Entity Framework Core database context, migrations, models, services, and repositories.
-   - Provides stateless RESTful endpoints consumed by the MVC client and potentially other third-party integrations.
+* **Client Role (`CogStay`)**:
+  Renders the graphical user interface. When an action occurs, the convention-based controller translates user inputs and executes stateless HTTP requests targeting the Web API.
+* **Server Role (`CogStayApi`)**:
+  Exposes REST endpoints. When a request arrives, the API controller resolves the business service directly from the referenced MVC assembly to perform database transactions, returning a serialized JSON result.
 
 ---
 
-## 2. Project Responsibilities
-
-| Responsibility | CogStay (MVC) | CogStayApi (Web API) |
-| :--- | :---: | :---: |
-| HTML Views & Layouts | **Yes** | No |
-| CSS, JavaScript, Static Assets | **Yes** | No |
-| User Session Handling (Auth) | **Yes** | No (Stateless) |
-| Core Business Logic (Services) | No | **Yes** |
-| Data Persistence (Repositories) | No | **Yes** |
-| Database Context & Migrations | No | **Yes** |
-| Routing | View Routing | Attribute API Routing |
-
----
-
-## 3. MVC ↔ Web API Interaction
-
-The MVC project communicates with the Web API project using `HttpClient` instances managed by `IHttpClientFactory` to ensure socket health. 
-
-* **Base URL Configuration**: The Web API's base URL is read from MVC's `appsettings.json` under `"ApiSettings:BaseUrl"` to prevent hardcoding.
-* **Serialization**: Communication payload is formatted as JSON.
-* **Error Handling**: A set of helper methods in `ControllerExtensions.cs` intercept non-success status codes (e.g., `400 Bad Request`, `404 Not Found`) and extract the API error message, throwing standard exceptions that are handled by the MVC controller's catch blocks to display user-friendly validation feedback.
-
----
-
-## 4. Dependency and Build Flow
+## 2. Project Reference & Dependency Relationships
 
 ```mermaid
-graph LR
-    subgraph CogStay [CogStay MVC Project]
-        Controllers[MVC Controllers]
-        Views[Razor Views]
-        Extensions[HTTP Extensions]
-    end
-
-    subgraph CogStayApi [CogStayApi Web API Project]
-        ApiControllers[API Controllers]
-        Services[Services Layer]
-        Repos[Repositories Layer]
-        Data[HotelDbContext & Migrations]
-        DTOs[Models, DTOs & Enums]
-    end
-
-    Controllers -.->|Shared Classes Reference| DTOs
-    Controllers -->|HTTP API Requests| ApiControllers
-    ApiControllers --> Services
-    Services --> Repos
-    Repos --> Data
+graph RL
+    CogStayApi[CogStayApi Web API Project] -->|Project Reference| CogStay[CogStay MVC Project]
 ```
 
-* **Compilation Dependency**: The `CogStay` MVC project has a compile-time project reference to `CogStayApi`. This reference is restricted *strictly* to accessing shared classes: Models, DTOs, and Enums.
-* **Runtime Dependency**: At runtime, `CogStay` has **no direct reference or DI registration** of the DbContext, services, or repositories. If the Web API is offline, the MVC project cannot retrieve or persist any data.
+* **Reference Direction**:
+  Unlike standard N-tier configurations, the Web API project (`CogStayApi`) references the MVC project (`CogStay`).
+* **Package Inheritance**:
+  - `CogStay` registers EF Core and SQL Server tools directly.
+  - `CogStayApi` references `CogStay` to utilize the compiled `HotelDbContext` and repository implementations at runtime.
+* **Namespace Conformance**:
+  Both projects share the root namespace `CogStayMVC`. This keeps code imports clean and compile-safe.
+
+---
+
+## 3. Detailed Request and Response Loop
+
+Here is the trace of a single customer booking a room:
+
+```text
+User Browser              CogStay (MVC Client)          CogStayApi (Web API)               Database
+    │                              │                             │                             │
+    │─── [1] Book Room (POST) ────>│                             │                             │
+    │    (CreateReservationDTO)    │                             │                             │
+    │                              │─── [2] POST api/reserv ────>│                             │
+    │                              │    (Json Serialization)     │                             │
+    │                              │                             │── [3] Call BookRoomAsync ──>│
+    │                              │                             │    (ReservationService)     │
+    │                              │                             │                             │── [4] SaveChanges ─>
+    │                              │                             │                             │   (HotelDbContext)
+    │                              │                             │                             │<── [5] SQL Commit ──
+    │                              │                             │<── [6] Return DTO Response ─│
+    │                              │<── [7] HTTP 201 Response ───│                             │
+    │                              │    (JSON Payload)           │                             │
+    │<── [8] Render Success View ──│                             │                             │
+```
+
+1. **Client Interaction**: User fills the booking details and submits the form on the room booking page.
+2. **MVC Action**: `GuestController.BookRoom(dto)` intercepts the request and issues a POST request to `api/reservations` on the API project via `HttpClient`.
+3. **API Dispatch**: `ReservationApiController` receives the JSON payload, deserializes it to `CreateReservationDTO` (sourced from the MVC project reference), and executes `_reservationService.BookRoomAsync(dto)`.
+4. **Logic Execution**: The `ReservationService` (housed in MVC) performs validation rules and delegates storage to the database context.
+5. **Database Transaction**: The `ReservationRepository` (housed in MVC) persists the reservation in SQL Server.
+6. **Return Pipeline**: The transaction completes, the database commits the row, and the API controller responds with a `201 Created` HTTP status containing the serialized `ReservationResponseDTO`.
+7. **View Render**: The MVC client receives the response, sets a success message in `TempData`, and redirects the user to their dashboard showing the newly made reservation.

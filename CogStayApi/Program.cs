@@ -21,10 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Configure DB Context (resolves from CogStay)
 builder.Services.AddDbContext<HotelDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register Repositories
+// Register Repositories (resolves from CogStay)
 builder.Services.AddScoped<IGuestRepository, GuestRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
@@ -34,7 +35,7 @@ builder.Services.AddScoped<IHousekeepingTaskRepository, HousekeepingTaskReposito
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
-// Register Services
+// Register Services (resolves from CogStay)
 builder.Services.AddScoped<IGuestService, GuestService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
