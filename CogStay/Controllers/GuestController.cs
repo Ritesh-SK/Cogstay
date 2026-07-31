@@ -137,7 +137,7 @@ public class GuestController : Controller
         {
             await _httpClient.PostAsJsonOrThrowAsync<ReservationResponseDTO, CreateReservationDTO>("api/reservations", dto);
             TempData["Success"] = "Room booked successfully!";
-            return RedirectToAction(nameof(MyReservations));
+            return RedirectToAction(nameof(BookingHistory));
         }
         catch (Exception ex)
         {
@@ -148,13 +148,9 @@ public class GuestController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> MyReservations()
+    public IActionResult MyReservations()
     {
-        int? guestId = HttpContext.Session.GetInt32("GuestId");
-        if (!guestId.HasValue) return RedirectToAction(nameof(Login));
-
-        var reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>($"api/reservations/guest/{guestId.Value}");
-        return View(reservations);
+        return RedirectToAction(nameof(BookingHistory));
     }
 
     [HttpGet]

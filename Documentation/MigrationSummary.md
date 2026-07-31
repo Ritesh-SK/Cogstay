@@ -58,3 +58,24 @@ To centralize all logic in the primary MVC project, the following folders were m
 * **No Duplicate Code**: All business logic layers exist exclusively in the `CogStay` MVC project.
 * **Namespace Alignment**: Both projects utilize the RootNamespace `CogStayMVC` (`CogStayMVC.Services`, `CogStayMVC.Data`, etc.). This prevented any compiler namespace issues, meaning no imports or using directives needed to be rewritten.
 * **Build Status**: The solution builds cleanly with **0 compiler warnings** and **0 errors**.
+
+---
+
+## 5. UI & Functional Improvements
+
+The following improvements were made to clean up layout structures, align buttons with standard style variables, and remove duplicate reservation views:
+
+### A. Manager Housekeeping Page Buttons (`Views/Housekeeping/Index.cshtml`)
+* Removed overriding custom inline styles (e.g. `display: inline-flex; height: 32px;` etc.) from the **Details**, **Update Status**, and **Delete** action buttons.
+* The buttons now natively inherit standard padding, height, borders, and smooth hover transitions matching the application-wide `.btn .btn-sm` classes.
+
+### B. Billing Module - Remove "Generate Invoice" Link (`Views/Billing/Index.cshtml`)
+* Removed the **Generate Invoice** action link button from the pending invoices statement UI.
+* Retained backend `Create` actions and view files to maintain billing system integrity.
+
+### C. Customer Module - Consolidate Reservation Pages
+* **Deleted Duplicate View**: Removed `/Views/Guest/MyReservations.cshtml` entirely.
+* **Controller Redirection**: Updated `GuestController.cs` to redirect the old `MyReservations` action and successful bookings to the `BookingHistory` action.
+* **Layout Sidebar**: Removed the duplicate `My Reservations` option from the sidebar menu in `_Layout.cshtml`, leaving `BookingHistory` as the single page to view guest stays.
+* **Dashboard Links**: Updated the quick action card link on the guest home dashboard from `/Guest/MyReservations` to `/Guest/BookingHistory` and updated the text to "Booking History".
+
