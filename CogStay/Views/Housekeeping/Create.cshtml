@@ -38,7 +38,21 @@
             </div>
 
             <div class="cogstay-form-group">
-                <label class="cogstay-form-label" asp-for="TaskDescription">Detailed Task Description</label>
+                <label class="cogstay-form-label" for="TaskType">Task / Service Type</label>
+                <select id="TaskType" name="TaskType" class="cogstay-form-control" required>
+                    <option value="">-- Select Service Type --</option>
+                    <option value="Cleaning">Cleaning</option>
+                    <option value="Spa">Spa</option>
+                    <option value="Food Service">Food Service</option>
+                    <option value="Room Service">Room Service</option>
+                    <option value="Laundry">Laundry</option>
+                    <option value="Maintenance">Maintenance</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="cogstay-form-group">
+                <label class="cogstay-form-label" asp-for="TaskDescription">Detailed Task Description / Notes</label>
                 <textarea asp-for="TaskDescription" class="cogstay-form-control" rows="4" placeholder="Description of cleaning duties, maintenance problems, or guest services..." required></textarea>
                 <span asp-validation-for="TaskDescription" class="text-danger"></span>
             </div>

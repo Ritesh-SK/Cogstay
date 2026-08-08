@@ -5,7 +5,7 @@
     ViewData["Role"] = "Guest";
     var guestName = ViewBag.GuestName ?? "Guest";
     var upcomingRes = Model.FirstOrDefault(r => r.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked);
-    var activeStay = Model.FirstOrDefault();
+    var activeStay = Model.FirstOrDefault(r => r.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked);
 }
 
 <div style="margin-bottom: 30px;">

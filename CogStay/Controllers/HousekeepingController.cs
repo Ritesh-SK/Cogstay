@@ -21,14 +21,30 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Index()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
         ViewData["Role"] = staffRole;
-        var tasks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<HousekeepingTaskResponseDTO>>("api/housekeeping");
+        var tasks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<HousekeepingTaskResponseDTO>>("api/housekeeping") ?? System.Linq.Enumerable.Empty<HousekeepingTaskResponseDTO>();
+
+        try
+        {
+            var stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays") ?? System.Linq.Enumerable.Empty<StayRecordResponseDTO>();
+            var roomGuestMap = stays
+                .Where(s => !s.ActualCheckOut.HasValue)
+                .GroupBy(s => s.RoomNumber)
+                .ToDictionary(g => g.Key, g => g.First().GuestName);
+
+            ViewBag.RoomGuestMap = roomGuestMap;
+        }
+        catch
+        {
+            ViewBag.RoomGuestMap = new Dictionary<string, string>();
+        }
+
         return View(tasks);
     }
 
@@ -36,7 +52,7 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Details(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -52,7 +68,7 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Create()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -68,13 +84,19 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Create(CreateHousekeepingTaskDTO dto)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
         ViewData["Role"] = staffRole;
+        string? taskType = Request.Form["TaskType"];
+        if (!string.IsNullOrEmpty(taskType))
+        {
+            dto.TaskDescription = $"[{taskType}] {dto.TaskDescription}";
+        }
+
         if (!ModelState.IsValid)
         {
             ViewBag.Rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms");
@@ -99,7 +121,7 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Edit(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -127,7 +149,7 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Edit(int id, UpdateTaskStatusDTO dto)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -161,7 +183,7 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });

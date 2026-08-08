@@ -42,20 +42,23 @@
             <thead>
                 <tr>
                     <th>Room</th>
-                    <th>Task Description</th>
-                    <th>Task Status</th>
-                    <th style="text-align: right;">Actions</th>
+                    <th>Guest</th>
+                    <th>Task</th>
+                    <th>Status</th>
+                    <th>Assigned Staff</th>
+                    <th style="text-align: right;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @if (!Model.Any())
                 {
                     <tr>
-                        <td colspan="4" style="text-align: center; color: var(--color-text-muted);">No housekeeping tasks found.</td>
+                        <td colspan="6" style="text-align: center; color: var(--color-text-muted);">No housekeeping tasks found.</td>
                     </tr>
                 }
                 else
                 {
+                    var roomGuestMap = ViewBag.RoomGuestMap as Dictionary<string, string> ?? new Dictionary<string, string>();
                     foreach (var item in Model)
                     {
                         string badgeClass = item.TaskStatus switch
@@ -66,10 +69,29 @@
                             _ => "secondary"
                         };
 
+                        // Extract Task Type and Clean Description
+                        string taskType = "Cleaning";
+                        string cleanDescription = item.TaskDescription;
+                        if (item.TaskDescription.StartsWith("[") && item.TaskDescription.Contains("]"))
+                        {
+                            int index = item.TaskDescription.IndexOf("]");
+                            taskType = item.TaskDescription.Substring(1, index - 1);
+                            cleanDescription = item.TaskDescription.Substring(index + 1).Trim();
+                        }
+
+                        // Find guest name
+                        string guestName = roomGuestMap.TryGetValue(item.RoomNumber, out var name) ? name : "No Active Guest";
+
                         <tr>
                             <td><strong>Room @item.RoomNumber</strong></td>
-                            <td>@item.TaskDescription</td>
+                            <td>@guestName</td>
+                            <td>
+                                <strong style="color: var(--color-primary-dark);">@taskType</strong>
+                                <br />
+                                <span style="font-size: 12px; color: var(--color-text-muted);">@cleanDescription</span>
+                            </td>
                             <td><span class="cogstay-badge @badgeClass">@item.TaskStatus</span></td>
+                            <td>Housekeeping Staff</td>
                             <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
                                 <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-secondary btn-sm"><i class="fa-solid fa-circle-info"></i> Details</a>
                                 <a asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-secondary btn-sm" style="border-color: var(--color-warning); color: var(--color-warning);"><i class="fa-solid fa-pen-to-square"></i> Update Status</a>

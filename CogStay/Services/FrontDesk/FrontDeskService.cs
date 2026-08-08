@@ -247,6 +247,12 @@ public class CheckInService : ICheckInService
         stay.ActualCheckOut = DateTime.Now;
         await _stayRecordRepository.UpdateAsync(stay);
 
+        if (stay.Reservation != null)
+        {
+            stay.Reservation.ReservationStatus = ReservationStatus.CheckedOut;
+            await _reservationRepository.UpdateAsync(stay.Reservation);
+        }
+
         if (stay.Reservation?.Room != null)
         {
             stay.Reservation.Room.Status = RoomStatus.CleaningRequired;
@@ -288,17 +294,20 @@ public class BillingService : IBillingService
     private readonly IStayRecordRepository _stayRecordRepository;
     private readonly IRoomRepository _roomRepository;
     private readonly IHousekeepingTaskRepository _housekeepingTaskRepository;
+    private readonly IReservationRepository _reservationRepository;
 
     public BillingService(
         IBillingRepository billingRepository,
         IStayRecordRepository stayRecordRepository,
         IRoomRepository roomRepository,
-        IHousekeepingTaskRepository housekeepingTaskRepository)
+        IHousekeepingTaskRepository housekeepingTaskRepository,
+        IReservationRepository reservationRepository)
     {
         _billingRepository = billingRepository;
         _stayRecordRepository = stayRecordRepository;
         _roomRepository = roomRepository;
         _housekeepingTaskRepository = housekeepingTaskRepository;
+        _reservationRepository = reservationRepository;
     }
 
     public async Task<IEnumerable<BillingResponseDTO>> GetAllBillsAsync()
@@ -401,6 +410,12 @@ public class BillingService : IBillingService
         {
             stay.ActualCheckOut = DateTime.Now;
             await _stayRecordRepository.UpdateAsync(stay);
+
+            if (stay.Reservation != null)
+            {
+                stay.Reservation.ReservationStatus = ReservationStatus.CheckedOut;
+                await _reservationRepository.UpdateAsync(stay.Reservation);
+            }
 
             if (stay.Reservation?.Room != null)
             {
