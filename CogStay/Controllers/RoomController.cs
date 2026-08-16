@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
+using CogStay.Application.DTOs;
 
 namespace CogStayMVC.Controllers;
 
@@ -28,7 +28,7 @@ public class RoomController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms");
+        var rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms", HttpContext);
         return View(rooms);
     }
 
@@ -43,7 +43,7 @@ public class RoomController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var room = await _httpClient.GetFromJsonOrThrowAsync<RoomResponseDTO>($"api/rooms/{id}");
+        var room = await _httpClient.GetFromJsonOrThrowAsync<RoomResponseDTO>($"api/rooms/{id}", HttpContext);
         if (room == null) return NotFound();
         return View(room);
     }
@@ -78,7 +78,7 @@ public class RoomController : Controller
 
         try
         {
-            await _httpClient.PostAsJsonOrThrowAsync<RoomResponseDTO, CreateRoomDTO>("api/rooms", dto);
+            await _httpClient.PostAsJsonOrThrowAsync<RoomResponseDTO, CreateRoomDTO>("api/rooms", dto, HttpContext);
             TempData["Success"] = "Room created successfully!";
             return RedirectToAction(nameof(Index), new { role = staffRole });
         }
@@ -100,7 +100,7 @@ public class RoomController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var room = await _httpClient.GetFromJsonOrThrowAsync<RoomResponseDTO>($"api/rooms/{id}");
+        var room = await _httpClient.GetFromJsonOrThrowAsync<RoomResponseDTO>($"api/rooms/{id}", HttpContext);
         if (room == null) return NotFound();
 
         var dto = new UpdateRoomDTO
@@ -131,7 +131,7 @@ public class RoomController : Controller
 
         try
         {
-            await _httpClient.PutAsJsonOrThrowAsync($"api/rooms/{id}", dto);
+            await _httpClient.PutAsJsonOrThrowAsync($"api/rooms/{id}", dto, HttpContext);
             TempData["Success"] = "Room updated successfully!";
             return RedirectToAction(nameof(Index), new { role = staffRole });
         }
@@ -156,7 +156,7 @@ public class RoomController : Controller
         ViewData["Role"] = staffRole;
         try
         {
-            await _httpClient.DeleteOrThrowAsync($"api/rooms/{id}");
+            await _httpClient.DeleteOrThrowAsync($"api/rooms/{id}", HttpContext);
             TempData["Success"] = "Room deleted successfully!";
         }
         catch (Exception ex)
@@ -177,7 +177,7 @@ public class RoomController : Controller
         }
 
         ViewData["Role"] = staffRole;
-        var availableRooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms/available");
+        var availableRooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms/available", HttpContext);
         return View(availableRooms);
     }
 }

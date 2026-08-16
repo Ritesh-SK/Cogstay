@@ -1,5 +1,5 @@
-@model CogStayMVC.DTOs.UpdateTaskStatusDTO
-@using CogStayMVC.DTOs
+@model CogStay.Application.DTOs.UpdateTaskStatusDTO
+@using CogStay.Application.DTOs
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Update Task Status";
@@ -41,7 +41,7 @@
             <div class="cogstay-form-row">
                 <div class="cogstay-form-group">
                     <label class="cogstay-form-label" asp-for="TaskStatus">Update Status</label>
-                    <select asp-for="TaskStatus" asp-items="Html.GetEnumSelectList<CogStayMVC.Enums.TaskStatus>()" class="cogstay-form-control" required></select>
+                    <select asp-for="TaskStatus" asp-items="Html.GetEnumSelectList<CogStay.Domain.Enums.TaskStatus>()" class="cogstay-form-control" required></select>
                     <span asp-validation-for="TaskStatus" class="text-danger"></span>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-@model CogStayMVC.DTOs.RoomResponseDTO
+@model CogStay.Application.DTOs.RoomResponseDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Room Details";
@@ -10,9 +10,10 @@
     string badgeClass = Model.Status switch
     {
         RoomStatus.Available => "success",
-        RoomStatus.Booked => "info",
         RoomStatus.Occupied => "danger",
-        _ => "warning"
+        RoomStatus.NeedsCleaning => "warning",
+        RoomStatus.Maintenance => "secondary",
+        _ => "info"
     };
 }
 

@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStay.Application.Contracts.Services;
+using CogStay.Application.DTOs;
 
-namespace CogStayMVC.Controllers.Api;
+namespace CogStayApi.Controllers;
 
 [ApiController]
 [Route("api/feedback")]
+[Authorize]
 public class FeedbackApiController : ControllerBase
 {
     private readonly IFeedbackService _feedbackService;
@@ -39,9 +42,16 @@ public class FeedbackApiController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<FeedbackResponseDTO>> SubmitFeedback([FromBody] CreateFeedbackDTO dto)
     {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var role = User.FindFirst(ClaimTypes.Role)?.Value;
+        if (role == "Guest")
         {
-            return BadRequest(ModelState);
+            var integerIdClaim = User.FindFirst("IntegerId")?.Value;
+            if (integerIdClaim != null && int.TryParse(integerIdClaim, out var claimId) && claimId != dto.GuestId)
+            {
+                return Forbid();
+            }
         }
 
         try
@@ -53,17 +63,10 @@ public class FeedbackApiController : ControllerBase
         {
             return NotFound(new { message = ex.Message });
         }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while submitting feedback.", details = ex.Message });
-        }
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> DeleteFeedback(int id)
     {
         try
@@ -79,7 +82,7 @@ public class FeedbackApiController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = "An error occurred while deleting feedback.", details = ex.Message });
+            return StatusCode(500, new { message = "An error occurred while deleting the feedback.", details = ex.Message });
         }
     }
 }

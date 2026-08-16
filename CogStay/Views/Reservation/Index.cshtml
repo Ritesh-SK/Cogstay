@@ -1,4 +1,4 @@
-@model IEnumerable<CogStayMVC.DTOs.ReservationResponseDTO>
+@model IEnumerable<CogStay.Application.DTOs.ReservationResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Reservations Queue";
@@ -59,8 +59,8 @@
                     {
                         string badgeClass = item.ReservationStatus switch
                         {
-                            CogStayMVC.Enums.ReservationStatus.Booked => "success",
-                            CogStayMVC.Enums.ReservationStatus.Cancelled => "danger",
+                            CogStay.Domain.Enums.ReservationStatus.Confirmed => "success",
+                            CogStay.Domain.Enums.ReservationStatus.Cancelled => "danger",
                             _ => "secondary"
                         };
 
@@ -73,7 +73,7 @@
                             <td><span class="cogstay-badge @badgeClass">@item.ReservationStatus</span></td>
                             <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
                                 <a asp-action="Details" asp-route-id="@item.ReservationId" class="btn btn-secondary btn-sm">Details</a>
-                                @if (item.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked)
+                                @if (item.ReservationStatus == CogStay.Domain.Enums.ReservationStatus.Confirmed)
                                 {
                                     <form asp-action="Cancel" asp-route-id="@item.ReservationId" method="post" style="display:inline;" onsubmit="return confirm('Cancel reservation #RES-@item.ReservationId?');">
                                         @Html.AntiForgeryToken()

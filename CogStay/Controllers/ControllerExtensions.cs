@@ -1,45 +1,62 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CogStayMVC.Controllers;
 
 public static class ControllerExtensions
 {
-    public static async Task<T> GetFromJsonOrThrowAsync<T>(this HttpClient client, string requestUri)
+    public static void AttachBearerToken(this HttpClient client, HttpContext httpContext)
     {
+        var token = httpContext.Session.GetString("JwtToken");
+        if (!string.IsNullOrEmpty(token))
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+    }
+
+    public static async Task<T> GetFromJsonOrThrowAsync<T>(this HttpClient client, string requestUri, HttpContext? httpContext = null)
+    {
+        if (httpContext != null) client.AttachBearerToken(httpContext);
         var response = await client.GetAsync(requestUri);
         return await HandleResponseAsync<T>(response);
     }
 
-    public static async Task<T> PostAsJsonOrThrowAsync<T, TValue>(this HttpClient client, string requestUri, TValue value)
+    public static async Task<T> PostAsJsonOrThrowAsync<T, TValue>(this HttpClient client, string requestUri, TValue value, HttpContext? httpContext = null)
     {
+        if (httpContext != null) client.AttachBearerToken(httpContext);
         var response = await client.PostAsJsonAsync(requestUri, value);
         return await HandleResponseAsync<T>(response);
     }
 
-    public static async Task PostAsJsonOrThrowAsync<TValue>(this HttpClient client, string requestUri, TValue value)
+    public static async Task PostAsJsonOrThrowAsync<TValue>(this HttpClient client, string requestUri, TValue value, HttpContext? httpContext = null)
     {
+        if (httpContext != null) client.AttachBearerToken(httpContext);
         var response = await client.PostAsJsonAsync(requestUri, value);
         await HandleResponseAsync(response);
     }
 
-    public static async Task PutAsJsonOrThrowAsync<TValue>(this HttpClient client, string requestUri, TValue value)
+    public static async Task PutAsJsonOrThrowAsync<TValue>(this HttpClient client, string requestUri, TValue value, HttpContext? httpContext = null)
     {
+        if (httpContext != null) client.AttachBearerToken(httpContext);
         var response = await client.PutAsJsonAsync(requestUri, value);
         await HandleResponseAsync(response);
     }
 
-    public static async Task PatchAsJsonOrThrowAsync<TValue>(this HttpClient client, string requestUri, TValue value)
+    public static async Task PatchAsJsonOrThrowAsync<TValue>(this HttpClient client, string requestUri, TValue value, HttpContext? httpContext = null)
     {
+        if (httpContext != null) client.AttachBearerToken(httpContext);
         var response = await client.PatchAsJsonAsync(requestUri, value);
         await HandleResponseAsync(response);
     }
 
-    public static async Task DeleteOrThrowAsync(this HttpClient client, string requestUri)
+    public static async Task DeleteOrThrowAsync(this HttpClient client, string requestUri, HttpContext? httpContext = null)
     {
+        if (httpContext != null) client.AttachBearerToken(httpContext);
         var response = await client.DeleteAsync(requestUri);
         await HandleResponseAsync(response);
     }

@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStay.Application.Contracts.Services;
+using CogStay.Application.DTOs;
 
-namespace CogStayMVC.Controllers.Api;
+namespace CogStayApi.Controllers;
 
 [ApiController]
 [Route("api/stays")]
+[Authorize]
 public class CheckInApiController : ControllerBase
 {
     private readonly ICheckInService _checkInService;
@@ -19,6 +21,7 @@ public class CheckInApiController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin,Manager,FrontDesk")]
     public async Task<ActionResult<IEnumerable<StayRecordResponseDTO>>> GetAllStays()
     {
         var stays = await _checkInService.GetAllStaysAsync();
@@ -48,12 +51,10 @@ public class CheckInApiController : ControllerBase
     }
 
     [HttpPost("checkin")]
+    [Authorize(Roles = "Admin,Manager,FrontDesk")]
     public async Task<ActionResult<StayRecordResponseDTO>> CheckInGuest([FromBody] CreateCheckInDTO dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         try
         {
@@ -67,10 +68,6 @@ public class CheckInApiController : ControllerBase
         catch (KeyNotFoundException ex)
         {
             return NotFound(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred during check-in.", details = ex.Message });
         }
     }
 
@@ -92,13 +89,10 @@ public class CheckInApiController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while requesting checkout.", details = ex.Message });
-        }
     }
 
     [HttpPost("{id:int}/complete-checkout")]
+    [Authorize(Roles = "Admin,Manager,FrontDesk")]
     public async Task<IActionResult> CompleteCheckOut(int id)
     {
         try
@@ -116,13 +110,10 @@ public class CheckInApiController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while completing checkout.", details = ex.Message });
-        }
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> DeleteStay(int id)
     {
         try

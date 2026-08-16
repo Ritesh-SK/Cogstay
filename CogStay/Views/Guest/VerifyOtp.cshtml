@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "Account OTP Verification";
+    var userEmail = ViewBag.Email as string ?? "";
+    var userPhone = ViewBag.Phone as string ?? "";
+}
+
+<div class="container mt-5" style="max-width: 600px;">
+    <div class="card shadow-lg border-0 rounded-4" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+        <div class="card-body p-4 p-md-5">
+            <h2 class="fw-bold text-center mb-3" style="color: #2b3674;">Verify Your Account</h2>
+            <p class="text-muted text-center mb-4">Dual Verification required to activate your CogStay Guest account.</p>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- Step 1: Email OTP Form -->
+            <div class="mb-5 p-3 rounded-3 border bg-light">
+                <h5 class="fw-bold mb-2 text-primary"><i class="bi bi-envelope"></i> Step 1: Email Verification</h5>
+                <p class="small text-muted mb-3">Enter the 6-digit code sent to your email address.</p>
+                <form asp-action="VerifyEmail" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Email Address</label>
+                        <input type="email" name="Email" value="@userEmail" class="form-control form-control-lg" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Email Verification Code</label>
+                        <input type="text" name="OtpCode" class="form-control form-control-lg letter-spacing-2" placeholder="e.g. 123456" maxlength="6" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">Verify Email OTP</button>
+                </form>
+            </div>
+
+            <!-- Step 2: Phone OTP Form -->
+            <div class="p-3 rounded-3 border bg-light">
+                <h5 class="fw-bold mb-2 text-success"><i class="bi bi-phone"></i> Step 2: Mobile Phone Verification</h5>
+                <p class="small text-muted mb-3">Enter the 6-digit code sent to your mobile phone number.</p>
+                <form asp-action="VerifyPhone" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Phone Number</label>
+                        <input type="text" name="PhoneNumber" value="@userPhone" class="form-control form-control-lg" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">SMS Verification Code</label>
+                        <input type="text" name="OtpCode" class="form-control form-control-lg letter-spacing-2" placeholder="e.g. 654321" maxlength="6" required />
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">Verify Phone OTP & Activate Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

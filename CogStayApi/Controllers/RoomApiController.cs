@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
-using CogStayMVC.Enums;
-using CogStayMVC.Services.Interfaces;
+using CogStay.Application.Contracts.Services;
+using CogStay.Application.DTOs;
+using CogStay.Domain.Enums;
 
-namespace CogStayMVC.Controllers.Api;
+namespace CogStayApi.Controllers;
 
 [ApiController]
 [Route("api/rooms")]
@@ -45,12 +46,10 @@ public class RoomApiController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<ActionResult<RoomResponseDTO>> CreateRoom([FromBody] CreateRoomDTO dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         try
         {
@@ -68,17 +67,11 @@ public class RoomApiController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> UpdateRoom(int id, [FromBody] UpdateRoomDTO dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        if (id != dto.RoomId)
-        {
-            return BadRequest(new { message = "Room ID in URL does not match ID in body." });
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (id != dto.RoomId) return BadRequest(new { message = "Room ID in URL does not match ID in body." });
 
         try
         {
@@ -89,13 +82,10 @@ public class RoomApiController : ControllerBase
         {
             return NotFound(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while updating the room.", details = ex.Message });
-        }
     }
 
     [HttpPatch("{roomId:int}/status")]
+    [Authorize(Roles = "Admin,Manager,FrontDesk,Housekeeping")]
     public async Task<IActionResult> UpdateRoomStatus(int roomId, [FromBody] RoomStatus status)
     {
         try
@@ -113,13 +103,10 @@ public class RoomApiController : ControllerBase
         {
             return NotFound(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while updating the room status.", details = ex.Message });
-        }
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> DeleteRoom(int id)
     {
         try

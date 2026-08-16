@@ -3,8 +3,8 @@
     var role = ViewData["Role"]?.ToString() ?? "Admin";
     ViewData["Title"] = role + " Dashboard";
 
-    var arrivalsList = ViewBag.ArrivalsList as IEnumerable<CogStayMVC.DTOs.ReservationResponseDTO> ?? Enumerable.Empty<CogStayMVC.DTOs.ReservationResponseDTO>();
-    var housekeepingTasksList = ViewBag.HousekeepingTasksList as IEnumerable<CogStayMVC.DTOs.HousekeepingTaskResponseDTO> ?? Enumerable.Empty<CogStayMVC.DTOs.HousekeepingTaskResponseDTO>();
+    var arrivalsList = ViewBag.ArrivalsList as IEnumerable<CogStay.Application.DTOs.ReservationResponseDTO> ?? Enumerable.Empty<CogStay.Application.DTOs.ReservationResponseDTO>();
+    var housekeepingTasksList = ViewBag.HousekeepingTasksList as IEnumerable<CogStay.Application.DTOs.HousekeepingTaskResponseDTO> ?? Enumerable.Empty<CogStay.Application.DTOs.HousekeepingTaskResponseDTO>();
     
     int availableRoomsCount = ViewBag.AvailableRoomsCount ?? 0;
     int totalRoomsCount = ViewBag.TotalRoomsCount ?? 0;
@@ -190,7 +190,7 @@ else if (role == "Housekeeping")
                     {
                         foreach (var task in housekeepingTasksList)
                         {
-                            string badgeClass = task.TaskStatus == CogStayMVC.Enums.TaskStatus.Pending ? "danger" : "warning";
+                            string badgeClass = task.TaskStatus == CogStay.Domain.Enums.TaskStatus.Pending ? "danger" : "warning";
                             <tr>
                                 <td><strong>Room @task.RoomNumber</strong></td>
                                 <td>@task.TaskDescription</td>

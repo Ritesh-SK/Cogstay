@@ -1,4 +1,4 @@
-@model IEnumerable<CogStayMVC.DTOs.BillingResponseDTO>
+@model IEnumerable<CogStay.Application.DTOs.BillingResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Billing Statements";
@@ -7,7 +7,7 @@
         var roleParam = Context.Request.Query["role"].ToString();
         ViewData["Role"] = string.IsNullOrEmpty(roleParam) ? "Admin" : roleParam;
     }
-    var pendingBills = Model.Where(b => b.PaymentStatus == CogStayMVC.Enums.PaymentStatus.Pending).ToList();
+    var pendingBills = Model.Where(b => b.PaymentStatus == CogStay.Domain.Enums.PaymentStatus.Pending).ToList();
 }
 
 <div class="table-action-header">

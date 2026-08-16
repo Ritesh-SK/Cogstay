@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStay.Application.Contracts.Services;
+using CogStay.Application.DTOs;
 
-namespace CogStayMVC.Controllers.Api;
+namespace CogStayApi.Controllers;
 
 [ApiController]
 [Route("api/guests")]
+[Authorize]
 public class GuestApiController : ControllerBase
 {
     private readonly IGuestService _guestService;
@@ -19,6 +22,7 @@ public class GuestApiController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin,Manager,FrontDesk")]
     public async Task<ActionResult<IEnumerable<GuestResponseDTO>>> GetAllGuests()
     {
         var guests = await _guestService.GetAllGuestsAsync();
@@ -28,6 +32,11 @@ public class GuestApiController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<GuestResponseDTO>> GetGuestById(int id)
     {
+        if (!IsAuthorizedForGuest(id))
+        {
+            return Forbid();
+        }
+
         var guest = await _guestService.GetGuestByIdAsync(id);
         if (guest == null)
         {
@@ -37,6 +46,7 @@ public class GuestApiController : ControllerBase
     }
 
     [HttpGet("email/{email}")]
+    [Authorize(Roles = "Admin,Manager,FrontDesk")]
     public async Task<ActionResult<GuestResponseDTO>> GetGuestByEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
@@ -52,57 +62,15 @@ public class GuestApiController : ControllerBase
         return Ok(guest);
     }
 
-    [HttpPost("register")]
-    public async Task<ActionResult<GuestResponseDTO>> RegisterGuest([FromBody] CreateGuestDTO dto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        try
-        {
-            var registeredGuest = await _guestService.RegisterGuestAsync(dto);
-            return CreatedAtAction(nameof(GetGuestById), new { id = registeredGuest.GuestId }, registeredGuest);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while registering the guest.", details = ex.Message });
-        }
-    }
-
-    [HttpPost("login")]
-    public async Task<ActionResult<GuestResponseDTO>> LoginGuest([FromBody] GuestLoginDTO dto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var guest = await _guestService.ValidateGuestLoginAsync(dto);
-        if (guest == null)
-        {
-            return Unauthorized(new { message = "Invalid email or password." });
-        }
-
-        return Ok(guest);
-    }
-
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateGuest(int id, [FromBody] UpdateGuestDTO dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (id != dto.GuestId) return BadRequest(new { message = "Guest ID mismatch." });
 
-        if (id != dto.GuestId)
+        if (!IsAuthorizedForGuest(id))
         {
-            return BadRequest(new { message = "Guest ID in URL does not match ID in body." });
+            return Forbid();
         }
 
         try
@@ -114,13 +82,10 @@ public class GuestApiController : ControllerBase
         {
             return NotFound(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while updating the guest.", details = ex.Message });
-        }
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> DeleteGuest(int id)
     {
         try
@@ -138,5 +103,14 @@ public class GuestApiController : ControllerBase
         {
             return StatusCode(500, new { message = "An error occurred while deleting the guest.", details = ex.Message });
         }
+    }
+
+    private bool IsAuthorizedForGuest(int guestId)
+    {
+        var role = User.FindFirst(ClaimTypes.Role)?.Value;
+        if (role == "Admin" || role == "Manager" || role == "FrontDesk") return true;
+
+        var integerIdClaim = User.FindFirst("IntegerId")?.Value;
+        return integerIdClaim != null && int.TryParse(integerIdClaim, out var claimId) && claimId == guestId;
     }
 }

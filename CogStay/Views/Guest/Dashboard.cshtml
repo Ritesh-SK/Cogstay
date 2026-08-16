@@ -1,11 +1,11 @@
-@model IEnumerable<CogStayMVC.DTOs.ReservationResponseDTO>
+@model IEnumerable<CogStay.Application.DTOs.ReservationResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Guest Dashboard";
     ViewData["Role"] = "Guest";
     var guestName = ViewBag.GuestName ?? "Guest";
-    var upcomingRes = Model.FirstOrDefault(r => r.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked);
-    var activeStay = Model.FirstOrDefault(r => r.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked);
+    var upcomingRes = Model.FirstOrDefault(r => r.ReservationStatus == CogStay.Domain.Enums.ReservationStatus.Confirmed);
+    var activeStay = Model.FirstOrDefault(r => r.ReservationStatus == CogStay.Domain.Enums.ReservationStatus.Confirmed);
 }
 
 <div style="margin-bottom: 30px;">

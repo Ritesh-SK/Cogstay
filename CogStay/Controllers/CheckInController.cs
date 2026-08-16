@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
+using CogStay.Application.DTOs;
 
 namespace CogStayMVC.Controllers;
 
@@ -21,14 +21,14 @@ public class CheckInController : Controller
     public async Task<IActionResult> ActiveStays()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Admin" && staffRole != "Manager"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
-        ViewData["Role"] = "FrontDesk";
-        var stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays");
+        ViewData["Role"] = staffRole;
+        var stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext);
         return View(stays);
     }
 
@@ -36,14 +36,14 @@ public class CheckInController : Controller
     public async Task<IActionResult> CheckIn()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Admin" && staffRole != "Manager"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
-        ViewData["Role"] = "FrontDesk";
-        ViewBag.Reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations");
+        ViewData["Role"] = staffRole;
+        ViewBag.Reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations", HttpContext);
         return View(new CreateCheckInDTO());
     }
 
@@ -52,29 +52,29 @@ public class CheckInController : Controller
     public async Task<IActionResult> CheckIn(CreateCheckInDTO dto)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Admin" && staffRole != "Manager"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
-        ViewData["Role"] = "FrontDesk";
+        ViewData["Role"] = staffRole;
         if (!ModelState.IsValid)
         {
-            ViewBag.Reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations");
+            ViewBag.Reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations", HttpContext);
             return View(dto);
         }
 
         try
         {
-            await _httpClient.PostAsJsonOrThrowAsync<StayRecordResponseDTO, CreateCheckInDTO>("api/stays/checkin", dto);
+            await _httpClient.PostAsJsonOrThrowAsync<StayRecordResponseDTO, CreateCheckInDTO>("api/stays/checkin", dto, HttpContext);
             TempData["Success"] = "Guest checked in successfully! Room status updated to Occupied.";
-            return RedirectToAction(nameof(ActiveStays), new { role = "FrontDesk" });
+            return RedirectToAction(nameof(ActiveStays), new { role = staffRole });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations");
+            ViewBag.Reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations", HttpContext);
             return View(dto);
         }
     }
@@ -83,14 +83,14 @@ public class CheckInController : Controller
     public async Task<IActionResult> CheckOut(int? id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Admin" && staffRole != "Manager"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
-        ViewData["Role"] = "FrontDesk";
-        var stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays");
+        ViewData["Role"] = staffRole;
+        var stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext);
         ViewBag.Stays = stays;
         return View(new CheckOutDTO { StayId = id ?? 0 });
     }
@@ -100,28 +100,27 @@ public class CheckInController : Controller
     public async Task<IActionResult> CheckOut(CheckOutDTO dto)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Admin" && staffRole != "Manager"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
-        ViewData["Role"] = "FrontDesk";
+        ViewData["Role"] = staffRole;
         if (!ModelState.IsValid)
         {
-            ViewBag.Stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays");
+            ViewBag.Stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext);
             return View(dto);
         }
 
         try
         {
-            // Front Desk initiates checkout -> redirects to Front Desk Billing Module for final payment & cleaning request creation!
-            return RedirectToAction("Payment", "Billing", new { stayId = dto.StayId, role = "FrontDesk" });
+            return RedirectToAction("Payment", "Billing", new { stayId = dto.StayId, role = staffRole });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays");
+            ViewBag.Stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext);
             return View(dto);
         }
     }
@@ -131,22 +130,22 @@ public class CheckInController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "FrontDesk")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Admin" && staffRole != "Manager"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
-        ViewData["Role"] = "FrontDesk";
+        ViewData["Role"] = staffRole;
         try
         {
-            await _httpClient.DeleteOrThrowAsync($"api/stays/{id}");
+            await _httpClient.DeleteOrThrowAsync($"api/stays/{id}", HttpContext);
             TempData["Success"] = "Stay record deleted.";
         }
         catch (Exception ex)
         {
             TempData["Error"] = ex.Message;
         }
-        return RedirectToAction(nameof(ActiveStays), new { role = "FrontDesk" });
+        return RedirectToAction(nameof(ActiveStays), new { role = staffRole });
     }
 }

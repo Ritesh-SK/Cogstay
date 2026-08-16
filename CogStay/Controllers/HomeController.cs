@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
+using CogStay.Application.DTOs;
 
 namespace CogStayMVC.Controllers;
 
@@ -17,7 +18,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var availableRooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms/available");
+        var availableRooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms/available", HttpContext);
         return View(availableRooms);
     }
 

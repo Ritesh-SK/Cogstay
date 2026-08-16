@@ -1,4 +1,4 @@
-@model IEnumerable<CogStayMVC.DTOs.ReservationResponseDTO>
+@model IEnumerable<CogStay.Application.DTOs.ReservationResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Booking History";
@@ -37,7 +37,7 @@
                 {
                     foreach (var item in Model)
                     {
-                        string badgeClass = item.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked ? "success" : "secondary";
+                        string badgeClass = item.ReservationStatus == CogStay.Domain.Enums.ReservationStatus.Confirmed ? "success" : "secondary";
                         <tr>
                             <td><strong>#RES-@item.ReservationId</strong></td>
                             <td>Room @item.RoomNumber (@item.RoomType)</td>

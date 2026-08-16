@@ -1,83 +1,81 @@
-using Microsoft.EntityFrameworkCore;
-using CogStayMVC.Data;
-using CogStayMVC.Models;
-using CogStayMVC.Enums;
-using CogStayMVC.Repositories.Implementations;
-using CogStayMVC.Repositories.Interfaces;
-using CogStayMVC.Services.Interfaces;
-using CogStayMVC.Repositories.Admin;
-using CogStayMVC.Repositories.FrontDesk;
-using CogStayMVC.Repositories.GuestModule;
-using CogStayMVC.Repositories.Housekeeping;
-using CogStayMVC.Repositories.Manager;
-using CogStayMVC.Services.Admin;
-using CogStayMVC.Services.FrontDesk;
-using CogStayMVC.Services.GuestModule;
-using CogStayMVC.Services.Housekeeping;
-using CogStayMVC.Services.Manager;
+using System;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using CogStay.Infrastructure;
+using CogStay.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add API Controllers
 builder.Services.AddControllers();
 
-// Configure DB Context (resolves from CogStay)
-builder.Services.AddDbContext<HotelDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Add Infrastructure & Application Services
+builder.Services.AddInfrastructureAndApplication();
 
-// Register Repositories (resolves from CogStay)
-builder.Services.AddScoped<IGuestRepository, GuestRepository>();
-builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
-builder.Services.AddScoped<IStayRecordRepository, StayRecordRepository>();
-builder.Services.AddScoped<IBillingRepository, BillingRepository>();
-builder.Services.AddScoped<IHousekeepingTaskRepository, HousekeepingTaskRepository>();
-builder.Services.AddScoped<IStaffRepository, StaffRepository>();
-builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+// Configure JWT Authentication
+var secretKey = builder.Configuration["JWT_SIGNING_KEY"] 
+    ?? builder.Configuration["Jwt:SigningKey"] 
+    ?? "CogStaySecretSigningKeySuperSecure32BytesLongString!";
+var issuer = builder.Configuration["JWT_ISSUER"] ?? builder.Configuration["Jwt:Issuer"] ?? "CogStayAPI";
+var audience = builder.Configuration["JWT_AUDIENCE"] ?? builder.Configuration["Jwt:Audience"] ?? "CogStayApp";
 
-// Register Services (resolves from CogStay)
-builder.Services.AddScoped<IGuestService, GuestService>();
-builder.Services.AddScoped<IRoomService, RoomService>();
-builder.Services.AddScoped<IReservationService, ReservationService>();
-builder.Services.AddScoped<ICheckInService, CheckInService>();
-builder.Services.AddScoped<IBillingService, BillingService>();
-builder.Services.AddScoped<IHousekeepingService, HousekeepingService>();
-builder.Services.AddScoped<IStaffService, StaffService>();
-builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = issuer,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+// Environment-aware CORS configuration
+var allowedOrigins = builder.Configuration["CORS_ALLOWED_ORIGINS"]?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) 
+    ?? new[] { "https://localhost:5000", "https://localhost:5001", "http://localhost:5000", "http://localhost:5001" };
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DefaultCorsPolicy", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors("DefaultCorsPolicy");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
-// Map API Controllers
 app.MapControllers();
 
-// Seed Default Administrator Account
+// Idempotent Admin Account Seeding on Startup
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<HotelDbContext>();
-    var defaultAdminEmail = "admin@gmail.com";
-    if (!context.Staff.Any(s => s.Email == defaultAdminEmail))
-    {
-        using var sha256 = System.Security.Cryptography.SHA256.Create();
-        var bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes("123456"));
-        var pwdHash = Convert.ToBase64String(bytes);
-
-        var admin = new Staff
-        {
-            FullName = "Administrator",
-            Email = defaultAdminEmail,
-            PhoneNumber = "0000000000",
-            PasswordHash = pwdHash,
-            Role = StaffRole.Admin,
-            IsActive = true,
-            CreatedAt = DateTime.Now
-        };
-        context.Staff.Add(admin);
-        context.SaveChanges();
-    }
+    var seeder = scope.ServiceProvider.GetRequiredService<IdempotentAdminSeeder>();
+    await seeder.SeedAsync();
 }
 
 app.Run();

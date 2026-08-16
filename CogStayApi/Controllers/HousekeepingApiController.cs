@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStay.Application.Contracts.Services;
+using CogStay.Application.DTOs;
 
-namespace CogStayMVC.Controllers.Api;
+namespace CogStayApi.Controllers;
 
 [ApiController]
 [Route("api/housekeeping")]
+[Authorize]
 public class HousekeepingApiController : ControllerBase
 {
     private readonly IHousekeepingService _housekeepingService;
@@ -44,35 +46,27 @@ public class HousekeepingApiController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin,Manager,FrontDesk,Housekeeping")]
     public async Task<ActionResult<HousekeepingTaskResponseDTO>> CreateTask([FromBody] CreateHousekeepingTaskDTO dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         try
         {
-            var createdTask = await _housekeepingService.CreateTaskAsync(dto);
-            return CreatedAtAction(nameof(GetTaskById), new { id = createdTask.TaskId }, createdTask);
+            var task = await _housekeepingService.CreateTaskAsync(dto);
+            return CreatedAtAction(nameof(GetTaskById), new { id = task.TaskId }, task);
         }
         catch (KeyNotFoundException ex)
         {
             return NotFound(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while creating the housekeeping task.", details = ex.Message });
-        }
     }
 
-    [HttpPut("status")]
+    [HttpPatch("status")]
+    [Authorize(Roles = "Admin,Manager,Housekeeping")]
     public async Task<IActionResult> UpdateTaskStatus([FromBody] UpdateTaskStatusDTO dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         try
         {
@@ -83,13 +77,10 @@ public class HousekeepingApiController : ControllerBase
         {
             return NotFound(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while updating the housekeeping task status.", details = ex.Message });
-        }
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> DeleteTask(int id)
     {
         try
@@ -105,7 +96,7 @@ public class HousekeepingApiController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = "An error occurred while deleting the housekeeping task.", details = ex.Message });
+            return StatusCode(500, new { message = "An error occurred while deleting the task.", details = ex.Message });
         }
     }
 }

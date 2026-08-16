@@ -1,4 +1,4 @@
-@model CogStayMVC.DTOs.HousekeepingTaskResponseDTO
+@model CogStay.Application.DTOs.HousekeepingTaskResponseDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Housekeeping Task Details";
@@ -9,9 +9,9 @@
     }
     string badgeClass = Model.TaskStatus switch
     {
-        CogStayMVC.Enums.TaskStatus.Pending => "danger",
-        CogStayMVC.Enums.TaskStatus.InProgress => "warning",
-        CogStayMVC.Enums.TaskStatus.Completed => "success",
+        CogStay.Domain.Enums.TaskStatus.Pending => "danger",
+        CogStay.Domain.Enums.TaskStatus.InProgress => "warning",
+        CogStay.Domain.Enums.TaskStatus.Completed => "success",
         _ => "secondary"
     };
 }

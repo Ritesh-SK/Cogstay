@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStay.Application.Contracts.Services;
+using CogStay.Application.DTOs;
 
-namespace CogStayMVC.Controllers.Api;
+namespace CogStayApi.Controllers;
 
 [ApiController]
 [Route("api/staff")]
+[Authorize(Roles = "Admin,Manager")]
 public class StaffApiController : ControllerBase
 {
     private readonly IStaffService _staffService;
@@ -21,8 +23,8 @@ public class StaffApiController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<StaffResponseDTO>>> GetAllStaff()
     {
-        var staffList = await _staffService.GetAllStaffAsync();
-        return Ok(staffList);
+        var staff = await _staffService.GetAllStaffAsync();
+        return Ok(staff);
     }
 
     [HttpGet("{id:int}")]
@@ -37,12 +39,10 @@ public class StaffApiController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<StaffResponseDTO>> CreateStaff([FromBody] CreateStaffDTO dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         try
         {
@@ -53,24 +53,14 @@ public class StaffApiController : ControllerBase
         {
             return Conflict(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while creating the staff member.", details = ex.Message });
-        }
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateStaff(int id, [FromBody] UpdateStaffDTO dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        if (id != dto.StaffId)
-        {
-            return BadRequest(new { message = "Staff ID in URL does not match ID in body." });
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (id != dto.StaffId) return BadRequest(new { message = "Staff ID mismatch." });
 
         try
         {
@@ -81,30 +71,10 @@ public class StaffApiController : ControllerBase
         {
             return NotFound(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while updating the staff member.", details = ex.Message });
-        }
-    }
-
-    [HttpPost("login")]
-    public async Task<ActionResult<StaffResponseDTO>> LoginStaff([FromBody] StaffLoginDTO dto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var staff = await _staffService.ValidateStaffLoginAsync(dto);
-        if (staff == null)
-        {
-            return Unauthorized(new { message = "Invalid email, password, or role." });
-        }
-
-        return Ok(staff);
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteStaff(int id)
     {
         try

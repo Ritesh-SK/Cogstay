@@ -5,8 +5,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
-using CogStayMVC.Enums;
+using CogStay.Application.DTOs;
+using CogStay.Domain.Enums;
+using TaskStatus = CogStay.Domain.Enums.TaskStatus;
 
 namespace CogStayMVC.Controllers;
 
@@ -30,18 +31,20 @@ public class StaffController : Controller
 
         try
         {
-            var staff = await _httpClient.PostAsJsonOrThrowAsync<StaffResponseDTO, StaffLoginDTO>("api/staff/login", dto);
-            if (staff == null)
+            var auth = await _httpClient.PostAsJsonOrThrowAsync<AuthResponseDTO, StaffLoginDTO>("api/auth/staff-login", dto);
+            if (auth == null)
             {
                 ModelState.AddModelError(string.Empty, "Invalid credentials or unauthorized role access.");
                 return View(dto);
             }
 
-            HttpContext.Session.SetInt32("StaffId", staff.StaffId);
-            HttpContext.Session.SetString("StaffName", staff.FullName);
-            HttpContext.Session.SetString("StaffRole", staff.Role.ToString());
+            HttpContext.Session.SetString("JwtToken", auth.Token);
+            HttpContext.Session.SetString("RefreshToken", auth.RefreshToken);
+            HttpContext.Session.SetInt32("StaffId", auth.IntegerId);
+            HttpContext.Session.SetString("StaffName", auth.FullName);
+            HttpContext.Session.SetString("StaffRole", auth.Role);
 
-            return RedirectToAction(nameof(Dashboard), new { role = staff.Role.ToString() });
+            return RedirectToAction(nameof(Dashboard), new { role = auth.Role });
         }
         catch (Exception ex)
         {
@@ -62,29 +65,34 @@ public class StaffController : Controller
         ViewData["Role"] = sessionRole;
         ViewBag.StaffName = HttpContext.Session.GetString("StaffName") ?? "Staff Member";
 
-        var rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms") ?? Enumerable.Empty<RoomResponseDTO>();
+        var rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms", HttpContext) ?? Enumerable.Empty<RoomResponseDTO>();
         var availableRooms = rooms.Where(r => r.Status == RoomStatus.Available).ToList();
-        var reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations") ?? Enumerable.Empty<ReservationResponseDTO>();
-        var activeStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays") ?? Enumerable.Empty<StayRecordResponseDTO>();
+        var reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations", HttpContext) ?? Enumerable.Empty<ReservationResponseDTO>();
+        var activeStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext) ?? Enumerable.Empty<StayRecordResponseDTO>();
         var currentActiveStays = activeStays.Where(s => !s.ActualCheckOut.HasValue).ToList();
-        var housekeepingTasks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<HousekeepingTaskResponseDTO>>("api/housekeeping") ?? Enumerable.Empty<HousekeepingTaskResponseDTO>();
-        var bills = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<BillingResponseDTO>>("api/billing") ?? Enumerable.Empty<BillingResponseDTO>();
+        var housekeepingTasks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<HousekeepingTaskResponseDTO>>("api/housekeeping", HttpContext) ?? Enumerable.Empty<HousekeepingTaskResponseDTO>();
+        var bills = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<BillingResponseDTO>>("api/billing", HttpContext) ?? Enumerable.Empty<BillingResponseDTO>();
         var pendingBills = bills.Where(b => b.PaymentStatus == PaymentStatus.Pending).ToList();
-        var staffList = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StaffResponseDTO>>("api/staff") ?? Enumerable.Empty<StaffResponseDTO>();
+        
+        IEnumerable<StaffResponseDTO> staffList = Enumerable.Empty<StaffResponseDTO>();
+        if (sessionRole == "Admin" || sessionRole == "Manager")
+        {
+            staffList = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StaffResponseDTO>>("api/staff", HttpContext) ?? Enumerable.Empty<StaffResponseDTO>();
+        }
 
         ViewBag.TotalRoomsCount = rooms.Count();
         ViewBag.TotalStaffCount = staffList.Count();
         ViewBag.AvailableRoomsCount = availableRooms.Count();
-        ViewBag.ReservationsCount = reservations.Count(r => r.ReservationStatus == ReservationStatus.Booked);
+        ViewBag.ReservationsCount = reservations.Count(r => r.ReservationStatus == ReservationStatus.Confirmed || r.ReservationStatus == ReservationStatus.Pending);
         ViewBag.ActiveStaysCount = currentActiveStays.Count();
-        ViewBag.PendingTasksCount = housekeepingTasks.Count(t => t.TaskStatus == Enums.TaskStatus.Pending);
-        ViewBag.InProgressTasksCount = housekeepingTasks.Count(t => t.TaskStatus == Enums.TaskStatus.InProgress);
-        ViewBag.CompletedTasksCount = housekeepingTasks.Count(t => t.TaskStatus == Enums.TaskStatus.Completed);
+        ViewBag.PendingTasksCount = housekeepingTasks.Count(t => t.TaskStatus == TaskStatus.Pending);
+        ViewBag.InProgressTasksCount = housekeepingTasks.Count(t => t.TaskStatus == TaskStatus.InProgress);
+        ViewBag.CompletedTasksCount = housekeepingTasks.Count(t => t.TaskStatus == TaskStatus.Completed);
         ViewBag.PendingPaymentAmount = pendingBills.Sum(b => b.TotalAmount);
         ViewBag.PendingBillsCount = pendingBills.Count();
 
-        ViewBag.ArrivalsList = reservations.Where(r => r.ReservationStatus == ReservationStatus.Booked).Take(5).ToList();
-        ViewBag.HousekeepingTasksList = housekeepingTasks.Where(t => t.TaskStatus != Enums.TaskStatus.Completed).Take(5).ToList();
+        ViewBag.ArrivalsList = reservations.Where(r => r.ReservationStatus == ReservationStatus.Confirmed || r.ReservationStatus == ReservationStatus.Pending).Take(5).ToList();
+        ViewBag.HousekeepingTasksList = housekeepingTasks.Where(t => t.TaskStatus != TaskStatus.Completed).Take(5).ToList();
 
         return View();
     }
@@ -93,14 +101,14 @@ public class StaffController : Controller
     public async Task<IActionResult> Index()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Admin" && staffRole != "Manager"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
             return RedirectToAction("Dashboard", new { role = staffRole });
         }
 
-        ViewData["Role"] = "Admin";
-        var staffList = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StaffResponseDTO>>("api/staff");
+        ViewData["Role"] = staffRole;
+        var staffList = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StaffResponseDTO>>("api/staff", HttpContext);
         return View(staffList);
     }
 
@@ -108,14 +116,14 @@ public class StaffController : Controller
     public async Task<IActionResult> Details(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "Admin")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Admin" && staffRole != "Manager"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login");
             return RedirectToAction("Dashboard", new { role = staffRole });
         }
 
-        ViewData["Role"] = "Admin";
-        var staff = await _httpClient.GetFromJsonOrThrowAsync<StaffResponseDTO>($"api/staff/{id}");
+        ViewData["Role"] = staffRole;
+        var staff = await _httpClient.GetFromJsonOrThrowAsync<StaffResponseDTO>($"api/staff/{id}", HttpContext);
         if (staff == null) return NotFound();
         return View(staff);
     }
@@ -150,7 +158,7 @@ public class StaffController : Controller
 
         try
         {
-            await _httpClient.PostAsJsonOrThrowAsync<StaffResponseDTO, CreateStaffDTO>("api/staff", dto);
+            await _httpClient.PostAsJsonOrThrowAsync<StaffResponseDTO, CreateStaffDTO>("api/staff", dto, HttpContext);
             TempData["Success"] = "Staff member created successfully!";
             return RedirectToAction(nameof(Index), new { role = "Admin" });
         }
@@ -172,7 +180,7 @@ public class StaffController : Controller
         }
 
         ViewData["Role"] = "Admin";
-        var staff = await _httpClient.GetFromJsonOrThrowAsync<StaffResponseDTO>($"api/staff/{id}");
+        var staff = await _httpClient.GetFromJsonOrThrowAsync<StaffResponseDTO>($"api/staff/{id}", HttpContext);
         if (staff == null) return NotFound();
 
         var dto = new UpdateStaffDTO
@@ -204,7 +212,7 @@ public class StaffController : Controller
 
         try
         {
-            await _httpClient.PutAsJsonOrThrowAsync($"api/staff/{id}", dto);
+            await _httpClient.PutAsJsonOrThrowAsync($"api/staff/{id}", dto, HttpContext);
             TempData["Success"] = "Staff updated successfully!";
             return RedirectToAction(nameof(Index), new { role = "Admin" });
         }
@@ -226,7 +234,7 @@ public class StaffController : Controller
         }
 
         ViewData["Role"] = "Admin";
-        var staff = await _httpClient.GetFromJsonOrThrowAsync<StaffResponseDTO>($"api/staff/{id}");
+        var staff = await _httpClient.GetFromJsonOrThrowAsync<StaffResponseDTO>($"api/staff/{id}", HttpContext);
         if (staff == null) return NotFound();
         return View(staff);
     }
@@ -245,7 +253,7 @@ public class StaffController : Controller
         ViewData["Role"] = "Admin";
         try
         {
-            await _httpClient.DeleteOrThrowAsync($"api/staff/{id}");
+            await _httpClient.DeleteOrThrowAsync($"api/staff/{id}", HttpContext);
             TempData["Success"] = "Staff member deleted successfully!";
         }
         catch (Exception ex)
@@ -254,8 +262,6 @@ public class StaffController : Controller
         }
         return RedirectToAction(nameof(Index), new { role = "Admin" });
     }
-
-
 
     [HttpGet]
     public IActionResult Logout()

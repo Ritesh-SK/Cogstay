@@ -1,4 +1,4 @@
-@model IEnumerable<CogStayMVC.DTOs.BillingResponseDTO>
+@model IEnumerable<CogStay.Application.DTOs.BillingResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Billing History Archive";
@@ -47,7 +47,7 @@
                 {
                     foreach (var item in Model)
                     {
-                        string badgeClass = item.PaymentStatus == CogStayMVC.Enums.PaymentStatus.Paid ? "success" : "danger";
+                        string badgeClass = item.PaymentStatus == CogStay.Domain.Enums.PaymentStatus.Paid ? "success" : "danger";
                         <tr>
                             <td><strong>#BILL-@item.BillId</strong></td>
                             <td>@item.GuestName</td>

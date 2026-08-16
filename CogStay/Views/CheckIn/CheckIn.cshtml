@@ -1,11 +1,11 @@
-@model CogStayMVC.DTOs.CreateCheckInDTO
-@using CogStayMVC.DTOs
+@model CogStay.Application.DTOs.CreateCheckInDTO
+@using CogStay.Application.DTOs
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Guest Check-In";
     ViewData["Role"] = "FrontDesk";
     var reservations = ViewBag.Reservations as IEnumerable<ReservationResponseDTO> ?? Enumerable.Empty<ReservationResponseDTO>();
-    var bookedReservations = reservations.Where(r => r.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked).ToList();
+    var bookedReservations = reservations.Where(r => r.ReservationStatus == CogStay.Domain.Enums.ReservationStatus.Confirmed).ToList();
 }
 
 <div style="margin-bottom: 30px;">

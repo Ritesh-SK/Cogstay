@@ -1,9 +1,9 @@
-@model CogStayMVC.DTOs.CreateReservationDTO
+@model CogStay.Application.DTOs.CreateReservationDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Book Room";
     ViewData["Role"] = "Guest";
-    var availableRooms = ViewBag.AvailableRooms as IEnumerable<CogStayMVC.DTOs.RoomResponseDTO> ?? Enumerable.Empty<CogStayMVC.DTOs.RoomResponseDTO>();
+    var availableRooms = ViewBag.AvailableRooms as IEnumerable<CogStay.Application.DTOs.RoomResponseDTO> ?? Enumerable.Empty<CogStay.Application.DTOs.RoomResponseDTO>();
 }
 
 <div style="margin-bottom: 30px;">

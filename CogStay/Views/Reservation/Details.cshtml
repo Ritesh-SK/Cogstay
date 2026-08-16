@@ -1,4 +1,4 @@
-@model CogStayMVC.DTOs.ReservationResponseDTO
+@model CogStay.Application.DTOs.ReservationResponseDTO
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Reservation Details";
@@ -9,8 +9,8 @@
     }
     string badgeClass = Model.ReservationStatus switch
     {
-        CogStayMVC.Enums.ReservationStatus.Booked => "success",
-        CogStayMVC.Enums.ReservationStatus.Cancelled => "danger",
+        CogStay.Domain.Enums.ReservationStatus.Confirmed => "success",
+        CogStay.Domain.Enums.ReservationStatus.Cancelled => "danger",
         _ => "secondary"
     };
 }
@@ -48,7 +48,7 @@
 
             <div style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--color-border); padding-top: 20px;">
                 <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-                @if (Model.ReservationStatus == CogStayMVC.Enums.ReservationStatus.Booked)
+                @if (Model.ReservationStatus == CogStay.Domain.Enums.ReservationStatus.Confirmed)
                 {
                     <a asp-controller="CheckIn" asp-action="CheckIn" class="btn btn-primary"><i class="fa-solid fa-sign-in-alt"></i> Process Guest Check-In</a>
                 }

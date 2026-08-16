@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
-using CogStayMVC.Services.Interfaces;
+using CogStay.Application.Contracts.Services;
+using CogStay.Application.DTOs;
 
-namespace CogStayMVC.Controllers.Api;
+namespace CogStayApi.Controllers;
 
 [ApiController]
 [Route("api/billing")]
+[Authorize]
 public class BillingApiController : ControllerBase
 {
     private readonly IBillingService _billingService;
@@ -21,8 +25,8 @@ public class BillingApiController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BillingResponseDTO>>> GetAllBills()
     {
-        var bills = await _billingService.GetAllBillsAsync();
-        return Ok(bills);
+        var allBills = await _billingService.GetAllBillsAsync();
+        return Ok(allBills);
     }
 
     [HttpGet("{id:int}")]
@@ -31,7 +35,7 @@ public class BillingApiController : ControllerBase
         var bill = await _billingService.GetBillByIdAsync(id);
         if (bill == null)
         {
-            return NotFound(new { message = $"Billing record with ID {id} not found." });
+            return NotFound(new { message = $"Bill with ID {id} not found." });
         }
         return Ok(bill);
     }
@@ -42,63 +46,30 @@ public class BillingApiController : ControllerBase
         var bill = await _billingService.GetBillByStayIdAsync(stayId);
         if (bill == null)
         {
-            return NotFound(new { message = $"Billing record with Stay ID {stayId} not found." });
+            return NotFound(new { message = $"Bill for stay ID {stayId} not found." });
         }
         return Ok(bill);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<BillingResponseDTO>> CreateBill([FromBody] CreateBillDTO dto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        try
-        {
-            var createdBill = await _billingService.CreateBillAsync(dto);
-            return CreatedAtAction(nameof(GetBillById), new { id = createdBill.BillId }, createdBill);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while creating the bill.", details = ex.Message });
-        }
-    }
-
-    [HttpPost("generate/stay/{stayId:int}")]
+    [HttpPost("generate/{stayId:int}")]
+    [Authorize(Roles = "Admin,Manager,FrontDesk")]
     public async Task<ActionResult<BillingResponseDTO>> GenerateBillForStay(int stayId, [FromQuery] string? remarks = null)
     {
         try
         {
-            var generatedBill = await _billingService.GenerateBillForStayAsync(stayId, remarks);
-            return CreatedAtAction(nameof(GetBillById), new { id = generatedBill.BillId }, generatedBill);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
+            var bill = await _billingService.GenerateBillForStayAsync(stayId, remarks);
+            return Ok(bill);
         }
         catch (KeyNotFoundException ex)
         {
             return NotFound(new { message = ex.Message });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while generating the bill.", details = ex.Message });
-        }
     }
 
-    [HttpPost("payment")]
+    [HttpPost("process-payment")]
     public async Task<IActionResult> ProcessPayment([FromBody] ProcessPaymentDTO dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         try
         {
@@ -109,17 +80,10 @@ public class BillingApiController : ControllerBase
         {
             return NotFound(new { message = ex.Message });
         }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while processing the payment.", details = ex.Message });
-        }
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> DeleteBill(int id)
     {
         try
@@ -127,7 +91,7 @@ public class BillingApiController : ControllerBase
             var bill = await _billingService.GetBillByIdAsync(id);
             if (bill == null)
             {
-                return NotFound(new { message = $"Billing record with ID {id} not found." });
+                return NotFound(new { message = $"Bill with ID {id} not found." });
             }
 
             await _billingService.DeleteBillAsync(id);
@@ -135,7 +99,7 @@ public class BillingApiController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = "An error occurred while deleting the billing record.", details = ex.Message });
+            return StatusCode(500, new { message = "An error occurred while deleting the bill.", details = ex.Message });
         }
     }
 }

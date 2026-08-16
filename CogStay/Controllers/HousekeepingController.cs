@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
+using CogStay.Application.DTOs;
 
 namespace CogStayMVC.Controllers;
 
@@ -21,18 +22,18 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Index()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
         ViewData["Role"] = staffRole;
-        var tasks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<HousekeepingTaskResponseDTO>>("api/housekeeping") ?? System.Linq.Enumerable.Empty<HousekeepingTaskResponseDTO>();
+        var tasks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<HousekeepingTaskResponseDTO>>("api/housekeeping", HttpContext) ?? Enumerable.Empty<HousekeepingTaskResponseDTO>();
 
         try
         {
-            var stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays") ?? System.Linq.Enumerable.Empty<StayRecordResponseDTO>();
+            var stays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext) ?? Enumerable.Empty<StayRecordResponseDTO>();
             var roomGuestMap = stays
                 .Where(s => !s.ActualCheckOut.HasValue)
                 .GroupBy(s => s.RoomNumber)
@@ -52,14 +53,14 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Details(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
         ViewData["Role"] = staffRole;
-        var task = await _httpClient.GetFromJsonOrThrowAsync<HousekeepingTaskResponseDTO>($"api/housekeeping/{id}");
+        var task = await _httpClient.GetFromJsonOrThrowAsync<HousekeepingTaskResponseDTO>($"api/housekeeping/{id}", HttpContext);
         if (task == null) return NotFound();
         return View(task);
     }
@@ -68,14 +69,14 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Create()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
         ViewData["Role"] = staffRole;
-        ViewBag.Rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms");
+        ViewBag.Rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms", HttpContext);
         return View(new CreateHousekeepingTaskDTO());
     }
 
@@ -84,7 +85,7 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Create(CreateHousekeepingTaskDTO dto)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -99,20 +100,20 @@ public class HousekeepingController : Controller
 
         if (!ModelState.IsValid)
         {
-            ViewBag.Rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms");
+            ViewBag.Rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms", HttpContext);
             return View(dto);
         }
 
         try
         {
-            await _httpClient.PostAsJsonOrThrowAsync<HousekeepingTaskResponseDTO, CreateHousekeepingTaskDTO>("api/housekeeping", dto);
+            await _httpClient.PostAsJsonOrThrowAsync<HousekeepingTaskResponseDTO, CreateHousekeepingTaskDTO>("api/housekeeping", dto, HttpContext);
             TempData["Success"] = "Housekeeping cleaning request created.";
             return RedirectToAction(nameof(Index), new { role = staffRole });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms");
+            ViewBag.Rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms", HttpContext);
             return View(dto);
         }
     }
@@ -121,18 +122,18 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Edit(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
         ViewData["Role"] = staffRole;
-        var task = await _httpClient.GetFromJsonOrThrowAsync<HousekeepingTaskResponseDTO>($"api/housekeeping/{id}");
+        var task = await _httpClient.GetFromJsonOrThrowAsync<HousekeepingTaskResponseDTO>($"api/housekeeping/{id}", HttpContext);
 
         if (task == null)
         {
-            return Content($"Task with ID {id} was not found in the database.");
+            return Content($"Task with ID {id} was not found.");
         }
 
         var dto = new UpdateTaskStatusDTO
@@ -149,7 +150,7 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Edit(int id, UpdateTaskStatusDTO dto)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -160,20 +161,20 @@ public class HousekeepingController : Controller
 
         if (!ModelState.IsValid)
         {
-            ViewBag.Task = await _httpClient.GetFromJsonOrThrowAsync<HousekeepingTaskResponseDTO>($"api/housekeeping/{dto.TaskId}");
+            ViewBag.Task = await _httpClient.GetFromJsonOrThrowAsync<HousekeepingTaskResponseDTO>($"api/housekeeping/{dto.TaskId}", HttpContext);
             return View(dto);
         }
 
         try
         {
-            await _httpClient.PutAsJsonOrThrowAsync("api/housekeeping/status", dto);
+            await _httpClient.PatchAsJsonOrThrowAsync("api/housekeeping/status", dto, HttpContext);
             TempData["Success"] = "Task status updated! Room status synchronized.";
             return RedirectToAction(nameof(Index), new { role = staffRole });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Task = await _httpClient.GetFromJsonOrThrowAsync<HousekeepingTaskResponseDTO>($"api/housekeeping/{dto.TaskId}");
+            ViewBag.Task = await _httpClient.GetFromJsonOrThrowAsync<HousekeepingTaskResponseDTO>($"api/housekeeping/{dto.TaskId}", HttpContext);
             return View(dto);
         }
     }
@@ -183,7 +184,7 @@ public class HousekeepingController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Housekeeping" && staffRole != "Manager" && staffRole != "FrontDesk" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -192,7 +193,7 @@ public class HousekeepingController : Controller
         ViewData["Role"] = staffRole;
         try
         {
-            await _httpClient.DeleteOrThrowAsync($"api/housekeeping/{id}");
+            await _httpClient.DeleteOrThrowAsync($"api/housekeeping/{id}", HttpContext);
             TempData["Success"] = "Housekeeping task deleted.";
         }
         catch (Exception ex)

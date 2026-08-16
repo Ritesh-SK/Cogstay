@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
+using CogStay.Application.DTOs;
 
 namespace CogStayMVC.Controllers;
 
@@ -21,14 +21,14 @@ public class BillingController : Controller
     public async Task<IActionResult> Index()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
         ViewData["Role"] = staffRole;
-        var bills = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<BillingResponseDTO>>("api/billing");
+        var bills = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<BillingResponseDTO>>("api/billing", HttpContext);
         return View(bills);
     }
 
@@ -36,14 +36,14 @@ public class BillingController : Controller
     public async Task<IActionResult> Create(int? stayId)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
         ViewData["Role"] = staffRole;
-        ViewBag.ActiveStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays");
+        ViewBag.ActiveStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext);
         return View(new CreateBillDTO { StayId = stayId ?? 0 });
     }
 
@@ -52,7 +52,7 @@ public class BillingController : Controller
     public async Task<IActionResult> Create(CreateBillDTO dto)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -61,7 +61,7 @@ public class BillingController : Controller
         ViewData["Role"] = staffRole;
         if (!ModelState.IsValid)
         {
-            ViewBag.ActiveStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays");
+            ViewBag.ActiveStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext);
             return View(dto);
         }
 
@@ -69,12 +69,12 @@ public class BillingController : Controller
         {
             if (dto.TotalAmount > 0)
             {
-                await _httpClient.PostAsJsonOrThrowAsync<BillingResponseDTO, CreateBillDTO>("api/billing", dto);
+                await _httpClient.PostAsJsonOrThrowAsync<BillingResponseDTO, CreateBillDTO>("api/billing", dto, HttpContext);
             }
             else
             {
                 var remarksQuery = string.IsNullOrEmpty(dto.Remarks) ? "" : $"?remarks={Uri.EscapeDataString(dto.Remarks)}";
-                await _httpClient.PostAsJsonOrThrowAsync<BillingResponseDTO, object>($"api/billing/generate/stay/{dto.StayId}{remarksQuery}", new { });
+                await _httpClient.PostAsJsonOrThrowAsync<BillingResponseDTO, object>($"api/billing/generate/{dto.StayId}{remarksQuery}", new { }, HttpContext);
             }
 
             TempData["Success"] = "Bill generated successfully.";
@@ -83,7 +83,7 @@ public class BillingController : Controller
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.ActiveStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays");
+            ViewBag.ActiveStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext);
             return View(dto);
         }
     }
@@ -92,7 +92,7 @@ public class BillingController : Controller
     public async Task<IActionResult> Payment(int? stayId, int? billId)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -103,17 +103,17 @@ public class BillingController : Controller
 
         if (billId.HasValue)
         {
-            bill = await _httpClient.GetFromJsonOrThrowAsync<BillingResponseDTO>($"api/billing/{billId.Value}");
+            bill = await _httpClient.GetFromJsonOrThrowAsync<BillingResponseDTO>($"api/billing/{billId.Value}", HttpContext);
         }
         else if (stayId.HasValue)
         {
             try
             {
-                bill = await _httpClient.GetFromJsonOrThrowAsync<BillingResponseDTO>($"api/billing/stay/{stayId.Value}");
+                bill = await _httpClient.GetFromJsonOrThrowAsync<BillingResponseDTO>($"api/billing/stay/{stayId.Value}", HttpContext);
             }
             catch
             {
-                bill = await _httpClient.PostAsJsonOrThrowAsync<BillingResponseDTO, object>($"api/billing/generate/stay/{stayId.Value}", new { });
+                bill = await _httpClient.PostAsJsonOrThrowAsync<BillingResponseDTO, object>($"api/billing/generate/{stayId.Value}", new { }, HttpContext);
             }
         }
 
@@ -138,7 +138,7 @@ public class BillingController : Controller
     public async Task<IActionResult> Payment(ProcessPaymentDTO dto)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -147,20 +147,20 @@ public class BillingController : Controller
         ViewData["Role"] = staffRole;
         if (!ModelState.IsValid)
         {
-            ViewBag.Bill = await _httpClient.GetFromJsonOrThrowAsync<BillingResponseDTO>($"api/billing/{dto.BillId}");
+            ViewBag.Bill = await _httpClient.GetFromJsonOrThrowAsync<BillingResponseDTO>($"api/billing/{dto.BillId}", HttpContext);
             return View(dto);
         }
 
         try
         {
-            await _httpClient.PostAsJsonOrThrowAsync("api/billing/payment", dto);
+            await _httpClient.PostAsJsonOrThrowAsync("api/billing/process-payment", dto, HttpContext);
             TempData["Success"] = "Payment accepted and checkout completed! Housekeeping cleaning request automatically generated.";
             return RedirectToAction(nameof(History), new { role = staffRole });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            ViewBag.Bill = await _httpClient.GetFromJsonOrThrowAsync<BillingResponseDTO>($"api/billing/{dto.BillId}");
+            ViewBag.Bill = await _httpClient.GetFromJsonOrThrowAsync<BillingResponseDTO>($"api/billing/{dto.BillId}", HttpContext);
             return View(dto);
         }
     }
@@ -169,14 +169,14 @@ public class BillingController : Controller
     public async Task<IActionResult> History()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
         ViewData["Role"] = staffRole;
-        var bills = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<BillingResponseDTO>>("api/billing");
+        var bills = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<BillingResponseDTO>>("api/billing", HttpContext);
         return View(bills);
     }
 
@@ -185,7 +185,7 @@ public class BillingController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager"))
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "FrontDesk" && staffRole != "Manager" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -194,7 +194,7 @@ public class BillingController : Controller
         ViewData["Role"] = staffRole;
         try
         {
-            await _httpClient.DeleteOrThrowAsync($"api/billing/{id}");
+            await _httpClient.DeleteOrThrowAsync($"api/billing/{id}", HttpContext);
             TempData["Success"] = "Bill record deleted.";
         }
         catch (Exception ex)

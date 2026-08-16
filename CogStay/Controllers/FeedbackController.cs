@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CogStayMVC.DTOs;
+using CogStay.Application.DTOs;
 
 namespace CogStayMVC.Controllers;
 
@@ -20,14 +21,14 @@ public class FeedbackController : Controller
     public async Task<IActionResult> Index()
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "Manager")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Manager" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
         }
 
-        ViewData["Role"] = "Manager";
-        var feedbacks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<FeedbackResponseDTO>>("api/feedback");
+        ViewData["Role"] = staffRole;
+        var feedbacks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<FeedbackResponseDTO>>("api/feedback", HttpContext);
         return View(feedbacks);
     }
 
@@ -60,7 +61,7 @@ public class FeedbackController : Controller
 
         try
         {
-            await _httpClient.PostAsJsonOrThrowAsync<FeedbackResponseDTO, CreateFeedbackDTO>("api/feedback", dto);
+            await _httpClient.PostAsJsonOrThrowAsync<FeedbackResponseDTO, CreateFeedbackDTO>("api/feedback", dto, HttpContext);
             TempData["Success"] = "Thank you for your feedback!";
             return RedirectToAction("Dashboard", "Guest");
         }
@@ -76,7 +77,7 @@ public class FeedbackController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         string? staffRole = HttpContext.Session.GetString("StaffRole");
-        if (string.IsNullOrEmpty(staffRole) || staffRole != "Manager")
+        if (string.IsNullOrEmpty(staffRole) || (staffRole != "Manager" && staffRole != "Admin"))
         {
             if (string.IsNullOrEmpty(staffRole)) return RedirectToAction("Login", "Staff");
             return RedirectToAction("Dashboard", "Staff", new { role = staffRole });
@@ -84,13 +85,13 @@ public class FeedbackController : Controller
 
         try
         {
-            await _httpClient.DeleteOrThrowAsync($"api/feedback/{id}");
+            await _httpClient.DeleteOrThrowAsync($"api/feedback/{id}", HttpContext);
             TempData["Success"] = "Feedback removed.";
         }
         catch (Exception ex)
         {
             TempData["Error"] = ex.Message;
         }
-        return RedirectToAction(nameof(Index), new { role = "Manager" });
+        return RedirectToAction(nameof(Index), new { role = staffRole });
     }
 }

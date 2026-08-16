@@ -1,4 +1,4 @@
-@model IEnumerable<CogStayMVC.DTOs.RoomResponseDTO>
+@model IEnumerable<CogStay.Application.DTOs.RoomResponseDTO>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Room Catalog";
@@ -59,12 +59,10 @@
                         string badgeClass = item.Status switch
                         {
                             RoomStatus.Available => "success",
-                            RoomStatus.Booked => "info",
                             RoomStatus.Occupied => "danger",
-                            RoomStatus.CheckoutPending => "warning",
-                            RoomStatus.CleaningRequired => "warning",
-                            RoomStatus.CleaningInProgress => "info",
-                            _ => "secondary"
+                            RoomStatus.NeedsCleaning => "warning",
+                            RoomStatus.Maintenance => "secondary",
+                            _ => "info"
                         };
 
                         <tr>
