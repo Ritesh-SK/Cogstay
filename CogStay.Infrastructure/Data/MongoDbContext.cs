@@ -12,19 +12,23 @@ public class MongoDbContext
 
     public MongoDbContext(IConfiguration configuration)
     {
-        var connectionString = configuration["MongoDB:ConnectionString"] 
-            ?? configuration["MONGODB_CONNECTION_STRING"] 
-            ?? "mongodb://localhost:27017";
+        // Read from Render Environment Variables first
+        var connectionString =
+            configuration["MongoDB:ConnectionString"] ??
+            configuration["MONGODB_CONNECTION_STRING"] ??
+            throw new InvalidOperationException(
+                "MongoDB connection string is missing. Set MongoDB__ConnectionString in Render.");
 
-        var databaseName = configuration["MongoDB:DatabaseName"] 
-            ?? configuration["MONGODB_DATABASE_NAME"] 
-            ?? "CogStayDb";
+        var databaseName =
+            configuration["MongoDB:DatabaseName"] ??
+            configuration["MONGODB_DATABASE_NAME"] ??
+            "ClusterCOG";
 
         var client = new MongoClient(connectionString);
         _database = client.GetDatabase(databaseName);
 
-        // Asynchronously initialize indexes without blocking startup
-        Task.Run(InitializeIndexesAsync);
+        // Initialize indexes in background
+        _ = Task.Run(InitializeIndexesAsync);
     }
 
     public IMongoDatabase Database => _database;
@@ -48,57 +52,93 @@ public class MongoDbContext
             var guestEmailIndex = new CreateIndexModel<Guest>(
                 Builders<Guest>.IndexKeys.Ascending(g => g.Email),
                 new CreateIndexOptions { Unique = true });
+
             var guestPhoneIndex = new CreateIndexModel<Guest>(
                 Builders<Guest>.IndexKeys.Ascending(g => g.PhoneNumber),
                 new CreateIndexOptions { Unique = true });
+
             var guestIdIndex = new CreateIndexModel<Guest>(
                 Builders<Guest>.IndexKeys.Ascending(g => g.GuestId));
-            await Guests.Indexes.CreateManyAsync(new[] { guestEmailIndex, guestPhoneIndex, guestIdIndex });
+
+            await Guests.Indexes.CreateManyAsync(new[]
+            {
+                guestEmailIndex,
+                guestPhoneIndex,
+                guestIdIndex
+            });
 
             // Staff Indexes
             var staffEmailIndex = new CreateIndexModel<Staff>(
                 Builders<Staff>.IndexKeys.Ascending(s => s.Email),
                 new CreateIndexOptions { Unique = true });
+
             var staffIdIndex = new CreateIndexModel<Staff>(
                 Builders<Staff>.IndexKeys.Ascending(s => s.StaffId));
-            await Staff.Indexes.CreateManyAsync(new[] { staffEmailIndex, staffIdIndex });
+
+            await Staff.Indexes.CreateManyAsync(new[]
+            {
+                staffEmailIndex,
+                staffIdIndex
+            });
 
             // Rooms Indexes
             var roomNumberIndex = new CreateIndexModel<Room>(
                 Builders<Room>.IndexKeys.Ascending(r => r.RoomNumber),
                 new CreateIndexOptions { Unique = true });
+
             var roomIdIndex = new CreateIndexModel<Room>(
                 Builders<Room>.IndexKeys.Ascending(r => r.RoomId));
-            await Rooms.Indexes.CreateManyAsync(new[] { roomNumberIndex, roomIdIndex });
+
+            await Rooms.Indexes.CreateManyAsync(new[]
+            {
+                roomNumberIndex,
+                roomIdIndex
+            });
 
             // Reservations Indexes
             var resGuestIdIndex = new CreateIndexModel<Reservation>(
                 Builders<Reservation>.IndexKeys.Ascending(r => r.GuestId));
+
             var resRoomIdIndex = new CreateIndexModel<Reservation>(
                 Builders<Reservation>.IndexKeys.Ascending(r => r.RoomId));
+
             var resIdIndex = new CreateIndexModel<Reservation>(
                 Builders<Reservation>.IndexKeys.Ascending(r => r.ReservationId));
-            await Reservations.Indexes.CreateManyAsync(new[] { resGuestIdIndex, resRoomIdIndex, resIdIndex });
 
-            // Otps Indexes
+            await Reservations.Indexes.CreateManyAsync(new[]
+            {
+                resGuestIdIndex,
+                resRoomIdIndex,
+                resIdIndex
+            });
+
+            // OTP Indexes
             var otpUserTypeIndex = new CreateIndexModel<OtpRecord>(
                 Builders<OtpRecord>.IndexKeys.Ascending(o => o.UserId).Ascending(o => o.OtpType));
+
             var otpTargetTypeIndex = new CreateIndexModel<OtpRecord>(
                 Builders<OtpRecord>.IndexKeys.Ascending(o => o.Target).Ascending(o => o.OtpType));
+
             var otpTtlIndex = new CreateIndexModel<OtpRecord>(
                 Builders<OtpRecord>.IndexKeys.Ascending(o => o.ExpiresAt),
                 new CreateIndexOptions { ExpireAfter = TimeSpan.Zero });
-            await Otps.Indexes.CreateManyAsync(new[] { otpUserTypeIndex, otpTargetTypeIndex, otpTtlIndex });
 
-            // RefreshTokens Index
+            await Otps.Indexes.CreateManyAsync(new[]
+            {
+                otpUserTypeIndex,
+                otpTargetTypeIndex,
+                otpTtlIndex
+            });
+
+            // Refresh Token Index
             var refreshTokenIndex = new CreateIndexModel<RefreshToken>(
                 Builders<RefreshToken>.IndexKeys.Ascending(rt => rt.Token),
                 new CreateIndexOptions { Unique = true });
+
             await RefreshTokens.Indexes.CreateOneAsync(refreshTokenIndex);
         }
         catch (Exception ex)
         {
-            // Logging index creation warning
             Console.WriteLine($"[MongoDB Index Initialization Warning] {ex.Message}");
         }
     }
