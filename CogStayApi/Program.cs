@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using CogStay.Infrastructure;
 using CogStay.Infrastructure.Services;
 
@@ -12,6 +13,39 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add API Controllers
 builder.Services.AddControllers();
+
+// Add Swagger / OpenAPI support
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "CogStay API", Version = "v1" });
+    
+    // Add JWT support in Swagger UI
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter your JWT token directly."
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 // Add Infrastructure & Application Services
 builder.Services.AddInfrastructureAndApplication();
@@ -61,6 +95,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Enable Swagger UI across all environments
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "CogStay API v1");
+});
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
@@ -68,6 +109,9 @@ app.UseCors("DefaultCorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Root health check endpoint to prevent 404 on base URL
+app.MapGet("/", () => Results.Ok(new { Status = "Healthy", App = "CogStay API", Time = DateTime.UtcNow }));
 
 app.MapControllers();
 
