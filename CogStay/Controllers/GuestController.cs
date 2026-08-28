@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CogStay.Application.DTOs;
+using CogStay.Domain.Enums;
 
 namespace CogStayMVC.Controllers;
 
@@ -65,7 +66,7 @@ public class GuestController : Controller
             TempData["Success"] = reg.Message;
             TempData["UserEmail"] = dto.Email;
             TempData["UserPhone"] = dto.PhoneNumber;
-            return RedirectToAction(nameof(VerifyOtp));
+            return RedirectToAction(nameof(VerifyOtp), new { email = dto.Email, phone = dto.PhoneNumber });
         }
         catch (Exception ex)
         {
@@ -75,10 +76,16 @@ public class GuestController : Controller
     }
 
     [HttpGet]
-    public IActionResult VerifyOtp()
+    public IActionResult VerifyOtp(string? email, string? phone)
     {
-        ViewBag.Email = TempData["UserEmail"]?.ToString() ?? "";
-        ViewBag.Phone = TempData["UserPhone"]?.ToString() ?? "";
+        var e = !string.IsNullOrEmpty(email) ? email : TempData["UserEmail"]?.ToString();
+        var p = !string.IsNullOrEmpty(phone) ? phone : TempData["UserPhone"]?.ToString();
+
+        if (TempData["UserEmail"] != null) TempData.Keep("UserEmail");
+        if (TempData["UserPhone"] != null) TempData.Keep("UserPhone");
+
+        ViewBag.Email = e ?? "";
+        ViewBag.Phone = p ?? "";
         return View();
     }
 
@@ -86,6 +93,9 @@ public class GuestController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> VerifyEmail(VerifyEmailOtpDTO dto)
     {
+        if (TempData["UserEmail"] != null) TempData.Keep("UserEmail");
+        if (TempData["UserPhone"] != null) TempData.Keep("UserPhone");
+
         try
         {
             var res = await _httpClient.PostAsJsonOrThrowAsync<OtpResultDTO, VerifyEmailOtpDTO>("api/auth/verify-email", dto);
@@ -95,19 +105,23 @@ public class GuestController : Controller
         {
             TempData["Error"] = ex.Message;
         }
-        return RedirectToAction(nameof(VerifyOtp));
+        return RedirectToAction(nameof(VerifyOtp), new { email = dto.Email, phone = TempData["UserPhone"]?.ToString() });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> VerifyPhone(VerifyPhoneOtpDTO dto)
     {
+        if (TempData["UserEmail"] != null) TempData.Keep("UserEmail");
+        if (TempData["UserPhone"] != null) TempData.Keep("UserPhone");
+
         try
         {
             var res = await _httpClient.PostAsJsonOrThrowAsync<OtpResultDTO, VerifyPhoneOtpDTO>("api/auth/verify-phone", dto);
             TempData["Success"] = res.Message;
             if (res.IsAccountActivated)
             {
+                TempData["Success"] = "Account activated successfully! You may now sign in to your guest account.";
                 return RedirectToAction(nameof(Login));
             }
         }
@@ -115,7 +129,26 @@ public class GuestController : Controller
         {
             TempData["Error"] = ex.Message;
         }
-        return RedirectToAction(nameof(VerifyOtp));
+        return RedirectToAction(nameof(VerifyOtp), new { email = TempData["UserEmail"]?.ToString(), phone = dto.PhoneNumber });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResendOtp(ResendOtpDTO dto)
+    {
+        try
+        {
+            await _httpClient.PostAsJsonOrThrowAsync<object, ResendOtpDTO>("api/auth/resend-otp", dto);
+            TempData["Success"] = $"A new {dto.OtpType} verification OTP code has been dispatched.";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+        return RedirectToAction(nameof(VerifyOtp), new { 
+            email = dto.OtpType == OtpType.Email ? dto.Target : TempData["UserEmail"]?.ToString(), 
+            phone = dto.OtpType == OtpType.Phone ? dto.Target : TempData["UserPhone"]?.ToString() 
+        });
     }
 
     [HttpGet]
@@ -123,6 +156,8 @@ public class GuestController : Controller
     {
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
+
+        ViewData["Role"] = "Guest";
 
         var guest = await _httpClient.GetFromJsonOrThrowAsync<GuestResponseDTO>($"api/guests/{guestId.Value}", HttpContext);
         if (guest == null) return RedirectToAction(nameof(Login));
@@ -152,6 +187,7 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
+        ViewData["Role"] = "Guest";
         ViewBag.AvailableRooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms/available", HttpContext);
         var dto = new CreateReservationDTO
         {
@@ -170,6 +206,8 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
         dto.GuestId = guestId.Value;
+
+        ViewData["Role"] = "Guest";
 
         if (!ModelState.IsValid)
         {
@@ -203,6 +241,7 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
+        ViewData["Role"] = "Guest";
         var reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>($"api/reservations/guest/{guestId.Value}", HttpContext);
         return View(reservations);
     }
@@ -213,6 +252,7 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
+        ViewData["Role"] = "Guest";
         var bills = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<BillingResponseDTO>>("api/billing", HttpContext);
         return View(bills);
     }
@@ -223,6 +263,7 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
 
+        ViewData["Role"] = "Guest";
         var guest = await _httpClient.GetFromJsonOrThrowAsync<GuestResponseDTO>($"api/guests/{guestId.Value}", HttpContext);
         if (guest == null) return NotFound();
 
@@ -244,6 +285,8 @@ public class GuestController : Controller
         int? guestId = HttpContext.Session.GetInt32("GuestId");
         if (!guestId.HasValue) return RedirectToAction(nameof(Login));
         dto.GuestId = guestId.Value;
+
+        ViewData["Role"] = "Guest";
 
         if (!ModelState.IsValid) return View(dto);
 
