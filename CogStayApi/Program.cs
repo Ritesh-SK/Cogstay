@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -47,6 +48,14 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Configure Forwarded Headers for Render Reverse Proxy
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 // Add Infrastructure & Application Services
 builder.Services.AddInfrastructureAndApplication();
 
@@ -71,6 +80,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,
         ValidIssuer = issuer,
         ValidateAudience = true,
+        ValidAudience = audience,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
         ValidateLifetime = true,
@@ -80,7 +90,7 @@ builder.Services.AddAuthentication(options =>
 
 // Environment-aware CORS configuration
 var allowedOrigins = builder.Configuration["CORS_ALLOWED_ORIGINS"]?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) 
-    ?? new[] { "https://localhost:5000", "https://localhost:5001", "http://localhost:5000", "http://localhost:5001" };
+    ?? new[] { "https://localhost:5000", "https://localhost:5001", "http://localhost:5000", "http://localhost:5001", "https://cogstay.onrender.com", "https://cogstay-1.onrender.com" };
 
 builder.Services.AddCors(options =>
 {
@@ -94,6 +104,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 // Enable Swagger UI across all environments
 app.UseSwagger();

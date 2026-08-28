@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using CogStay.Application.DTOs;
 using CogStay.Domain.Enums;
 using TaskStatus = CogStay.Domain.Enums.TaskStatus;
@@ -14,10 +15,12 @@ namespace CogStayMVC.Controllers;
 public class StaffController : Controller
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<StaffController> _logger;
 
-    public StaffController(IHttpClientFactory httpClientFactory)
+    public StaffController(IHttpClientFactory httpClientFactory, ILogger<StaffController> logger)
     {
         _httpClient = httpClientFactory.CreateClient("CogStayApi");
+        _logger = logger;
     }
 
     [HttpGet]
@@ -48,6 +51,7 @@ public class StaffController : Controller
         }
         catch (Exception ex)
         {
+            _logger.LogWarning(ex, "[StaffController.Login Failed] Email: {Email} | Role: {Role}", dto.Email, dto.Role);
             ModelState.AddModelError(string.Empty, ex.Message);
             return View(dto);
         }
@@ -65,20 +69,55 @@ public class StaffController : Controller
         ViewData["Role"] = sessionRole;
         ViewBag.StaffName = HttpContext.Session.GetString("StaffName") ?? "Staff Member";
 
-        var rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms", HttpContext) ?? Enumerable.Empty<RoomResponseDTO>();
-        var availableRooms = rooms.Where(r => r.Status == RoomStatus.Available).ToList();
-        var reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations", HttpContext) ?? Enumerable.Empty<ReservationResponseDTO>();
-        var activeStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext) ?? Enumerable.Empty<StayRecordResponseDTO>();
-        var currentActiveStays = activeStays.Where(s => !s.ActualCheckOut.HasValue).ToList();
-        var housekeepingTasks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<HousekeepingTaskResponseDTO>>("api/housekeeping", HttpContext) ?? Enumerable.Empty<HousekeepingTaskResponseDTO>();
-        var bills = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<BillingResponseDTO>>("api/billing", HttpContext) ?? Enumerable.Empty<BillingResponseDTO>();
-        var pendingBills = bills.Where(b => b.PaymentStatus == PaymentStatus.Pending).ToList();
-        
+        IEnumerable<RoomResponseDTO> rooms = Enumerable.Empty<RoomResponseDTO>();
+        IEnumerable<ReservationResponseDTO> reservations = Enumerable.Empty<ReservationResponseDTO>();
+        IEnumerable<StayRecordResponseDTO> activeStays = Enumerable.Empty<StayRecordResponseDTO>();
+        IEnumerable<HousekeepingTaskResponseDTO> housekeepingTasks = Enumerable.Empty<HousekeepingTaskResponseDTO>();
+        IEnumerable<BillingResponseDTO> bills = Enumerable.Empty<BillingResponseDTO>();
         IEnumerable<StaffResponseDTO> staffList = Enumerable.Empty<StaffResponseDTO>();
+
+        try
+        {
+            rooms = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<RoomResponseDTO>>("api/rooms", HttpContext) ?? Enumerable.Empty<RoomResponseDTO>();
+        }
+        catch (Exception ex) { _logger.LogWarning(ex, "[Dashboard Load Warning] Unable to fetch rooms."); }
+
+        try
+        {
+            reservations = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<ReservationResponseDTO>>("api/reservations", HttpContext) ?? Enumerable.Empty<ReservationResponseDTO>();
+        }
+        catch (Exception ex) { _logger.LogWarning(ex, "[Dashboard Load Warning] Unable to fetch reservations."); }
+
+        try
+        {
+            activeStays = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StayRecordResponseDTO>>("api/stays", HttpContext) ?? Enumerable.Empty<StayRecordResponseDTO>();
+        }
+        catch (Exception ex) { _logger.LogWarning(ex, "[Dashboard Load Warning] Unable to fetch stays."); }
+
+        try
+        {
+            housekeepingTasks = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<HousekeepingTaskResponseDTO>>("api/housekeeping", HttpContext) ?? Enumerable.Empty<HousekeepingTaskResponseDTO>();
+        }
+        catch (Exception ex) { _logger.LogWarning(ex, "[Dashboard Load Warning] Unable to fetch housekeeping tasks."); }
+
+        try
+        {
+            bills = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<BillingResponseDTO>>("api/billing", HttpContext) ?? Enumerable.Empty<BillingResponseDTO>();
+        }
+        catch (Exception ex) { _logger.LogWarning(ex, "[Dashboard Load Warning] Unable to fetch bills."); }
+
         if (sessionRole == "Admin" || sessionRole == "Manager")
         {
-            staffList = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StaffResponseDTO>>("api/staff", HttpContext) ?? Enumerable.Empty<StaffResponseDTO>();
+            try
+            {
+                staffList = await _httpClient.GetFromJsonOrThrowAsync<IEnumerable<StaffResponseDTO>>("api/staff", HttpContext) ?? Enumerable.Empty<StaffResponseDTO>();
+            }
+            catch (Exception ex) { _logger.LogWarning(ex, "[Dashboard Load Warning] Unable to fetch staff list."); }
         }
+
+        var availableRooms = rooms.Where(r => r.Status == RoomStatus.Available).ToList();
+        var currentActiveStays = activeStays.Where(s => !s.ActualCheckOut.HasValue).ToList();
+        var pendingBills = bills.Where(b => b.PaymentStatus == PaymentStatus.Pending).ToList();
 
         ViewBag.TotalRoomsCount = rooms.Count();
         ViewBag.TotalStaffCount = staffList.Count();

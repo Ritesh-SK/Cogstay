@@ -12,12 +12,14 @@ public class MongoDbContext
 
     public MongoDbContext(IConfiguration configuration)
     {
-        // Read from Render Environment Variables first
+        // Read from Render Environment Variables and Configuration
         var connectionString =
+            configuration.GetConnectionString("MongoDb") ??
             configuration["MongoDB:ConnectionString"] ??
             configuration["MONGODB_CONNECTION_STRING"] ??
+            configuration["ConnectionStrings:MongoDb"] ??
             throw new InvalidOperationException(
-                "MongoDB connection string is missing. Set MongoDB__ConnectionString in Render.");
+                "MongoDB connection string is missing. Set ConnectionStrings__MongoDb or MONGODB_CONNECTION_STRING in Render.");
 
         var databaseName =
             configuration["MongoDB:DatabaseName"] ??
