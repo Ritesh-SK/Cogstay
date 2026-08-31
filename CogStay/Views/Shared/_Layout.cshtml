@@ -29,10 +29,26 @@
 
     @if (ViewData["Role"] != null)
     {
-        var role = ViewData["Role"]?.ToString() ?? "";
-        var avatarInitial = string.IsNullOrEmpty(role) ? "S" : role.Substring(0, 1).ToUpper();
+        var role = ViewData["Role"]?.ToString() ?? Context.Session.GetString("StaffRole") ?? "Guest";
+        var userName = ViewData["UserName"]?.ToString() 
+            ?? Context.Session.GetString("StaffName") 
+            ?? Context.Session.GetString("GuestName") 
+            ?? (ViewBag.StaffName as string) 
+            ?? (ViewBag.GuestName as string);
+
+        if (string.IsNullOrWhiteSpace(userName))
+        {
+            userName = role;
+        }
+
+        var avatarInitial = !string.IsNullOrWhiteSpace(userName) && userName != role 
+            ? userName.Substring(0, 1).ToUpper() 
+            : role.Substring(0, 1).ToUpper();
 
         <div class="cogstay-app-wrapper">
+            <!-- Sidebar Overlay for Mobile -->
+            <div class="cogstay-sidebar-overlay" id="cogstaySidebarOverlay"></div>
+
             <!-- Sidebar -->
             <aside class="cogstay-sidebar">
                 <div class="cogstay-sidebar-brand">
@@ -46,7 +62,7 @@
                         @avatarInitial
                     </div>
                     <div class="cogstay-user-info">
-                        <span class="cogstay-user-name">Demo @role</span>
+                        <span class="cogstay-user-name">@userName</span>
                         <span class="cogstay-user-role">@role</span>
                     </div>
                 </div>
@@ -234,5 +250,155 @@
         </div>
     }
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Sidebar Mobile Toggle & Overlay
+            const sidebar = document.querySelector(".cogstay-sidebar");
+            const toggleBtn = document.getElementById("cogstaySidebarToggleBtn");
+            const overlay = document.getElementById("cogstaySidebarOverlay");
+
+            if (sidebar && toggleBtn) {
+                toggleBtn.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    sidebar.classList.toggle("open");
+                    if (overlay) overlay.classList.toggle("active");
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener("click", function() {
+                    if (sidebar) sidebar.classList.remove("open");
+                    overlay.classList.remove("active");
+                });
+            }
+
+            // Close mobile sidebar on navigation click
+            const menuLinks = document.querySelectorAll(".cogstay-menu-link");
+            menuLinks.forEach(link => {
+                link.addEventListener("click", function() {
+                    if (window.innerWidth <= 768 && sidebar) {
+                        sidebar.classList.remove("open");
+                        if (overlay) overlay.classList.remove("active");
+                    }
+                });
+            });
+
+            // Notification Popover Interaction & API Integration
+            const bellBtn = document.getElementById("cogstayNotificationBellBtn");
+            const dropdown = document.getElementById("cogstayNotificationDropdown");
+            const badge = document.getElementById("cogstayNotificationBadge");
+            const body = document.getElementById("cogstayNotificationBody");
+            const markAllBtn = document.getElementById("cogstayMarkAllReadBtn");
+
+            if (bellBtn && dropdown) {
+                // Fetch unread count on page load
+                fetchUnreadCount();
+
+                bellBtn.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    dropdown.classList.toggle("active");
+                    if (dropdown.classList.contains("active")) {
+                        loadNotifications();
+                    }
+                });
+
+                document.addEventListener("click", function(e) {
+                    if (dropdown && !dropdown.contains(e.target) && !bellBtn.contains(e.target)) {
+                        dropdown.classList.remove("active");
+                    }
+                });
+
+                if (markAllBtn) {
+                    markAllBtn.addEventListener("click", function(e) {
+                        e.stopPropagation();
+                        fetch('/Notifications/MarkAllAsRead', { method: 'POST' })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    if (badge) {
+                                        badge.textContent = "0";
+                                        badge.style.display = "none";
+                                    }
+                                    loadNotifications();
+                                }
+                            });
+                    });
+                }
+            }
+
+            function fetchUnreadCount() {
+                fetch('/Notifications/GetUnreadCount')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && badge) {
+                            if (data.unreadCount > 0) {
+                                badge.textContent = data.unreadCount > 9 ? "9+" : data.unreadCount;
+                                badge.style.display = "flex";
+                            } else {
+                                badge.textContent = "0";
+                                badge.style.display = "none";
+                            }
+                        }
+                    })
+                    .catch(() => {});
+            }
+
+            function loadNotifications() {
+                if (!body) return;
+                fetch('/Notifications/GetMyNotifications')
+                    .then(res => res.json())
+                    .then(res => {
+                        if (!res.success || !res.data || res.data.length === 0) {
+                            body.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--color-text-muted); font-size: 13px;">No notifications found.</div>';
+                            return;
+                        }
+
+                        let html = '';
+                        res.data.forEach(item => {
+                            const iconClass = item.type || 'info';
+                            let faIcon = 'fa-info';
+                            if (iconClass === 'success') faIcon = 'fa-check';
+                            else if (iconClass === 'warning') faIcon = 'fa-triangle-exclamation';
+                            else if (iconClass === 'reservation') faIcon = 'fa-calendar-check';
+                            else if (iconClass === 'system') faIcon = 'fa-server';
+                            else if (iconClass === 'housekeeping') faIcon = 'fa-broom';
+
+                            html += `
+                                <div class="cogstay-notification-item ${item.isRead ? '' : 'unread'}" onclick="markSingleRead('${item.id}', this)">
+                                    <div class="cogstay-notification-icon ${iconClass}">
+                                        <i class="fa-solid ${faIcon}"></i>
+                                    </div>
+                                    <div class="cogstay-notification-content">
+                                        <div class="cogstay-notification-item-title">${escapeHtml(item.title)}</div>
+                                        <div class="cogstay-notification-item-msg">${escapeHtml(item.message)}</div>
+                                        <div class="cogstay-notification-item-time">${escapeHtml(item.timeAgo)}</div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        body.innerHTML = html;
+                    })
+                    .catch(err => {
+                        body.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--color-danger); font-size: 13px;">Failed to load notifications.</div>';
+                    });
+            }
+
+            window.markSingleRead = function(id, element) {
+                fetch('/Notifications/MarkAsRead?id=' + id, { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (element) element.classList.remove('unread');
+                            fetchUnreadCount();
+                        }
+                    });
+            };
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+            }
+        });
+    </script>
 </body>
 </html>

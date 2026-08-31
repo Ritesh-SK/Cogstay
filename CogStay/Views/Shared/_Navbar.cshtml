@@ -10,16 +10,36 @@
 
 <header class="cogstay-navbar">
     <div class="cogstay-nav-left">
-        <button class="cogstay-sidebar-toggle" aria-label="Toggle Sidebar">
+        <button class="cogstay-sidebar-toggle" id="cogstaySidebarToggleBtn" aria-label="Toggle Sidebar">
             <i class="fa-solid fa-bars"></i>
         </button>
         <h2 class="cogstay-page-title">@ViewData["Title"]</h2>
     </div>
     <div class="cogstay-nav-right">
         <span class="cogstay-portal-badge">@portalName</span>
-        <div class="cogstay-notification-bell">
+        <div class="cogstay-notification-bell" id="cogstayNotificationBellBtn" title="Notifications">
             <i class="fa-regular fa-bell"></i>
-            <span class="cogstay-notification-badge"></span>
+            <span class="cogstay-notification-badge" id="cogstayNotificationBadge" style="display: none;">0</span>
+
+            <!-- Notification Popover Dropdown -->
+            <div class="cogstay-notification-dropdown" id="cogstayNotificationDropdown">
+                <div class="cogstay-notification-header">
+                    <div class="cogstay-notification-title">
+                        <i class="fa-solid fa-bell" style="color: var(--color-accent);"></i> Notifications
+                    </div>
+                    <button type="button" class="cogstay-mark-read-btn" id="cogstayMarkAllReadBtn">
+                        Mark all read
+                    </button>
+                </div>
+                <div class="cogstay-notification-body" id="cogstayNotificationBody">
+                    <div style="padding: 20px; text-align: center; color: var(--color-text-muted); font-size: 13px;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Loading notifications...
+                    </div>
+                </div>
+                <div class="cogstay-notification-footer">
+                    <span>CogStay Real-Time Alerts</span>
+                </div>
+            </div>
         </div>
     </div>
 </header>

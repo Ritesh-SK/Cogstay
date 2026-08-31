@@ -10,7 +10,7 @@
         <i class="fa-solid fa-hotel" style="color: var(--color-accent);"></i> CogStay
     </a>
     
-    <ul class="cogstay-public-links">
+    <ul class="cogstay-public-links" id="cogstayPublicLinks">
         <li><a href="#about" class="cogstay-public-link">About Us</a></li>
         <li><a href="#services" class="cogstay-public-link">Services</a></li>
         <li><a href="#rooms" class="cogstay-public-link">Rooms & Suites</a></li>
@@ -18,9 +18,14 @@
         <li><a href="#contact" class="cogstay-public-link">Contact</a></li>
     </ul>
 
-    <div class="cogstay-public-actions">
-        <a href="/Guest/Login" class="btn btn-secondary">Guest Login</a>
-        <a href="/Staff/Login" class="btn btn-primary">Staff Portal</a>
+    <div class="cogstay-public-right-group" style="display: flex; align-items: center; gap: 12px;">
+        <div class="cogstay-public-actions">
+            <a href="/Guest/Login" class="btn btn-secondary">Guest Login</a>
+            <a href="/Staff/Login" class="btn btn-primary">Staff Portal</a>
+        </div>
+        <button class="cogstay-public-mobile-toggle" id="cogstayPublicMobileToggle" aria-label="Toggle Navigation Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </div>
 </nav>
 
@@ -341,5 +346,32 @@
         });
 
         revealElements.forEach(el => observer.observe(el));
+
+        // Public Landing Page Mobile Navigation Menu Toggle
+        const publicToggle = document.getElementById('cogstayPublicMobileToggle');
+        const publicLinks = document.getElementById('cogstayPublicLinks');
+        if (publicToggle && publicLinks) {
+            publicToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                publicLinks.classList.toggle('mobile-open');
+                const icon = publicToggle.querySelector('i');
+                if (icon) {
+                    if (publicLinks.classList.contains('mobile-open')) {
+                        icon.className = 'fa-solid fa-xmark';
+                    } else {
+                        icon.className = 'fa-solid fa-bars';
+                    }
+                }
+            });
+
+            const navLinks = publicLinks.querySelectorAll('a');
+            navLinks.forEach(l => {
+                l.addEventListener('click', () => {
+                    publicLinks.classList.remove('mobile-open');
+                    const icon = publicToggle.querySelector('i');
+                    if (icon) icon.className = 'fa-solid fa-bars';
+                });
+            });
+        }
     });
 </script>
