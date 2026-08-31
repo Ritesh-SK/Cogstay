@@ -45,7 +45,6 @@ public class MongoDbContext
     public IMongoCollection<Feedback> Feedbacks => _database.GetCollection<Feedback>("Feedbacks");
     public IMongoCollection<OtpRecord> Otps => _database.GetCollection<OtpRecord>("Otps");
     public IMongoCollection<RefreshToken> RefreshTokens => _database.GetCollection<RefreshToken>("RefreshTokens");
-    public IMongoCollection<Notification> Notifications => _database.GetCollection<Notification>("Notifications");
 
     public async Task InitializeIndexesAsync()
     {

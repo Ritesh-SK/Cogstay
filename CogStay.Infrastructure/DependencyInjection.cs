@@ -28,7 +28,6 @@ public static class DependencyInjection
         services.AddScoped<IFeedbackRepository, FeedbackRepository>();
         services.AddScoped<IOtpRepository, OtpRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-        services.AddScoped<INotificationRepository, NotificationRepository>();
 
         // Register Password Hashers
         services.AddScoped<IPasswordHasher<Guest>, PasswordHasher<Guest>>();
@@ -51,7 +50,6 @@ public static class DependencyInjection
         services.AddScoped<IFeedbackService, FeedbackService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IOtpService, OtpService>();
-        services.AddScoped<INotificationService, NotificationService>();
 
         return services;
     }

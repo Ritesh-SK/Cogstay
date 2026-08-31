@@ -115,11 +115,21 @@
             }
             else
             {
+                var roomImages = new[] {
+                    "/images/rooms/room_deluxe.png",
+                    "/images/rooms/room_standard.png",
+                    "/images/rooms/room_suite.png"
+                };
+                int roomIdx = 0;
+
                 foreach (var room in Model)
                 {
+                    var currentImg = roomImages[roomIdx % roomImages.Length];
+                    roomIdx++;
+
                     <div class="cogstay-room-card">
                         <div class="cogstay-room-image-container">
-                            <img class="cogstay-room-card-img" src="/images/rooms/room_deluxe.png" alt="@room.RoomType" />
+                            <img class="cogstay-room-card-img" src="@currentImg" alt="@room.RoomType" />
                             <span class="cogstay-room-badge"><i class="fa-solid fa-door-open"></i> Room @room.RoomNumber</span>
                         </div>
                         <div class="cogstay-room-body">
