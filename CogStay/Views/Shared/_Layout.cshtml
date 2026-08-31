@@ -345,11 +345,28 @@
 
             function loadNotifications() {
                 if (!body) return;
+
+                body.innerHTML = `
+                    <div class="cogstay-notification-state-container">
+                        <div class="cogstay-loading-spinner">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i>
+                        </div>
+                        <span class="cogstay-loading-text">Fetching notifications...</span>
+                    </div>
+                `;
+
                 fetch('/Notifications/GetMyNotifications')
                     .then(res => res.json())
                     .then(res => {
                         if (!res.success || !res.data || res.data.length === 0) {
-                            body.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--color-text-muted); font-size: 13px;">No notifications found.</div>';
+                            body.innerHTML = `
+                                <div class="cogstay-notification-state-container">
+                                    <div class="cogstay-empty-icon">
+                                        <i class="fa-regular fa-bell-slash"></i>
+                                    </div>
+                                    <span class="cogstay-loading-text">You're all caught up! No unread alerts.</span>
+                                </div>
+                            `;
                             return;
                         }
 
@@ -371,7 +388,7 @@
                                     <div class="cogstay-notification-content">
                                         <div class="cogstay-notification-item-title">${escapeHtml(item.title)}</div>
                                         <div class="cogstay-notification-item-msg">${escapeHtml(item.message)}</div>
-                                        <div class="cogstay-notification-item-time">${escapeHtml(item.timeAgo)}</div>
+                                        <div class="cogstay-notification-item-time"><i class="fa-regular fa-clock"></i> ${escapeHtml(item.timeAgo)}</div>
                                     </div>
                                 </div>
                             `;
@@ -379,7 +396,14 @@
                         body.innerHTML = html;
                     })
                     .catch(err => {
-                        body.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--color-danger); font-size: 13px;">Failed to load notifications.</div>';
+                        body.innerHTML = `
+                            <div class="cogstay-notification-state-container">
+                                <div class="cogstay-empty-icon" style="color: var(--color-danger); background: rgba(179, 65, 46, 0.08);">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </div>
+                                <span class="cogstay-loading-text" style="color: var(--color-danger);">Unable to load notifications. Please try again.</span>
+                            </div>
+                        `;
                     });
             }
 
